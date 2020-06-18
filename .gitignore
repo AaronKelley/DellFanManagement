@@ -1,0 +1,10 @@
+/.vs
+/DellFanCmd/bin
+/DellFanCmd/obj
+/DellFanKeepAlive/bin
+/DellFanKeepAlive/obj
+/DellFanLib/x64
+*.user
+/DellFanLibInterop/bin
+/DellFanLibInterop/obj
+/packages
