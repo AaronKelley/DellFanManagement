@@ -1,6 +1,7 @@
 ﻿using DellFanManagement.Interop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -20,6 +21,11 @@ namespace DellFanManagement.KeepAlive
         /// Keep track of the highest temperature on record for each component.
         /// </summary>
         private static readonly Dictionary<string, int> maxValues = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Switch to true if anything is written to the error log.
+        /// </summary>
+        private static bool errorsDetected = false;
 
         /// <summary>
         /// Main method; start of the program.
@@ -66,91 +72,103 @@ namespace DellFanManagement.KeepAlive
 
                     while (true)
                     {
-                        statusString.Clear();
-                        statusString.Append(titleText);
-                        statusString.AppendFormat("Current time: {0,-30}\n\n", DateTime.Now.ToString());
-
-                        bool thresholdsMet = true;
-
-                        IReadOnlyDictionary<string, int> temperatures = temperatureReader.GetCpuCoreTemperatures();
-                        foreach (string key in temperatures.Keys)
+                        try
                         {
-                            int temperature = temperatures[key];
+                            statusString.Clear();
+                            statusString.Append(titleText);
+                            statusString.AppendFormat("Current time: {0,-30}\n\n", DateTime.Now.ToString());
 
-                            if (temperature > (ecFanControlEnabled ? temperatureLowerThreshold : temperatureUpperThreshold))
+                            bool thresholdsMet = true;
+
+                            IReadOnlyDictionary<string, int> temperatures = temperatureReader.GetCpuCoreTemperatures();
+                            foreach (string key in temperatures.Keys)
+                            {
+                                int temperature = temperatures[key];
+
+                                if (temperature > (ecFanControlEnabled ? temperatureLowerThreshold : temperatureUpperThreshold))
+                                {
+                                    thresholdsMet = false;
+                                }
+                            }
+
+                            rpm1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
+
+                            if (fan2Present)
+                            {
+                                rpm2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
+
+                                if (rpm2 == uint.MaxValue && firstRun)
+                                {
+                                    // No fan 2.
+                                    fan2Present = false;
+                                }
+
+                                firstRun = false;
+                            }
+
+                            if (rpm1 == 0 || rpm1 > rpmThreshold || (fan2Present && (rpm2 == 0 || rpm2 > rpmThreshold)))
                             {
                                 thresholdsMet = false;
                             }
-                        }
 
-                        rpm1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                            statusString.AppendFormat("Temperature and fan speed thresholds are {0,-8}\n", thresholdsMet ? "met." : "not met.");
+                            statusString.AppendFormat("{0,-75}\n\n", ecFanControlEnabled ?
+                                string.Format("The EC has had control of the system fans since {0}.", ecFanControlChangeTime.ToString()) :
+                                string.Format("The fan speed has been locked since {0}.", ecFanControlChangeTime.ToString())
+                            );
 
-                        if (fan2Present)
-                        {
-                            rpm2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
-
-                            if (rpm2 == uint.MaxValue && firstRun)
+                            statusString.Append("System temperatures:\n");
+                            foreach (string key in temperatures.Keys)
                             {
-                                // No fan 2.
-                                fan2Present = false;
+                                string temperature = temperatures[key] != 0 ? temperatures[key].ToString() : "--";
+                                statusString.AppendFormat("  {0,-14}{1,3}", key, temperature);
+                                CheckValues(key, temperatures[key]);
+                                if (minValues.ContainsKey(key) && maxValues.ContainsKey(key))
+                                {
+                                    statusString.AppendFormat("  ( {0,3} - {1,3} )", minValues[key], maxValues[key]);
+                                }
+                                statusString.Append("\n");
                             }
 
-                            firstRun = false;
-                        }
-
-                        if (rpm1 == 0 || rpm1 > rpmThreshold  || (fan2Present && (rpm2 == 0 || rpm2 > rpmThreshold)))
-                        {
-                            thresholdsMet = false;
-                        }
-
-                        statusString.AppendFormat("Temperature and fan speed thresholds are {0,-8}\n", thresholdsMet ? "met." : "not met.");
-                        statusString.AppendFormat("{0,-75}\n\n", ecFanControlEnabled ?
-                            string.Format("The EC has had control of the system fans since {0}.", ecFanControlChangeTime.ToString()) :
-                            string.Format("The fan speed has been locked since {0}.", ecFanControlChangeTime.ToString())
-                        );
-
-                        statusString.Append("System temperatures:\n");
-                        foreach (string key in temperatures.Keys)
-                        {
-                            string temperature = temperatures[key] != 0 ? temperatures[key].ToString() : "--";
-                            statusString.AppendFormat("  {0,-14}{1,3}", key, temperature);
-                            CheckValues(key, temperatures[key]);
-                            if (minValues.ContainsKey(key) && maxValues.ContainsKey(key))
-                            {
-                                statusString.AppendFormat("  ( {0,3} - {1,3} )", minValues[key], maxValues[key]);
-                            }
                             statusString.Append("\n");
-                        }
+                            statusString.Append("Fan speeds:\n");
+                            statusString.AppendFormat("  {0,-9}{1,5}\n", "Fan #1", rpm1);
+                            if (fan2Present)
+                            {
+                                statusString.AppendFormat("  {0,-9}{1,5}\n", "Fan #2", rpm2);
+                            }
 
-                        statusString.Append("\n");
-                        statusString.Append("Fan speeds:\n");
-                        statusString.AppendFormat("  {0,-9}{1,5}\n", "Fan #1", rpm1);
-                        if (fan2Present)
-                        {
-                            statusString.AppendFormat("  {0,-9}{1,5}\n", "Fan #2", rpm2);
-                        }
+                            if (ecFanControlEnabled && thresholdsMet)
+                            {
+                                DellFanLib.DisableEcFanControl();
+                                ecFanControlEnabled = false;
+                                ecFanControlChangeTime = DateTime.Now;
+                                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                Console.Clear();
+                            }
+                            else if (!ecFanControlEnabled && !thresholdsMet)
+                            {
+                                DellFanLib.EnableEcFanControl();
+                                ecFanControlEnabled = true;
+                                ecFanControlChangeTime = DateTime.Now;
+                                Console.BackgroundColor = ConsoleColor.DarkRed;
+                                Console.Clear();
+                            }
 
-                        if (ecFanControlEnabled && thresholdsMet)
-                        {
-                            DellFanLib.DisableEcFanControl();
-                            ecFanControlEnabled = false;
-                            ecFanControlChangeTime = DateTime.Now;
-                            Console.BackgroundColor = ConsoleColor.DarkBlue;
-                            Console.Clear();
-                        }
-                        else if (!ecFanControlEnabled && !thresholdsMet)
-                        {
-                            DellFanLib.EnableEcFanControl();
-                            ecFanControlEnabled = true;
-                            ecFanControlChangeTime = DateTime.Now;
-                            Console.BackgroundColor = ConsoleColor.DarkRed;
-                            Console.Clear();
-                        }
+                            if (errorsDetected)
+                            {
+                                statusString.Append("\n!! Errors detected, check error log file for details !!\n");
+                            }
 
-                        FixConsole();
-                        Console.CursorLeft = 0;
-                        Console.CursorTop = 0;
-                        Console.Write(statusString);
+                            FixConsole();
+                            Console.CursorLeft = 0;
+                            Console.CursorTop = 0;
+                            Console.Write(statusString);
+                        }
+                        catch (Exception exception)
+                        {
+                            LogError(exception);
+                        }
 
                         Thread.Sleep(1000);
                     }
@@ -234,6 +252,18 @@ namespace DellFanManagement.KeepAlive
             {
                 // No action.
             }
+        }
+
+        /// <summary>
+        /// If an exception occurs during normal operation, write the details to a log file.
+        /// </summary>
+        /// <param name="exception">Exception to log</param>
+        private static void LogError(Exception exception)
+        {
+            errorsDetected = true;
+
+            string errorText = string.Format("{0} - {1} {2}\n{3}\n\n", DateTime.Now.ToString(), exception.GetType().ToString(), exception.Message, exception.StackTrace);
+            File.AppendAllText("DellFanKeepAlive-Errors.log", errorText);
         }
     }
 }
