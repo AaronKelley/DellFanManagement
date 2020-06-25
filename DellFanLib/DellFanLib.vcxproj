@@ -22,7 +22,6 @@
     <ClCompile Include="DellFanLib.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DellFanLib-Public.h" />
     <ClInclude Include="DellFanLib.h" />
   </ItemGroup>
   <ItemGroup>

@@ -23,9 +23,6 @@
     <ClInclude Include="DellFanLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DellFanLib-Public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
