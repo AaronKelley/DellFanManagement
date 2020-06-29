@@ -39,6 +39,12 @@ namespace DellFanManagement.KeepAlive
                 int temperatureLowerThreshold = int.Parse(args[0]);
                 int temperatureUpperThreshold = int.Parse(args[1]);
                 ulong rpmThreshold = ulong.Parse(args[2]);
+                
+                int sleepInterval = 1;
+                if (args.Length > 3)
+                {
+                    sleepInterval = int.Parse(args[3]);
+                }
 
                 FixConsole();
 
@@ -181,7 +187,7 @@ namespace DellFanManagement.KeepAlive
                             LogError(exception);
                         }
 
-                        Thread.Sleep(1000);
+                        Thread.Sleep(1000 * sleepInterval);
                     }
                 }
                 else
