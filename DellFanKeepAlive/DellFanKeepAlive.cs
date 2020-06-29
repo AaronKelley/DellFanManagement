@@ -61,6 +61,7 @@ namespace DellFanManagement.KeepAlive
                     DellFanLib.EnableEcFanControl();
                     bool ecFanControlEnabled = true;
                     DateTime ecFanControlChangeTime = DateTime.Now;
+                    DateTime lastUpdateTime = DateTime.Now;
                     StringBuilder statusString = new StringBuilder();
 
                     ulong rpm1;
@@ -74,9 +75,19 @@ namespace DellFanManagement.KeepAlive
                     {
                         try
                         {
+                            // Check last update time.
+                            DateTime currentTime = DateTime.Now;
+                            if (((DateTimeOffset)currentTime).ToUnixTimeSeconds() - ((DateTimeOffset)lastUpdateTime).ToUnixTimeSeconds() > 30)
+                            {
+                                lastUpdateTime = currentTime;
+                                throw new Exception(string.Format("A long time passed between updates - {0} - {1}", lastUpdateTime.ToString(), currentTime.ToString()));
+                            }
+
+                            lastUpdateTime = currentTime;
+
                             statusString.Clear();
                             statusString.Append(titleText);
-                            statusString.AppendFormat("Current time: {0,-30}\n\n", DateTime.Now.ToString());
+                            statusString.AppendFormat("Current time: {0,-30}\n\n", lastUpdateTime);
 
                             bool thresholdsMet = true;
 
