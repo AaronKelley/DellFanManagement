@@ -85,8 +85,9 @@ namespace DellFanManagement.KeepAlive
                             DateTime currentTime = DateTime.Now;
                             if (((DateTimeOffset)currentTime).ToUnixTimeSeconds() - ((DateTimeOffset)lastUpdateTime).ToUnixTimeSeconds() > 30)
                             {
+                                string message = string.Format("A long time passed between updates - {0} - {1}", lastUpdateTime.ToString(), currentTime.ToString());
                                 lastUpdateTime = currentTime;
-                                throw new Exception(string.Format("A long time passed between updates - {0} - {1}", lastUpdateTime.ToString(), currentTime.ToString()));
+                                throw new Exception(message);
                             }
 
                             lastUpdateTime = currentTime;
