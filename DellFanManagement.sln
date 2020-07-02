@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellFanKeepAlive", "DellFan
 		{9218997E-E503-49B3-8E72-FD28A45E1873} = {9218997E-E503-49B3-8E72-FD28A45E1873}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSmmIoLib", "DellSmmIoLib\DellSmmIoLib.csproj", "{C7B8C793-52D8-493B-84FD-5670C4A6585D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,14 @@ Global
 		{C4918600-4890-4F77-8D95-A8246B17C1AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C4918600-4890-4F77-8D95-A8246B17C1AA}.Release|x64.ActiveCfg = Release|Any CPU
 		{C4918600-4890-4F77-8D95-A8246B17C1AA}.Release|x64.Build.0 = Release|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Debug|x64.Build.0 = Debug|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|x64.ActiveCfg = Release|Any CPU
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
