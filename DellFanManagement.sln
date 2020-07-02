@@ -24,6 +24,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellFanKeepAlive", "DellFan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSmmIoLib", "DellSmmIoLib\DellSmmIoLib.csproj", "{C7B8C793-52D8-493B-84FD-5670C4A6585D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSetThermalSetting", "DellSetThermalSetting\DellSetThermalSetting.csproj", "{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}"
+	ProjectSection(ProjectDependencies) = postProject
+		{84CECE63-519A-406B-BB8F-2991F6191817} = {84CECE63-519A-406B-BB8F-2991F6191817}
+		{C7B8C793-52D8-493B-84FD-5670C4A6585D} = {C7B8C793-52D8-493B-84FD-5670C4A6585D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +76,14 @@ Global
 		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|x64.ActiveCfg = Release|Any CPU
 		{C7B8C793-52D8-493B-84FD-5670C4A6585D}.Release|x64.Build.0 = Release|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Debug|x64.Build.0 = Debug|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Release|x64.ActiveCfg = Release|Any CPU
+		{77F1DBB1-AB45-49CF-90E4-83DB1B934D86}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
