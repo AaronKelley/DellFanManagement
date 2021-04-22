@@ -38,7 +38,8 @@ namespace DellFanManagement.KeepAlive
             {
                 int temperatureLowerThreshold = int.Parse(args[0]);
                 int temperatureUpperThreshold = int.Parse(args[1]);
-                ulong rpmThreshold = ulong.Parse(args[2]);
+                ulong rpmUpperThreshold = ulong.Parse(args[2]);
+                ulong rpmLowerThreshold = rpmUpperThreshold - 400;
                 
                 int sleepInterval = 1;
                 if (args.Length > 3)
@@ -58,7 +59,7 @@ namespace DellFanManagement.KeepAlive
                     "Open Hardware Monitor version 0.9.5 • Copyright © 2009-2020 Michael Möller and contributors (MPL 2.0)\n" +
                     "Icon made from Icon Fonts (http://www.onlinewebfonts.com/icon/), licensed by CC BY 3.0\n" +
                     "\n" +
-                    "Configuration: lower temperature threshold " + temperatureLowerThreshold + ", upper temperature threshold " + temperatureUpperThreshold + ", RPM threshold " + rpmThreshold + "\n" +
+                    "Configuration: lower temperature threshold " + temperatureLowerThreshold + ", upper temperature threshold " + temperatureUpperThreshold + ", RPM threshold " + rpmUpperThreshold + "\n" +
                     "\n";
 
                 if (DellFanLib.Initialize())
@@ -85,8 +86,9 @@ namespace DellFanManagement.KeepAlive
                             DateTime currentTime = DateTime.Now;
                             if (((DateTimeOffset)currentTime).ToUnixTimeSeconds() - ((DateTimeOffset)lastUpdateTime).ToUnixTimeSeconds() > 30)
                             {
+                                string message = string.Format("A long time passed between updates - {0} - {1}", lastUpdateTime.ToString(), currentTime.ToString());
                                 lastUpdateTime = currentTime;
-                                throw new Exception(string.Format("A long time passed between updates - {0} - {1}", lastUpdateTime.ToString(), currentTime.ToString()));
+                                throw new Exception(message);
                             }
 
                             lastUpdateTime = currentTime;
@@ -123,7 +125,7 @@ namespace DellFanManagement.KeepAlive
                                 firstRun = false;
                             }
 
-                            if (rpm1 == 0 || rpm1 > rpmThreshold || (fan2Present && (rpm2 == 0 || rpm2 > rpmThreshold)))
+                            if (rpm1 > rpmUpperThreshold || rpm1 < rpmLowerThreshold || (fan2Present && (rpm2 > rpmUpperThreshold || rpm2 < rpmLowerThreshold)))
                             {
                                 thresholdsMet = false;
                             }
