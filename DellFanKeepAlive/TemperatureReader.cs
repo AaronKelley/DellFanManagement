@@ -1,9 +1,7 @@
-﻿using OpenHardwareMonitor.Hardware;
+﻿using NvAPIWrapper.GPU;
+using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DellFanManagement.KeepAlive
 {
@@ -23,7 +21,7 @@ namespace DellFanManagement.KeepAlive
             _computer = new Computer
             {
                 CPUEnabled = true,
-                GPUEnabled = true
+                //GPUEnabled = true
             };
 
             _computer.Open();
@@ -37,6 +35,7 @@ namespace DellFanManagement.KeepAlive
         {
             Dictionary<string, int> temperatures = new Dictionary<string, int>();
 
+            // OpenHardwareMonitor values
             foreach (IHardware hardware in _computer.Hardware)
             {
                 hardware.Update();
@@ -47,6 +46,31 @@ namespace DellFanManagement.KeepAlive
                     {
                         temperatures.Add(sensor.Name, int.Parse(sensor.Value.Value.ToString()));
                     }
+                }
+            }
+
+            // NVAPI values
+            foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
+            {
+                int sensorCount = 0;
+                int iteration = 1;
+
+                foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
+                {
+                    sensorCount++;
+                }
+
+                foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
+                {
+                    string name = gpu.FullName;
+                    if (sensorCount > 1)
+                    {
+                        name += string.Format(" #{0}", iteration);
+                    }
+
+                    temperatures.Add(name, sensor.CurrentTemperature);
+
+                    iteration++;
                 }
             }
 
