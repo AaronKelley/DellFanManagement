@@ -366,8 +366,8 @@ namespace DellFanManagement.Cmd
                 "  ec-enable               Turn EC fan control on (fan goes to automatic control)\n" +
                 "  test                    Try turning EC fan control off,\n" +
                 "                          and record the fan RPM at different levels.\n" +
-                "  fan1-rpm                Report RPM for fan 1\n" +
-                "  fan2-rpm                Report RPM for fan 2\n" +
+                "  rpm-fan1                Report RPM for fan 1\n" +
+                "  rpm-fan2                Report RPM for fan 2\n" +
                 "                          (RPMs are reported via status/error code)\n" +
                 "\n" +
                 "After EC fan control is off, you may use:\n" +
