@@ -1,4 +1,5 @@
 ﻿using NvAPIWrapper.GPU;
+using NvAPIWrapper.Native.Exceptions;
 using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
@@ -52,25 +53,26 @@ namespace DellFanManagement.KeepAlive
             // NVAPI values
             foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
             {
-                int sensorCount = 0;
-                int iteration = 1;
+                string name = gpu.FullName;
 
-                foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
+                try
                 {
-                    sensorCount++;
-                }
-
-                foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
-                {
-                    string name = gpu.FullName;
-                    if (sensorCount > 1)
+                    foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
                     {
-                        name += string.Format(" #{0}", iteration);
+                        temperatures.Add(name, sensor.CurrentTemperature);
                     }
-
-                    temperatures.Add(name, sensor.CurrentTemperature);
-
-                    iteration++;
+                }
+                catch (NVIDIAApiException exception)
+                {
+                    if (exception.Message == "NVAPI_GPU_NOT_POWERED")
+                    {
+                        // GPU is currently powered off.
+                        temperatures.Add(name, 0);
+                    }
+                    else
+                    {
+                        throw exception;
+                    }
                 }
             }
 
