@@ -305,6 +305,7 @@ namespace DellFanManagement.App
             catch (Exception exception)
             {
                 _state.Error = string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace);
+                Log.Write(_state.Error);
             }
 
             // TODO: DellFanLib.Shutdown();

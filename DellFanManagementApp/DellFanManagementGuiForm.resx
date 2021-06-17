@@ -64,6 +64,6 @@ Licensed under GPLv3
 Uses Dell SMM I/O driver by 424778940z
 https://github.com/424778940z/bzh-windrv-dell-smm-io
 
-Also uses Open Hardware Monitor, NVAPI, and irrKlang.</value>
+Also uses Libre Hardware Monitor, NVAPI, and irrKlang.</value>
   </data>
 </root>

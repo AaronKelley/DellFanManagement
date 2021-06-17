@@ -1,8 +1,8 @@
 ﻿using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
+using LibreHardwareMonitor.Hardware;
 using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native.Exceptions;
-using OpenHardwareMonitor.Hardware;
 using System;
 
 namespace DellFanManagement.App
@@ -34,7 +34,7 @@ namespace DellFanManagement.App
 
                 Computer computer = new()
                 {
-                    CPUEnabled = true
+                    IsCpuEnabled = true
                 };
 
                 computer.Open();

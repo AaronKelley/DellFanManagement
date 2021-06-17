@@ -1,5 +1,6 @@
 ﻿using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -77,6 +78,16 @@ namespace DellFanManagement.App
         private AudioDevice _selectedAudioDevice;
 
         /// <summary>
+        /// Number of times in a row that the thermal setting has failed to update.
+        /// </summary>
+        private int _consecutiveThermalSettingFailures;
+
+        /// <summary>
+        /// Number of times before trying to read the thermal setting again (exponential backoff).
+        /// </summary>
+        private int _thermalSettingReadBackoff;
+
+        /// <summary>
         /// <summary>
         /// Constructor; initialize everything.
         /// </summary>
@@ -94,6 +105,9 @@ namespace DellFanManagement.App
             _changesAllowed = false;
 
             _keepAliveStatus = string.Empty;
+
+            _consecutiveThermalSettingFailures = 0;
+            _thermalSettingReadBackoff = 0;
 
             WaitOne();
             Update();
@@ -130,7 +144,31 @@ namespace DellFanManagement.App
         /// </summary>
         public void UpdateThermalSetting()
         {
-            ThermalSetting = DellSmmIoLib.GetThermalSetting();
+            // If a backoff has been set, decrement it.
+            if (_thermalSettingReadBackoff > 0)
+            {
+                _thermalSettingReadBackoff--;
+            }
+            else
+            {
+                ThermalSetting = DellSmmIoLib.GetThermalSetting();
+
+                if (ThermalSetting == ThermalSetting.Error)
+                {
+                    // Reading this setting on an unsupported system can cause high CPU usage from WMI.
+                    // Exponential backoff before trying to read it again.
+                    _consecutiveThermalSettingFailures++;
+                    _thermalSettingReadBackoff = 1;
+                    for (int index = 0; index < _consecutiveThermalSettingFailures; index++)
+                    {
+                        _thermalSettingReadBackoff *= 4;
+                    }
+                }
+                else
+                {
+                    _consecutiveThermalSettingFailures = 0;
+                }
+            }
         }
 
         /// <summary>

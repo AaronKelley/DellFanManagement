@@ -1,6 +1,6 @@
-﻿using NvAPIWrapper.GPU;
+﻿using LibreHardwareMonitor.Hardware;
+using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native.Exceptions;
-using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 
@@ -21,8 +21,8 @@ namespace DellFanManagement.App
         {
             _computer = new Computer
             {
-                CPUEnabled = true,
-                //GPUEnabled = true
+                IsCpuEnabled = true
+                // TODO: GPU?
             };
 
             _computer.Open();
@@ -45,7 +45,10 @@ namespace DellFanManagement.App
                 {
                     if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
                     {
-                        temperatures.Add(sensor.Name, int.Parse(sensor.Value.Value.ToString()));
+                        if (!sensor.Name.Contains("TjMax") && !sensor.Name.Contains("Average") && !sensor.Name.Contains("Max"))
+                        {
+                            temperatures.Add(sensor.Name, int.Parse(sensor.Value.Value.ToString()));
+                        }
                     }
                 }
             }

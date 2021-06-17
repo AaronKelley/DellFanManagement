@@ -19,10 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.7" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="NvAPIWrapper.Net" Version="0.8.1.101" />
-    <PackageReference Include="OpenHardwareMonitorLibCore" Version="1.0.2" />
     <PackageReference Include="System.Management" Version="5.0.0" />
   </ItemGroup>
 
