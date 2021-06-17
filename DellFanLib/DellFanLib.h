@@ -39,7 +39,7 @@ extern "C"
 	/// <summary>
 	/// Set the fan level of one of the fans.
 	/// </summary>
-	/// <param name="fanIndex">Which fan to set the level of (0 or 1)</param>
+	/// <param name="fanIndex">Which fan to set the level of</param>
 	/// <param name="fanLevel">Which fan level to set (0 = off, 1 = medium, 2 = high)</param>
 	/// <returns>ulong-max means failure</returns>
 	DllExport unsigned long SetFanLevel(unsigned long fanIndex, unsigned long fanLevel);

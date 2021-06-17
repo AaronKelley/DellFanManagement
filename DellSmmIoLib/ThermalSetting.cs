@@ -6,6 +6,6 @@
         Optimized = 1,
         Cool = 2,
         Quiet = 4,
-        UltraPerformance = 8
+        Performance = 8
     }
 }
