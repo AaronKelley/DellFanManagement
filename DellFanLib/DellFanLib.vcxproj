@@ -146,7 +146,6 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanCmd\bin\$(Configuration)" /Y
-copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanKeepAlive\bin\$(Configuration)" /Y
 copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -170,7 +169,6 @@ copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)D
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanCmd\bin\$(Configuration)" /Y
-copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanKeepAlive\bin\$(Configuration)" /Y
 copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
