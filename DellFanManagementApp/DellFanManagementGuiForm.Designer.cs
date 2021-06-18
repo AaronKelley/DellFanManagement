@@ -86,7 +86,6 @@ namespace DellFanManagement.App
             this.restartBackgroundThreadButton = new System.Windows.Forms.Button();
             this.aboutGroupBox = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.aboutVersionLabel = new System.Windows.Forms.Label();
             this.aboutProductLabel = new System.Windows.Forms.Label();
             this.audioKeepAliveGroupBox = new System.Windows.Forms.GroupBox();
             this.audioKeepAliveComboBox = new System.Windows.Forms.ComboBox();
@@ -671,7 +670,6 @@ namespace DellFanManagement.App
             // aboutGroupBox
             // 
             this.aboutGroupBox.Controls.Add(this.richTextBox1);
-            this.aboutGroupBox.Controls.Add(this.aboutVersionLabel);
             this.aboutGroupBox.Controls.Add(this.aboutProductLabel);
             this.aboutGroupBox.Location = new System.Drawing.Point(620, 12);
             this.aboutGroupBox.Name = "aboutGroupBox";
@@ -688,15 +686,6 @@ namespace DellFanManagement.App
             this.richTextBox1.Size = new System.Drawing.Size(336, 140);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
-            // 
-            // aboutVersionLabel
-            // 
-            this.aboutVersionLabel.AutoSize = true;
-            this.aboutVersionLabel.Location = new System.Drawing.Point(169, 19);
-            this.aboutVersionLabel.Name = "aboutVersionLabel";
-            this.aboutVersionLabel.Size = new System.Drawing.Size(28, 15);
-            this.aboutVersionLabel.TabIndex = 1;
-            this.aboutVersionLabel.Text = "DEV";
             // 
             // aboutProductLabel
             // 
@@ -850,7 +839,6 @@ namespace DellFanManagement.App
         private System.Windows.Forms.GroupBox ecFanControlGroupBox;
         private System.Windows.Forms.Button restartBackgroundThreadButton;
         private System.Windows.Forms.GroupBox aboutGroupBox;
-        private System.Windows.Forms.Label aboutVersionLabel;
         private System.Windows.Forms.Label aboutProductLabel;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.GroupBox audioKeepAliveGroupBox;

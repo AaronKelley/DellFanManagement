@@ -34,7 +34,7 @@ namespace DellFanManagement.App
             _core = new Core(_state, this);
 
             // Version number in the about box.
-            aboutVersionLabel.Text = DellFanLib.Version;
+            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);
