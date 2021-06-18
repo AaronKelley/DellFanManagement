@@ -31,8 +31,6 @@ namespace DellFanManagement.App
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DellFanManagementGuiForm));
             this.fansGroupBox = new System.Windows.Forms.GroupBox();
-            this.fan2RpmValue = new System.Windows.Forms.Label();
-            this.fan1RpmValue = new System.Windows.Forms.Label();
             this.fan2RpmLabel = new System.Windows.Forms.Label();
             this.fan1RpmLabel = new System.Windows.Forms.Label();
             this.thermalSettingGroupBox = new System.Windows.Forms.GroupBox();
@@ -106,8 +104,6 @@ namespace DellFanManagement.App
             // 
             // fansGroupBox
             // 
-            this.fansGroupBox.Controls.Add(this.fan2RpmValue);
-            this.fansGroupBox.Controls.Add(this.fan1RpmValue);
             this.fansGroupBox.Controls.Add(this.fan2RpmLabel);
             this.fansGroupBox.Controls.Add(this.fan1RpmLabel);
             this.fansGroupBox.Location = new System.Drawing.Point(12, 12);
@@ -117,41 +113,23 @@ namespace DellFanManagement.App
             this.fansGroupBox.TabStop = false;
             this.fansGroupBox.Text = "Fans:";
             // 
-            // fan2RpmValue
-            // 
-            this.fan2RpmValue.AutoSize = true;
-            this.fan2RpmValue.Location = new System.Drawing.Point(69, 38);
-            this.fan2RpmValue.Name = "fan2RpmValue";
-            this.fan2RpmValue.Size = new System.Drawing.Size(90, 15);
-            this.fan2RpmValue.TabIndex = 4;
-            this.fan2RpmValue.Text = "(Not measured)";
-            // 
-            // fan1RpmValue
-            // 
-            this.fan1RpmValue.AutoSize = true;
-            this.fan1RpmValue.Location = new System.Drawing.Point(69, 19);
-            this.fan1RpmValue.Name = "fan1RpmValue";
-            this.fan1RpmValue.Size = new System.Drawing.Size(90, 15);
-            this.fan1RpmValue.TabIndex = 3;
-            this.fan1RpmValue.Text = "(Not measured)";
-            // 
             // fan2RpmLabel
             // 
             this.fan2RpmLabel.AutoSize = true;
             this.fan2RpmLabel.Location = new System.Drawing.Point(6, 38);
             this.fan2RpmLabel.Name = "fan2RpmLabel";
-            this.fan2RpmLabel.Size = new System.Drawing.Size(66, 15);
+            this.fan2RpmLabel.Size = new System.Drawing.Size(152, 15);
             this.fan2RpmLabel.TabIndex = 2;
-            this.fan2RpmLabel.Text = "Fan 2 RPM:";
+            this.fan2RpmLabel.Text = "Fan 2 RPM: (Not measured)";
             // 
             // fan1RpmLabel
             // 
             this.fan1RpmLabel.AutoSize = true;
             this.fan1RpmLabel.Location = new System.Drawing.Point(6, 19);
             this.fan1RpmLabel.Name = "fan1RpmLabel";
-            this.fan1RpmLabel.Size = new System.Drawing.Size(66, 15);
+            this.fan1RpmLabel.Size = new System.Drawing.Size(152, 15);
             this.fan1RpmLabel.TabIndex = 1;
-            this.fan1RpmLabel.Text = "Fan 1 RPM:";
+            this.fan1RpmLabel.Text = "Fan 1 RPM: (Not measured)";
             // 
             // thermalSettingGroupBox
             // 
@@ -787,8 +765,6 @@ namespace DellFanManagement.App
         private System.Windows.Forms.GroupBox fansGroupBox;
         private System.Windows.Forms.Label fan1RpmLabel;
         private System.Windows.Forms.Label fan2RpmLabel;
-        private System.Windows.Forms.Label fan2RpmValue;
-        private System.Windows.Forms.Label fan1RpmValue;
         private System.Windows.Forms.GroupBox thermalSettingGroupBox;
         private System.Windows.Forms.RadioButton thermalSettingRadioButtonPerformance;
         private System.Windows.Forms.RadioButton thermalSettingRadioButtonQuiet;

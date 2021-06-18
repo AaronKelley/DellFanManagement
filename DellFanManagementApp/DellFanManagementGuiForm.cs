@@ -119,8 +119,8 @@ namespace DellFanManagement.App
             _state.WaitOne();
 
             // Fan RPM.
-            fan1RpmValue.Text = _state.Fan1Rpm.ToString();
-            fan2RpmValue.Text = _state.Fan2Rpm.ToString();
+            fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm);
+            fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm);
 
             // Temperatures.
             int labelIndex = 0;
