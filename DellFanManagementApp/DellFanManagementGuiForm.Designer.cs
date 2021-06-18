@@ -764,6 +764,7 @@ namespace DellFanManagement.App
             this.Controls.Add(this.thermalSettingGroupBox);
             this.Controls.Add(this.fansGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "DellFanManagementGuiForm";
             this.Text = "Dell Fan Management";
             this.fansGroupBox.ResumeLayout(false);
