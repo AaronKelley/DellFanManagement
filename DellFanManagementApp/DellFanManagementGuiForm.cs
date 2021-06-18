@@ -1,6 +1,7 @@
 ﻿using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -232,22 +233,36 @@ namespace DellFanManagement.App
             restartBackgroundThreadButton.Enabled = !_state.BackgroundThreadRunning;
 
             // Sync up audio devices list.
+            List<AudioDevice> devicesToAdd = new();
+            List<AudioDevice> devicesToRemove = new();
+            
             // Items to add.
             foreach (AudioDevice audioDevice in _state.AudioDevices)
             {
                 if (!audioKeepAliveComboBox.Items.Contains(audioDevice))
                 {
-                    audioKeepAliveComboBox.Items.Add(audioDevice);
+                    devicesToAdd.Add(audioDevice);
                 }
             }
+
             // Items to remove.
             foreach (AudioDevice audioDevice in audioKeepAliveComboBox.Items)
             {
                 if (!_state.AudioDevices.Contains(audioDevice))
                 {
-                    audioKeepAliveComboBox.Items.Remove(audioDevice);
-                    // TODO: Handle case when the selected device is removed.
+                    devicesToRemove.Add(audioDevice);
                 }
+            }
+
+            // Perform additions and removals.
+            foreach (AudioDevice audioDevice in devicesToAdd)
+            {
+                audioKeepAliveComboBox.Items.Add(audioDevice);
+            }
+            foreach (AudioDevice audioDevice in devicesToRemove)
+            {
+                audioKeepAliveComboBox.Items.Remove(audioDevice);
+                // TODO: Handle case when the selected device is removed.
             }
 
             if (audioKeepAliveComboBox.SelectedItem == null)
