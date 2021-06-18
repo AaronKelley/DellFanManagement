@@ -73,7 +73,7 @@ namespace DellFanManagement.App
             this.manualFan1RadioButtonMedium = new System.Windows.Forms.RadioButton();
             this.manualFan1RadioButtonOff = new System.Windows.Forms.RadioButton();
             this.keepAliveGroupBox = new System.Windows.Forms.GroupBox();
-            this.keepAliveApplyChanges = new System.Windows.Forms.Button();
+            this.keepAliveApplyChangesButton = new System.Windows.Forms.Button();
             this.keepAliveRpmThresholdTextBox = new System.Windows.Forms.TextBox();
             this.keepAliveRpmThresholdLabel = new System.Windows.Forms.Label();
             this.keepAliveUpperTemperatureThresholdTextBox = new System.Windows.Forms.TextBox();
@@ -548,7 +548,7 @@ namespace DellFanManagement.App
             // 
             // keepAliveGroupBox
             // 
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveApplyChanges);
+            this.keepAliveGroupBox.Controls.Add(this.keepAliveApplyChangesButton);
             this.keepAliveGroupBox.Controls.Add(this.keepAliveRpmThresholdTextBox);
             this.keepAliveGroupBox.Controls.Add(this.keepAliveRpmThresholdLabel);
             this.keepAliveGroupBox.Controls.Add(this.keepAliveUpperTemperatureThresholdTextBox);
@@ -562,14 +562,14 @@ namespace DellFanManagement.App
             this.keepAliveGroupBox.TabStop = false;
             this.keepAliveGroupBox.Text = "Keep alive options:";
             // 
-            // keepAliveApplyChanges
+            // keepAliveApplyChangesButton
             // 
-            this.keepAliveApplyChanges.Location = new System.Drawing.Point(7, 105);
-            this.keepAliveApplyChanges.Name = "keepAliveApplyChanges";
-            this.keepAliveApplyChanges.Size = new System.Drawing.Size(194, 23);
-            this.keepAliveApplyChanges.TabIndex = 6;
-            this.keepAliveApplyChanges.Text = "Appl&y changes";
-            this.keepAliveApplyChanges.UseVisualStyleBackColor = true;
+            this.keepAliveApplyChangesButton.Location = new System.Drawing.Point(7, 105);
+            this.keepAliveApplyChangesButton.Name = "keepAliveApplyChangesButton";
+            this.keepAliveApplyChangesButton.Size = new System.Drawing.Size(194, 23);
+            this.keepAliveApplyChangesButton.TabIndex = 6;
+            this.keepAliveApplyChangesButton.Text = "Appl&y changes";
+            this.keepAliveApplyChangesButton.UseVisualStyleBackColor = true;
             // 
             // keepAliveRpmThresholdTextBox
             // 
@@ -837,7 +837,7 @@ namespace DellFanManagement.App
         private System.Windows.Forms.RadioButton manualFan1RadioButtonMedium;
         private System.Windows.Forms.RadioButton manualFan1RadioButtonOff;
         private System.Windows.Forms.GroupBox keepAliveGroupBox;
-        private System.Windows.Forms.Button keepAliveApplyChanges;
+        private System.Windows.Forms.Button keepAliveApplyChangesButton;
         private System.Windows.Forms.TextBox keepAliveRpmThresholdTextBox;
         private System.Windows.Forms.Label keepAliveRpmThresholdLabel;
         private System.Windows.Forms.TextBox keepAliveUpperTemperatureThresholdTextBox;

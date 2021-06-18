@@ -67,7 +67,9 @@ namespace DellFanManagement.App
 
             // ...Keep alive section...
             keepAliveLowerTemperatureThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
-            keepAliveApplyChanges.Click += new EventHandler(KeepAliveApplyChangesButtonClickedEventHandler);
+            keepAliveUpperTemperatureThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
+            keepAliveRpmThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
+            keepAliveApplyChangesButton.Click += new EventHandler(KeepAliveApplyChangesButtonClickedEventHandler);
 
             // ...Audio keep alive controls...
             audioKeepAliveComboBox.SelectedValueChanged += new EventHandler(AudioDeviceChangedEventHandler);
@@ -548,6 +550,8 @@ namespace DellFanManagement.App
             {
                 keepAliveRpmThresholdTextBox.Text = Regex.Replace(keepAliveRpmThresholdTextBox.Text, "[^0-9]", "");
             }
+
+            CheckKeepAliveOptionsConsistency();
         }
 
         /// <summary>
@@ -556,6 +560,26 @@ namespace DellFanManagement.App
         private void KeepAliveApplyChangesButtonClickedEventHandler(Object sender, EventArgs e)
         {
             WriteKeepAliveConfiguration();
+        }
+
+        /// <summary>
+        /// Check to see if the GUI keep alive options text boxes match the currently stored configuration, and enable
+        /// or disable the "apply changes" button accordingly.
+        /// </summary>
+        private void CheckKeepAliveOptionsConsistency()
+        {
+            if (keepAliveLowerTemperatureThresholdTextBox.Text == _core.LowerTemperatureThreshold.ToString() &&
+                keepAliveUpperTemperatureThresholdTextBox.Text == _core.UpperTemperatureThreshold.ToString() &&
+                keepAliveRpmThresholdTextBox.Text == _core.RpmThreshold.ToString())
+            {
+                // Configuration matches.
+                keepAliveApplyChangesButton.Enabled = false;
+            }
+            else
+            {
+                // Configuration has changed.
+                keepAliveApplyChangesButton.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -573,6 +597,7 @@ namespace DellFanManagement.App
                     if (success)
                     {
                         _core.WriteKeepAliveConfiguration(lowerTemperatureThreshold, upperTemperatureThreshold, rpmThreshold);
+                        CheckKeepAliveOptionsConsistency();
                     }
                 }
             }

@@ -57,17 +57,17 @@ namespace DellFanManagement.App
         /// <summary>
         /// Lower temperature threshold for keep alive.
         /// </summary>
-        private int? _lowerTemperatureThreshold;
+        public int? LowerTemperatureThreshold { get; private set; }
 
         /// <summary>
         /// Upper temperature threshold for keep alive.
         /// </summary>
-        private int? _upperTemperatureThreshold;
+        public int? UpperTemperatureThreshold { get; private set; }
 
         /// <summary>
         /// Fan RPM threshold for keep alive.
         /// </summary>
-        private ulong? _rpmThreshold;
+        public ulong? RpmThreshold { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -86,9 +86,9 @@ namespace DellFanManagement.App
             _fan1LevelRequested = null;
             _fan2LevelRequested = null;
 
-            _lowerTemperatureThreshold = null;
-            _upperTemperatureThreshold = null;
-            _rpmThreshold = null;
+            LowerTemperatureThreshold = null;
+            UpperTemperatureThreshold = null;
+            RpmThreshold = null;
         }
 
         /// <summary>
@@ -322,14 +322,14 @@ namespace DellFanManagement.App
         /// </summary>
         private void CheckKeepAlive()
         {
-            if (_lowerTemperatureThreshold != null && _upperTemperatureThreshold != null && _rpmThreshold != null)
+            if (LowerTemperatureThreshold != null && UpperTemperatureThreshold != null && RpmThreshold != null)
             {
                 bool thresholdsMet = true;
-                ulong? rpmLowerThreshold = _rpmThreshold - 400;
+                ulong? rpmLowerThreshold = RpmThreshold - 400;
 
                 foreach (KeyValuePair<string, int> temperature in _state.Temperatures)
                 {
-                    if (temperature.Value > (_state.EcFanControlEnabled ? _lowerTemperatureThreshold : _upperTemperatureThreshold))
+                    if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
                     {
                         _state.KeepAliveStatus = "Waiting for CPU or GPU temp to fall";
                         thresholdsMet = false;
@@ -338,7 +338,7 @@ namespace DellFanManagement.App
 
                 if (thresholdsMet)
                 {
-                    if (_state.Fan1Rpm > _rpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > _rpmThreshold))
+                    if (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold))
                     {
                         _state.KeepAliveStatus = "Waiting for fan speed to decrease";
                         thresholdsMet = false;
@@ -459,9 +459,9 @@ namespace DellFanManagement.App
         /// <param name="rpmThreshold">Fan speed threshold</param>
         public void WriteKeepAliveConfiguration(int lowerTemperatureThreshold, int upperTemperatureThreshold, int rpmThreshold)
         {
-            _lowerTemperatureThreshold = lowerTemperatureThreshold;
-            _upperTemperatureThreshold = upperTemperatureThreshold;
-            _rpmThreshold = ulong.Parse(rpmThreshold.ToString());
+            LowerTemperatureThreshold = lowerTemperatureThreshold;
+            UpperTemperatureThreshold = upperTemperatureThreshold;
+            RpmThreshold = ulong.Parse(rpmThreshold.ToString());
         }
     }
 }
