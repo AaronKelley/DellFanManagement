@@ -350,11 +350,14 @@ namespace DellFanManagement.App
                     }
                 }
 
-                if (_state.EcFanControlEnabled && thresholdsMet)
+                if (thresholdsMet)
                 {
+                    if (_state.EcFanControlEnabled)
+                    {
+                        _state.EcFanControlEnabled = false;
+                        DellFanLib.DisableEcFanControl();
+                    }
                     _state.KeepAliveStatus = "Fan speed is locked";
-                    _state.EcFanControlEnabled = false;
-                    DellFanLib.DisableEcFanControl();
                 }
                 else if (!_state.EcFanControlEnabled && !thresholdsMet)
                 {
