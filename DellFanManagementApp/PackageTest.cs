@@ -133,7 +133,7 @@ namespace DellFanManagement.App
                 ulong result = DellFanLib.GetFanRpm(FanIndex.Fan1);
                 Console.WriteLine("  Fan 1 RPM: {0}", result);
 
-                // TODO: DellFanLib.Shutdown();
+                DellFanLib.Shutdown();
             }
             catch (Exception exception)
             {

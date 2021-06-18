@@ -308,7 +308,7 @@ namespace DellFanManagement.App
                 Log.Write(_state.Error);
             }
 
-            // TODO: DellFanLib.Shutdown();
+            DellFanLib.Shutdown();
 
             _state.WaitOne();
             _state.BackgroundThreadRunning = false;
