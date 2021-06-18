@@ -11,14 +11,20 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates that an external request has come in to terminate sound playback.
         /// </summary>
-        private bool _tTerminationRequested;
+        private bool _terminationRequested;
+
+        /// <summary>
+        /// Optionally select a specific audio device to play the sound on.
+        /// </summary>
+        private readonly AudioDevice _audioDevice;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SoundPlayer()
+        public SoundPlayer(AudioDevice audioDevice = null)
         {
-            _tTerminationRequested = false;
+            _terminationRequested = false;
+            _audioDevice = audioDevice;
         }
 
         /// <summary>
@@ -28,20 +34,30 @@ namespace DellFanManagement.App
         /// <param name="loop">Whether or not to loop the file (if true, method will never return)</param>
         public void PlaySound(string soundFilePath, bool loop = false)
         {
-            ISoundEngine engine = new();
+            ISoundEngine engine;
+
+            if (_audioDevice != null)
+            {
+                engine = new(SoundOutputDriver.AutoDetect, SoundEngineOptionFlag.DefaultOptions, _audioDevice.DeviceId);
+            }
+            else
+            {
+                engine = new(SoundOutputDriver.AutoDetect, SoundEngineOptionFlag.DefaultOptions);
+            }
+
             do
             {
                 engine.Play2D(soundFilePath);
-                while (!_tTerminationRequested && engine.IsCurrentlyPlaying(soundFilePath))
+                while (!_terminationRequested && engine.IsCurrentlyPlaying(soundFilePath))
                 {
                     Thread.Sleep(100);
                 }
 
-                if (_tTerminationRequested)
+                if (_terminationRequested)
                 {
                     engine.StopAllSounds();
                 }
-            } while (loop && !_tTerminationRequested);
+            } while (loop && !_terminationRequested);
         }
 
         /// <summary>
@@ -49,7 +65,7 @@ namespace DellFanManagement.App
         /// </summary>
         public void RequestTermination()
         {
-            _tTerminationRequested = true;
+            _terminationRequested = true;
         }
     }
 }

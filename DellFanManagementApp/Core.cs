@@ -410,7 +410,7 @@ namespace DellFanManagement.App
 
                 if (audioKeepAliveEnabled && selectedAudioDevice != null)
                 {
-                    _soundPlayer = new();
+                    _soundPlayer = new(selectedAudioDevice);
                     _soundPlayer.PlaySound(@"silence.wav", true);
                 }
             }
