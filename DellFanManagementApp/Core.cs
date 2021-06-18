@@ -428,8 +428,7 @@ namespace DellFanManagement.App
                 _state.AudioThreadRunning = false;
                 _state.Release();
 
-                MethodInvoker invoker = new(_form.UncheckAudioKeepAlive);
-                _form.BeginInvoke(invoker);
+                UpdateForm();
             }
         }
 
