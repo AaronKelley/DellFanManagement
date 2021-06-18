@@ -1,6 +1,7 @@
 ﻿using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
 using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace DellFanManagement.App
@@ -63,7 +64,8 @@ namespace DellFanManagement.App
             configurationRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
             configurationRadioButtonKeepAlive.CheckedChanged += new EventHandler(ConfigurationRadioButtonKeepAliveEventHandler);
 
-            // ...Keep alive apply changes button...
+            // ...Keep alive section...
+            keepAliveLowerTemperatureThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
             keepAliveApplyChanges.Click += new EventHandler(KeepAliveApplyChangesButtonClickedEventHandler);
 
             // ...Audio keep alive controls...
@@ -512,6 +514,28 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
+        /// Called when the keep alive configuration text boxes are modified.
+        /// </summary>
+        private void KeepAliveTextBoxesChangedEventHandler(Object sender, EventArgs e)
+        {
+            // Enforce digits only in these text boxes.
+            if (Regex.IsMatch(keepAliveLowerTemperatureThresholdTextBox.Text, "[^0-9]"))
+            {
+                keepAliveLowerTemperatureThresholdTextBox.Text = Regex.Replace(keepAliveLowerTemperatureThresholdTextBox.Text, "[^0-9]", "");
+            }
+
+            if (Regex.IsMatch(keepAliveUpperTemperatureThresholdTextBox.Text, "[^0-9]"))
+            {
+                keepAliveUpperTemperatureThresholdTextBox.Text = Regex.Replace(keepAliveUpperTemperatureThresholdTextBox.Text, "[^0-9]", "");
+            }
+
+            if (Regex.IsMatch(keepAliveRpmThresholdTextBox.Text, "[^0-9]"))
+            {
+                keepAliveRpmThresholdTextBox.Text = Regex.Replace(keepAliveRpmThresholdTextBox.Text, "[^0-9]", "");
+            }
+        }
+
+        /// <summary>
         /// Called when the keep alive "Apply changes" button is clicked.
         /// </summary>
         private void KeepAliveApplyChangesButtonClickedEventHandler(Object sender, EventArgs e)
@@ -524,12 +548,19 @@ namespace DellFanManagement.App
         /// </summary>
         public void WriteKeepAliveConfiguration()
         {
-            // TODO: Make robust.
-            _core.WriteKeepAliveConfiguration(
-                    int.Parse(keepAliveLowerTemperatureThresholdTextBox.Text),
-                    int.Parse(keepAliveUpperTemperatureThresholdTextBox.Text),
-                    int.Parse(keepAliveRpmThresholdTextBox.Text)
-                );
+            bool success = int.TryParse(keepAliveLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
+            if (success)
+            {
+                success = int.TryParse(keepAliveUpperTemperatureThresholdTextBox.Text, out int upperTemperatureThreshold);
+                if (success)
+                {
+                    success = int.TryParse(keepAliveRpmThresholdTextBox.Text, out int rpmThreshold);
+                    if (success)
+                    {
+                        _core.WriteKeepAliveConfiguration(lowerTemperatureThreshold, upperTemperatureThreshold, rpmThreshold);
+                    }
+                }
+            }
         }
     }
 }

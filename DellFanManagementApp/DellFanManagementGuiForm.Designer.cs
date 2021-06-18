@@ -574,6 +574,7 @@ namespace DellFanManagement.App
             // keepAliveRpmThresholdTextBox
             // 
             this.keepAliveRpmThresholdTextBox.Location = new System.Drawing.Point(166, 78);
+            this.keepAliveRpmThresholdTextBox.MaxLength = 4;
             this.keepAliveRpmThresholdTextBox.Name = "keepAliveRpmThresholdTextBox";
             this.keepAliveRpmThresholdTextBox.Size = new System.Drawing.Size(35, 23);
             this.keepAliveRpmThresholdTextBox.TabIndex = 5;
@@ -591,6 +592,7 @@ namespace DellFanManagement.App
             // keepAliveUpperTemperatureThresholdTextBox
             // 
             this.keepAliveUpperTemperatureThresholdTextBox.Location = new System.Drawing.Point(176, 49);
+            this.keepAliveUpperTemperatureThresholdTextBox.MaxLength = 3;
             this.keepAliveUpperTemperatureThresholdTextBox.Name = "keepAliveUpperTemperatureThresholdTextBox";
             this.keepAliveUpperTemperatureThresholdTextBox.Size = new System.Drawing.Size(25, 23);
             this.keepAliveUpperTemperatureThresholdTextBox.TabIndex = 3;
@@ -608,6 +610,7 @@ namespace DellFanManagement.App
             // keepAliveLowerTemperatureThresholdTextBox
             // 
             this.keepAliveLowerTemperatureThresholdTextBox.Location = new System.Drawing.Point(176, 20);
+            this.keepAliveLowerTemperatureThresholdTextBox.MaxLength = 3;
             this.keepAliveLowerTemperatureThresholdTextBox.Name = "keepAliveLowerTemperatureThresholdTextBox";
             this.keepAliveLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(25, 23);
             this.keepAliveLowerTemperatureThresholdTextBox.TabIndex = 1;
