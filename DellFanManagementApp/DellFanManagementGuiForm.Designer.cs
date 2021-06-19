@@ -541,9 +541,9 @@ namespace DellFanManagement.App
             // 
             // keepAliveApplyChangesButton
             // 
-            this.keepAliveApplyChangesButton.Location = new System.Drawing.Point(6, 107);
+            this.keepAliveApplyChangesButton.Location = new System.Drawing.Point(5, 107);
             this.keepAliveApplyChangesButton.Name = "keepAliveApplyChangesButton";
-            this.keepAliveApplyChangesButton.Size = new System.Drawing.Size(208, 25);
+            this.keepAliveApplyChangesButton.Size = new System.Drawing.Size(210, 25);
             this.keepAliveApplyChangesButton.TabIndex = 6;
             this.keepAliveApplyChangesButton.Text = "Appl&y changes";
             this.keepAliveApplyChangesButton.UseVisualStyleBackColor = true;
