@@ -139,25 +139,12 @@ unsigned long SetFanLevel(unsigned long fanIndex, unsigned long fanLevel)
 
 bool GetDriverPath()
 {
-    PWSTR slash;
-
-    if (!GetModuleFileName(GetModuleHandle(NULL), driverPath, sizeof(driverPath) / 2))
+    if (!GetCurrentDirectory(sizeof(driverPath) / 2, driverPath))
     {
         return false;
     }
 
-    slash = wcsrchr(driverPath, '\\');
-
-    if (slash)
-    {
-        slash[1] = 0;
-    }
-    else
-    {
-        return false;
-    }
-
-    wcscat_s(driverPath, L"bzh_dell_smm_io_x64.sys");
+    wcscat_s(driverPath, L"\\bzh_dell_smm_io_x64.sys");
 
     return true;
 }
