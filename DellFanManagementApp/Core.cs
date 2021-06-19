@@ -211,10 +211,16 @@ namespace DellFanManagement.App
             _state.BackgroundThreadRunning = true;
             _state.Release();
 
+            bool releaseSemaphore = false;
+
             try
             {
                 // Initialize and turn on EC control.
-                DellFanLib.Initialize();
+                if (!DellFanLib.Initialize())
+                {
+                    throw new Exception("Failed to load driver");
+                }
+
                 DellFanLib.EnableEcFanControl();
 
                 Thread.Sleep(Core.RefreshInterval);
@@ -222,11 +228,11 @@ namespace DellFanManagement.App
                 while (_state.BackgroundThreadRunning)
                 {
                     _state.WaitOne();
+                    _requestSemaphore.WaitOne();
+                    releaseSemaphore = true;
 
                     // Update state.
                     _state.Update();
-
-                    _requestSemaphore.WaitOne();
 
                     // Take action based on configuration.
                     if (_state.Configuration == Configuration.Automatic)
@@ -296,6 +302,7 @@ namespace DellFanManagement.App
 
                     _requestSemaphore.Release();
                     _state.Release();
+                    releaseSemaphore = false;
 
                     UpdateForm();
 
@@ -304,7 +311,15 @@ namespace DellFanManagement.App
             }
             catch (Exception exception)
             {
+                if (releaseSemaphore)
+                {
+                    _state.Release();
+                }
+
+                _state.WaitOne();
                 _state.Error = string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace);
+                _state.Release();
+
                 Log.Write(_state.Error);
             }
 
