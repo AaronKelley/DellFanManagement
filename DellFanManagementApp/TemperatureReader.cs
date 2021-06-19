@@ -19,10 +19,17 @@ namespace DellFanManagement.App
         /// </summary>
         public TemperatureReader()
         {
+            bool nvidiaGpuPresent = false;
+
+            if (PhysicalGPU.GetPhysicalGPUs().Length > 0)
+            {
+                nvidiaGpuPresent = true;
+            }
+
             _computer = new Computer
             {
-                IsCpuEnabled = true
-                // TODO: GPU?
+                IsCpuEnabled = true,
+                IsGpuEnabled = !nvidiaGpuPresent
             };
 
             _computer.Open();
@@ -54,27 +61,30 @@ namespace DellFanManagement.App
             }
 
             // NVAPI values
-            foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
+            if (!_computer.IsGpuEnabled)
             {
-                string name = gpu.FullName;
+                foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
+                {
+                    string name = gpu.FullName;
 
-                try
-                {
-                    foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
+                    try
                     {
-                        temperatures.Add(name, sensor.CurrentTemperature);
+                        foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
+                        {
+                            temperatures.Add(name, sensor.CurrentTemperature);
+                        }
                     }
-                }
-                catch (NVIDIAApiException exception)
-                {
-                    if (exception.Message == "NVAPI_GPU_NOT_POWERED")
+                    catch (NVIDIAApiException exception)
                     {
-                        // GPU is currently powered off.
-                        temperatures.Add(name, 0);
-                    }
-                    else
-                    {
-                        throw;
+                        if (exception.Message == "NVAPI_GPU_NOT_POWERED")
+                        {
+                            // GPU is currently powered off.
+                            temperatures.Add(name, 0);
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
             }
