@@ -429,9 +429,10 @@ namespace DellFanManagement.App
                     _soundPlayer.PlaySound(@"silence.wav", true);
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 // Take no action, just allow the thread to terminate without error.
+                Log.Write(exception);
             }
 
             _soundPlayer = null;
