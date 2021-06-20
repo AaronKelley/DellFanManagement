@@ -1,3 +1,4 @@
+using DellFanManagement.Interop;
 using System;
 using System.Windows.Forms;
 
@@ -23,8 +24,7 @@ namespace DellFanManagement.App
                 }
                 catch (Exception exception)
                 {
-                    // TODO: Show error message box.
-                    Console.Error.WriteLine("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace);
+                    MessageBox.Show(string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace), "Error starting application", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -32,13 +32,29 @@ namespace DellFanManagement.App
                 // CMD mode.
                 try
                 {
-                    if (args[0] == "PackageTest")
+                    Console.WriteLine("Dell Fan Management, version {0}", DellFanLib.Version);
+                    Console.WriteLine("By Aaron Kelley");
+                    Console.WriteLine("Licensed under GPLv3");
+                    Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");
+                    Console.WriteLine();
+                    Console.WriteLine("Dell SMM I/O driver by 424778940z");
+                    Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
+                    Console.WriteLine();
+                    Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
+                    Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
+                    Console.WriteLine();
+
+                    if (args[0].ToLower() == "packagetest")
                     {
                         PackageTest.RunPackageTests();
                     }
-                    else if (args[0] == "SetThermalSetting")
+                    else if (args[0].ToLower() == "setthermalsetting")
                     {
                         SetThermalSetting.ExecuteSetThermalSetting(args);
+                    }
+                    else
+                    {
+                        DellFanCmd.ProcessCommand(args);
                     }
                 }
                 catch (Exception exception)

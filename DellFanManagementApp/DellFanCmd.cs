@@ -2,7 +2,7 @@
 using System;
 using System.Threading;
 
-namespace DellFanManagement.Cmd
+namespace DellFanManagement.App
 {
     /// <summary>
     /// Single class which contains the entire program.
@@ -10,28 +10,16 @@ namespace DellFanManagement.Cmd
     static class DellFanCmd
     {
         /// <summary>
-        /// Main method; start of the program.
+        /// Code for the old DellFanCmd program; called for remaining command line parameters.
         /// </summary>
         /// <param name="args">Command-line parameters</param>
         /// <returns>Status/error code</returns>
-        static int Main(string[] args)
+        public static int ProcessCommand(string[] args)
         {
             int returnCode = 0;
 
             try
             {
-                Console.WriteLine("DellFanCmd {0}", DellFanLib.Version);
-                Console.WriteLine("By Aaron Kelley");
-                Console.WriteLine("Licensed under GPLv3");
-                Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");
-                Console.WriteLine();
-                Console.WriteLine("Dell SMM I/O driver by 424778940z");
-                Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
-                Console.WriteLine();
-                Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
-                Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
-                Console.WriteLine();
-
                 if (args.Length != 1)
                 {
                     Usage();
@@ -115,6 +103,96 @@ namespace DellFanManagement.Cmd
                         fanSelection = FanIndex.Fan2;
                         fanLevel = FanLevel.Level2;
                     }
+                    else if (args[0] == "fan3-level0")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan3;
+                        fanLevel = FanLevel.Level0;
+                    }
+                    else if (args[0] == "fan3-level1")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan3;
+                        fanLevel = FanLevel.Level1;
+                    }
+                    else if (args[0] == "fan3-level2")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan3;
+                        fanLevel = FanLevel.Level2;
+                    }
+                    else if (args[0] == "fan4-level0")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan4;
+                        fanLevel = FanLevel.Level0;
+                    }
+                    else if (args[0] == "fan4-level1")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan4;
+                        fanLevel = FanLevel.Level1;
+                    }
+                    else if (args[0] == "fan4-level2")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan4;
+                        fanLevel = FanLevel.Level2;
+                    }
+                    else if (args[0] == "fan5-level0")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan5;
+                        fanLevel = FanLevel.Level0;
+                    }
+                    else if (args[0] == "fan5-level1")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan5;
+                        fanLevel = FanLevel.Level1;
+                    }
+                    else if (args[0] == "fan5-level2")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan5;
+                        fanLevel = FanLevel.Level2;
+                    }
+                    else if (args[0] == "fan6-level0")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan6;
+                        fanLevel = FanLevel.Level0;
+                    }
+                    else if (args[0] == "fan6-level1")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan6;
+                        fanLevel = FanLevel.Level1;
+                    }
+                    else if (args[0] == "fan6-level2")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan6;
+                        fanLevel = FanLevel.Level2;
+                    }
+                    else if (args[0] == "fan7-level0")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan7;
+                        fanLevel = FanLevel.Level0;
+                    }
+                    else if (args[0] == "fan7-level1")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan7;
+                        fanLevel = FanLevel.Level1;
+                    }
+                    else if (args[0] == "fan7-level2")
+                    {
+                        setFanLevel = true;
+                        fanSelection = FanIndex.Fan7;
+                        fanLevel = FanLevel.Level2;
+                    }
                     else if (args[0] == "rpm-fan1")
                     {
                         getFanRpm = true;
@@ -124,6 +202,31 @@ namespace DellFanManagement.Cmd
                     {
                         getFanRpm = true;
                         fanSelection = FanIndex.Fan2;
+                    }
+                    else if (args[0] == "rpm-fan3")
+                    {
+                        getFanRpm = true;
+                        fanSelection = FanIndex.Fan3;
+                    }
+                    else if (args[0] == "rpm-fan4")
+                    {
+                        getFanRpm = true;
+                        fanSelection = FanIndex.Fan4;
+                    }
+                    else if (args[0] == "rpm-fan5")
+                    {
+                        getFanRpm = true;
+                        fanSelection = FanIndex.Fan5;
+                    }
+                    else if (args[0] == "rpm-fan6")
+                    {
+                        getFanRpm = true;
+                        fanSelection = FanIndex.Fan6;
+                    }
+                    else if (args[0] == "rpm-fan7")
+                    {
+                        getFanRpm = true;
+                        fanSelection = FanIndex.Fan7;
                     }
                     else if (args[0] == "test")
                     {
@@ -229,7 +332,15 @@ namespace DellFanManagement.Cmd
                             }
 
                             Console.WriteLine(" Result: {0}", result);
-                            returnCode = int.Parse(result.ToString());
+                            if (result < int.MaxValue)
+                            {
+                                returnCode = int.Parse(result.ToString());
+                            }
+                            else
+                            {
+                                Console.WriteLine(" (Likely error)");
+                                returnCode = -1;
+                            }
                         }
                         else if (runTest)
                         {
@@ -356,27 +467,27 @@ namespace DellFanManagement.Cmd
         /// <summary>
         /// Print usage directions to the console.
         /// </summary>
-        private static void Usage()
+        public static void Usage()
         {
             Console.Write(
-                "Usage: DellFanCmd [command]\n" +
+                "Usage: DellFanManagement [command]\n" +
                 "Available commands:\n" +
                 "  ec-disable              Turn EC fan control off (fan goes to manual control)\n" +
                 "  ec-disable-nofanchg     Turn EC fan control off and don't change the fan speed\n" +
                 "  ec-enable               Turn EC fan control on (fan goes to automatic control)\n" +
                 "  test                    Try turning EC fan control off,\n" +
                 "                          and record the fan RPM at different levels.\n" +
-                "  rpm-fan1                Report RPM for fan 1\n" +
-                "  rpm-fan2                Report RPM for fan 2\n" +
+                "  rpm-fanX                Report RPM for fan 1\n" +
+                "                          Replace \"X\" with fan number (1-7)\n" +
                 "                          (RPMs are reported via status/error code)\n" +
+                "  thermalmode MODE        Change the system thermal mode;\n" +
+                "                          Replace \"MODE\" with Optimized, Cool, Quiet, or Performance\n" +
                 "\n" +
                 "After EC fan control is off, you may use:\n" +
-                "  fan1-level0             Set fan 1 to level 0 (0%)\n" +
-                "  fan1-level1             Set fan 1 to level 1 (50%)\n" +
-                "  fan1-level2             Set fan 1 to level 2 (100%)\n" +
-                "  fan2-level0             Set fan 2 to level 0 (0%)\n" +
-                "  fan2-level1             Set fan 2 to level 1 (50%)\n" +
-                "  fan2-level2             Set fan 2 to level 2 (100%)\n" +
+                "  fanX-level0             Set fan X to level 0 (0%)\n" +
+                "  fanX-level1             Set fan X to level 1 (50%)\n" +
+                "  fanX-level2             Set fan X to level 2 (100%)\n" +
+                "                          Replace \"X\" with fan number (1-7)\n" +
                 "\n" +
                 "Append \"-alt\" to EC disable or enable commands to attempt alternate method.\n" +
                 "(Example: ec-disable-alt)\n");

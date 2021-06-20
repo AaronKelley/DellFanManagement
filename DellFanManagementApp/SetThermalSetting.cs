@@ -17,7 +17,7 @@ namespace DellFanManagement.App
         {
             if (args.Length != 2)
             {
-                Usage();
+                DellFanCmd.Usage();
                 return -1;
             }
 
@@ -39,7 +39,7 @@ namespace DellFanManagement.App
                     newSetting = ThermalSetting.Performance;
                     break;
                 default:
-                    Usage();
+                    DellFanCmd.Usage();
                     return -1;
             }
 
@@ -51,7 +51,6 @@ namespace DellFanManagement.App
             if (!DellSmmIoLib.SetThermalSetting(newSetting))
             {
                 Console.Error.WriteLine("Failed to apply the new thermal setting.");
-                Usage();
                 return -1;
             }
 
@@ -65,23 +64,6 @@ namespace DellFanManagement.App
             }
 
             return 0;
-        }
-
-        /// <summary>
-        /// Print a message to the console about how to use the program.
-        /// </summary>
-        private static void Usage()
-        {
-            Console.WriteLine(
-                    "\n" +
-                    "To set the system thermal setting:\n" +
-                    "  DellFanManagement.exe SetThermalSetting Optimized    Set system to optimized mode\n" +
-                    "  DellFanManagement.exe SetThermalSetting Cool         Set system to cool mode\n" +
-                    "  DellFanManagement.exe SetThermalSetting Quiet        Set system to quiet mode\n" +
-                    "  DellFanManagement.exe SetThermalSetting Performance  Set system to performance mode\n" +
-                    "\n" +
-                    "The program must be run elevated / \"as administrator\".\n"
-                );
         }
     }
 }
