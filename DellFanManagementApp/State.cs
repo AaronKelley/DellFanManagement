@@ -109,6 +109,8 @@ namespace DellFanManagement.App
             _consecutiveThermalSettingFailures = 0;
             _thermalSettingReadBackoff = 0;
 
+            Fan2Present = true;
+
             WaitOne();
             Update();
             Release();
@@ -135,8 +137,16 @@ namespace DellFanManagement.App
         {
             // Update state: RPM.
             Fan1Rpm = DellFanLib.GetFanRpm(FanIndex.Fan1);
-            Fan2Rpm = DellFanLib.GetFanRpm(FanIndex.Fan2); // TODO: What if fan 2 doesn't exist?
-            Fan2Present = true;
+            Fan2Rpm = DellFanLib.GetFanRpm(FanIndex.Fan2);
+
+            if (Fan1Rpm != uint.MaxValue && Fan2Rpm == uint.MaxValue)
+            {
+                Fan2Present = false;
+            }
+            else if (Fan2Rpm != uint.MaxValue)
+            {
+                Fan2Present = true;
+            }
         }
 
         /// <summary>

@@ -273,7 +273,7 @@ namespace DellFanManagement.App
                                 }
                             }
 
-                            if (_state.Fan2Level != _fan2LevelRequested)
+                            if (_state.Fan2Present && _state.Fan2Level != _fan2LevelRequested)
                             {
                                 _state.Fan2Level = _fan2LevelRequested;
                                 if (_fan2LevelRequested != null)

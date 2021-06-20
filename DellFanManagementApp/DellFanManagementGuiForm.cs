@@ -120,7 +120,26 @@ namespace DellFanManagement.App
 
             // Fan RPM.
             fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm);
-            fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm);
+
+            if (_state.Fan2Present)
+            {
+                fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm);
+                fan2RpmLabel.Enabled = true;
+                manualFan2GroupBox.Enabled = true;
+            }
+            else
+            {
+                fan2RpmLabel.Text = string.Format("Fan 2 not present");
+                fan2RpmLabel.Enabled = false;
+
+                if (manualFan2GroupBox.Enabled)
+                {
+                    manualFan2GroupBox.Enabled = false;
+                    manualFan2RadioButtonOff.Checked = false;
+                    manualFan2RadioButtonMedium.Checked = false;
+                    manualFan2RadioButtonHigh.Checked = false;
+                }
+            }
 
             // Temperatures.
             int labelIndex = 0;
