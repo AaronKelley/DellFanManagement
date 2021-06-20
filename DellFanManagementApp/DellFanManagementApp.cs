@@ -10,22 +10,32 @@ namespace DellFanManagement.App
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             if (args.Length == 0)
             {
                 // GUI mode.
                 try
                 {
-                    Application.SetHighDpiMode(HighDpiMode.SystemAware);
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new DellFanManagementGuiForm());
+                    if (UacHelper.IsProcessElevated())
+                    {
+                        Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        Application.Run(new DellFanManagementGuiForm());
+                    }
+                    else
+                    {
+                        MessageBox.Show("This program must be run with administrative privileges.", "Dell Fan Management privilege check", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show(string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace), "Error starting application", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return 1;
                 }
+
+                return 0;
             }
             else
             {
@@ -44,22 +54,32 @@ namespace DellFanManagement.App
                     Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
                     Console.WriteLine();
 
-                    if (args[0].ToLower() == "packagetest")
+                    if (UacHelper.IsProcessElevated())
                     {
-                        PackageTest.RunPackageTests();
-                    }
-                    else if (args[0].ToLower() == "setthermalsetting")
-                    {
-                        SetThermalSetting.ExecuteSetThermalSetting(args);
+                        if (args[0].ToLower() == "packagetest")
+                        {
+                            return PackageTest.RunPackageTests() ? 0 : 1;
+                        }
+                        else if (args[0].ToLower() == "setthermalsetting")
+                        {
+                            return SetThermalSetting.ExecuteSetThermalSetting(args);
+                        }
+                        else
+                        {
+                            return DellFanCmd.ProcessCommand(args);
+                        }
                     }
                     else
                     {
-                        DellFanCmd.ProcessCommand(args);
+                        Console.WriteLine();
+                        Console.WriteLine("This program must be run with administrative privileges.");
+                        return 1;
                     }
                 }
                 catch (Exception exception)
                 {
                     Console.Error.WriteLine("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace);
+                    return 1;
                 }
             }
         }
