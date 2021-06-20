@@ -99,11 +99,11 @@ namespace DellFanManagement.App
             // TODO: Read previous mode from configuration.
             configurationRadioButtonAutomatic.Checked = true;
 
-            // Initial update to populate the form before display.
-            UpdateForm();
-
             // Save initial keep alive configuration.
             WriteKeepAliveConfiguration();
+
+            // Update form with default state values.
+            UpdateForm();
 
             // Start thread to do background work.
             _core.StartBackgroundThread();

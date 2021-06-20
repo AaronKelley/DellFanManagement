@@ -223,8 +223,6 @@ namespace DellFanManagement.App
 
                 DellFanLib.EnableEcFanControl();
 
-                Thread.Sleep(Core.RefreshInterval);
-
                 while (_state.BackgroundThreadRunning)
                 {
                     _state.WaitOne();
