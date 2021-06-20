@@ -298,6 +298,13 @@ namespace DellFanManagement.App
                         _requestedThermalSetting = null;
                     }
 
+                    // Check to see if the active audio device has disappeared.
+                    if (_state.AudioThreadRunning && !_state.AudioDevices.Contains(_state.SelectedAudioDevice))
+                    {
+                        // Terminate the audio thread.
+                        _soundPlayer?.RequestTermination();
+                    }
+
                     _requestSemaphore.Release();
                     _state.Release();
                     releaseSemaphore = false;

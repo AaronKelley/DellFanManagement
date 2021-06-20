@@ -283,12 +283,16 @@ namespace DellFanManagement.App
             foreach (AudioDevice audioDevice in devicesToRemove)
             {
                 audioKeepAliveComboBox.Items.Remove(audioDevice);
-                // TODO: Handle case when the selected device is removed.
             }
 
             if (audioKeepAliveComboBox.SelectedItem == null)
             {
                 audioKeepAliveCheckbox.Enabled = false;
+            }
+
+            if (audioKeepAliveCheckbox.Checked && !_state.AudioThreadRunning)
+            {
+                audioKeepAliveCheckbox.Checked = false;
             }
 
             // Error message.
