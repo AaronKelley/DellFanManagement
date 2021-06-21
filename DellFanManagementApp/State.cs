@@ -104,7 +104,7 @@ namespace DellFanManagement.App
             _semaphore = new(1, 1);
             _changesAllowed = false;
 
-            _keepAliveStatus = string.Empty;
+            _keepAliveStatus = " ";
 
             _consecutiveThermalSettingFailures = 0;
             _thermalSettingReadBackoff = 0;

@@ -88,7 +88,8 @@ namespace DellFanManagement.App
             this.audioKeepAliveGroupBox = new System.Windows.Forms.GroupBox();
             this.audioKeepAliveComboBox = new System.Windows.Forms.ComboBox();
             this.audioKeepAliveCheckbox = new System.Windows.Forms.CheckBox();
-            this.keepAliveStatusLabel = new System.Windows.Forms.Label();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.keepAliveStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.fansGroupBox.SuspendLayout();
             this.thermalSettingGroupBox.SuspendLayout();
             this.temperatureGroupBox.SuspendLayout();
@@ -100,6 +101,7 @@ namespace DellFanManagement.App
             this.ecFanControlGroupBox.SuspendLayout();
             this.aboutGroupBox.SuspendLayout();
             this.audioKeepAliveGroupBox.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // fansGroupBox
@@ -704,22 +706,28 @@ namespace DellFanManagement.App
             this.audioKeepAliveCheckbox.Text = "K&eep this audio device active to prevent pops and clicks:";
             this.audioKeepAliveCheckbox.UseVisualStyleBackColor = true;
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.keepAliveStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 293);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(1000, 22);
+            this.statusStrip.SizingGrip = false;
+            this.statusStrip.TabIndex = 11;
+            // 
             // keepAliveStatusLabel
             // 
-            this.keepAliveStatusLabel.AutoSize = true;
-            this.keepAliveStatusLabel.Location = new System.Drawing.Point(288, 245);
-            this.keepAliveStatusLabel.MaximumSize = new System.Drawing.Size(112, 0);
             this.keepAliveStatusLabel.Name = "keepAliveStatusLabel";
-            this.keepAliveStatusLabel.Size = new System.Drawing.Size(109, 15);
-            this.keepAliveStatusLabel.TabIndex = 10;
+            this.keepAliveStatusLabel.Size = new System.Drawing.Size(109, 17);
             this.keepAliveStatusLabel.Text = "Fan speed is locked";
             // 
             // DellFanManagementGuiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 293);
-            this.Controls.Add(this.keepAliveStatusLabel);
+            this.ClientSize = new System.Drawing.Size(1000, 315);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.audioKeepAliveGroupBox);
             this.Controls.Add(this.aboutGroupBox);
             this.Controls.Add(this.restartBackgroundThreadButton);
@@ -756,6 +764,8 @@ namespace DellFanManagement.App
             this.aboutGroupBox.PerformLayout();
             this.audioKeepAliveGroupBox.ResumeLayout(false);
             this.audioKeepAliveGroupBox.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -821,7 +831,8 @@ namespace DellFanManagement.App
         private System.Windows.Forms.GroupBox audioKeepAliveGroupBox;
         private System.Windows.Forms.ComboBox audioKeepAliveComboBox;
         private System.Windows.Forms.CheckBox audioKeepAliveCheckbox;
-        private System.Windows.Forms.Label keepAliveStatusLabel;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel keepAliveStatusLabel;
     }
 }
 

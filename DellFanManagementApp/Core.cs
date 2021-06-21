@@ -98,7 +98,7 @@ namespace DellFanManagement.App
         {
             _state.WaitOne();
             _state.Configuration = Configuration.Automatic;
-            _state.KeepAliveStatus = string.Empty;
+            _state.KeepAliveStatus = " ";
             _state.Release();
         }
 
@@ -110,7 +110,7 @@ namespace DellFanManagement.App
             _state.WaitOne();
             _state.Configuration = Configuration.Manual;
             _ecFanControlRequested = _state.EcFanControlEnabled;
-            _state.KeepAliveStatus = string.Empty;
+            _state.KeepAliveStatus = " ";
             _state.Release();
         }
 
@@ -351,7 +351,7 @@ namespace DellFanManagement.App
                 {
                     if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
                     {
-                        _state.KeepAliveStatus = "Waiting for CPU or GPU temp to fall";
+                        _state.KeepAliveStatus = "Waiting for CPU or GPU temperature to fall";
                         thresholdsMet = false;
                     }
                 }
@@ -360,12 +360,19 @@ namespace DellFanManagement.App
                 {
                     if (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold))
                     {
-                        _state.KeepAliveStatus = "Waiting for fan speed to decrease";
+                        _state.KeepAliveStatus = "Waiting for embedded controller to reduce the fan speed";
                         thresholdsMet = false;
                     }
                     else if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
                     {
-                        _state.KeepAliveStatus = "Waiting for fan speed to increase";
+                        if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
+                        {
+                            _state.KeepAliveStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
+                        }
+                        else
+                        {
+                            _state.KeepAliveStatus = "Waiting for embedded controller to raise the fan speed";
+                        }
                         thresholdsMet = false;
                     }
                 }
@@ -377,7 +384,10 @@ namespace DellFanManagement.App
                         _state.EcFanControlEnabled = false;
                         DellFanLib.DisableEcFanControl();
                     }
-                    _state.KeepAliveStatus = "Fan speed is locked";
+                    if (!_state.KeepAliveStatus.StartsWith("Fan speed locked"))
+                    {
+                        _state.KeepAliveStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
+                    }
                 }
                 else if (!_state.EcFanControlEnabled && !thresholdsMet)
                 {
