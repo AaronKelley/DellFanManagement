@@ -391,11 +391,11 @@ namespace DellFanManagement.App
             this.operationModeGroupBox.TabStop = false;
             this.operationModeGroupBox.Text = "Operation mode:";
             // 
-            // operationModeRadioButtonKeepAlive
+            // operationModeRadioButtonConsistency
             // 
             this.operationModeRadioButtonConsistency.AutoSize = true;
             this.operationModeRadioButtonConsistency.Location = new System.Drawing.Point(6, 72);
-            this.operationModeRadioButtonConsistency.Name = "operationModeRadioButtonKeepAlive";
+            this.operationModeRadioButtonConsistency.Name = "operationModeRadioButtonConsistency";
             this.operationModeRadioButtonConsistency.Size = new System.Drawing.Size(89, 19);
             this.operationModeRadioButtonConsistency.TabIndex = 2;
             this.operationModeRadioButtonConsistency.TabStop = true;
@@ -703,7 +703,7 @@ namespace DellFanManagement.App
             this.audioKeepAliveCheckbox.Name = "audioKeepAliveCheckbox";
             this.audioKeepAliveCheckbox.Size = new System.Drawing.Size(322, 19);
             this.audioKeepAliveCheckbox.TabIndex = 0;
-            this.audioKeepAliveCheckbox.Text = "K&eep this audio device active to prevent pops and clicks:";
+            this.audioKeepAliveCheckbox.Text = "&Keep this audio device active to prevent pops and clicks:";
             this.audioKeepAliveCheckbox.UseVisualStyleBackColor = true;
             // 
             // statusStrip
@@ -716,9 +716,9 @@ namespace DellFanManagement.App
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 11;
             // 
-            // keepAliveStatusLabel
+            // consistencyModeStatusLabel
             // 
-            this.consistencyModeStatusLabel.Name = "keepAliveStatusLabel";
+            this.consistencyModeStatusLabel.Name = "consistencyModeStatusLabel";
             this.consistencyModeStatusLabel.Size = new System.Drawing.Size(109, 17);
             this.consistencyModeStatusLabel.Text = "Fan speed is locked";
             // 
