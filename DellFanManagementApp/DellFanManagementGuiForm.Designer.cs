@@ -141,7 +141,7 @@ namespace DellFanManagement.App
             this.thermalSettingGroupBox.Controls.Add(this.thermalSettingRadioButtonOptimized);
             this.thermalSettingGroupBox.Location = new System.Drawing.Point(288, 117);
             this.thermalSettingGroupBox.Name = "thermalSettingGroupBox";
-            this.thermalSettingGroupBox.Size = new System.Drawing.Size(112, 124);
+            this.thermalSettingGroupBox.Size = new System.Drawing.Size(111, 124);
             this.thermalSettingGroupBox.TabIndex = 3;
             this.thermalSettingGroupBox.TabStop = false;
             this.thermalSettingGroupBox.Text = "Thermal setting:";
@@ -386,7 +386,7 @@ namespace DellFanManagement.App
             this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonAutomatic);
             this.operationModeGroupBox.Location = new System.Drawing.Point(288, 12);
             this.operationModeGroupBox.Name = "operationModeGroupBox";
-            this.operationModeGroupBox.Size = new System.Drawing.Size(112, 99);
+            this.operationModeGroupBox.Size = new System.Drawing.Size(111, 99);
             this.operationModeGroupBox.TabIndex = 2;
             this.operationModeGroupBox.TabStop = false;
             this.operationModeGroupBox.Text = "Operation mode:";
@@ -428,9 +428,9 @@ namespace DellFanManagement.App
             // 
             this.manualGroupBox.Controls.Add(this.manualFan2GroupBox);
             this.manualGroupBox.Controls.Add(this.manualFan1GroupBox);
-            this.manualGroupBox.Location = new System.Drawing.Point(406, 12);
+            this.manualGroupBox.Location = new System.Drawing.Point(405, 12);
             this.manualGroupBox.Name = "manualGroupBox";
-            this.manualGroupBox.Size = new System.Drawing.Size(220, 126);
+            this.manualGroupBox.Size = new System.Drawing.Size(194, 126);
             this.manualGroupBox.TabIndex = 4;
             this.manualGroupBox.TabStop = false;
             this.manualGroupBox.Text = "Manual control:";
@@ -440,9 +440,9 @@ namespace DellFanManagement.App
             this.manualFan2GroupBox.Controls.Add(this.manualFan2RadioButtonHigh);
             this.manualFan2GroupBox.Controls.Add(this.manualFan2RadioButtonMedium);
             this.manualFan2GroupBox.Controls.Add(this.manualFan2RadioButtonOff);
-            this.manualFan2GroupBox.Location = new System.Drawing.Point(96, 21);
+            this.manualFan2GroupBox.Location = new System.Drawing.Point(100, 21);
             this.manualFan2GroupBox.Name = "manualFan2GroupBox";
-            this.manualFan2GroupBox.Size = new System.Drawing.Size(84, 99);
+            this.manualFan2GroupBox.Size = new System.Drawing.Size(88, 99);
             this.manualFan2GroupBox.TabIndex = 1;
             this.manualFan2GroupBox.TabStop = false;
             this.manualFan2GroupBox.Text = "Fan 2:";
@@ -487,7 +487,7 @@ namespace DellFanManagement.App
             this.manualFan1GroupBox.Controls.Add(this.manualFan1RadioButtonOff);
             this.manualFan1GroupBox.Location = new System.Drawing.Point(6, 21);
             this.manualFan1GroupBox.Name = "manualFan1GroupBox";
-            this.manualFan1GroupBox.Size = new System.Drawing.Size(84, 99);
+            this.manualFan1GroupBox.Size = new System.Drawing.Size(88, 99);
             this.manualFan1GroupBox.TabIndex = 0;
             this.manualFan1GroupBox.TabStop = false;
             this.manualFan1GroupBox.Text = "Fan 1:";
@@ -534,9 +534,9 @@ namespace DellFanManagement.App
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeUpperTemperatureThresholdLabel);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdTextBox);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdLabel);
-            this.consistencyModeGroupBox.Location = new System.Drawing.Point(406, 144);
+            this.consistencyModeGroupBox.Location = new System.Drawing.Point(405, 144);
             this.consistencyModeGroupBox.Name = "consistencyModeGroupBox";
-            this.consistencyModeGroupBox.Size = new System.Drawing.Size(220, 138);
+            this.consistencyModeGroupBox.Size = new System.Drawing.Size(194, 138);
             this.consistencyModeGroupBox.TabIndex = 5;
             this.consistencyModeGroupBox.TabStop = false;
             this.consistencyModeGroupBox.Text = "Consistency mode options:";
@@ -545,17 +545,17 @@ namespace DellFanManagement.App
             // 
             this.consistencyModeApplyChangesButton.Location = new System.Drawing.Point(5, 107);
             this.consistencyModeApplyChangesButton.Name = "consistencyModeApplyChangesButton";
-            this.consistencyModeApplyChangesButton.Size = new System.Drawing.Size(210, 25);
+            this.consistencyModeApplyChangesButton.Size = new System.Drawing.Size(184, 25);
             this.consistencyModeApplyChangesButton.TabIndex = 6;
             this.consistencyModeApplyChangesButton.Text = "Appl&y changes";
             this.consistencyModeApplyChangesButton.UseVisualStyleBackColor = true;
             // 
             // consistencyModeRpmThresholdTextBox
             // 
-            this.consistencyModeRpmThresholdTextBox.Location = new System.Drawing.Point(178, 78);
+            this.consistencyModeRpmThresholdTextBox.Location = new System.Drawing.Point(158, 78);
             this.consistencyModeRpmThresholdTextBox.MaxLength = 4;
             this.consistencyModeRpmThresholdTextBox.Name = "consistencyModeRpmThresholdTextBox";
-            this.consistencyModeRpmThresholdTextBox.Size = new System.Drawing.Size(36, 23);
+            this.consistencyModeRpmThresholdTextBox.Size = new System.Drawing.Size(30, 23);
             this.consistencyModeRpmThresholdTextBox.TabIndex = 5;
             this.consistencyModeRpmThresholdTextBox.Text = "2900";
             // 
@@ -570,10 +570,10 @@ namespace DellFanManagement.App
             // 
             // consistencyModeUpperTemperatureThresholdTextBox
             // 
-            this.consistencyModeUpperTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 49);
-            this.consistencyModeUpperTemperatureThresholdTextBox.MaxLength = 3;
+            this.consistencyModeUpperTemperatureThresholdTextBox.Location = new System.Drawing.Point(170, 49);
+            this.consistencyModeUpperTemperatureThresholdTextBox.MaxLength = 2;
             this.consistencyModeUpperTemperatureThresholdTextBox.Name = "consistencyModeUpperTemperatureThresholdTextBox";
-            this.consistencyModeUpperTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
+            this.consistencyModeUpperTemperatureThresholdTextBox.Size = new System.Drawing.Size(18, 23);
             this.consistencyModeUpperTemperatureThresholdTextBox.TabIndex = 3;
             this.consistencyModeUpperTemperatureThresholdTextBox.Text = "85";
             // 
@@ -588,10 +588,10 @@ namespace DellFanManagement.App
             // 
             // consistencyModeLowerTemperatureThresholdTextBox
             // 
-            this.consistencyModeLowerTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 20);
-            this.consistencyModeLowerTemperatureThresholdTextBox.MaxLength = 3;
+            this.consistencyModeLowerTemperatureThresholdTextBox.Location = new System.Drawing.Point(170, 20);
+            this.consistencyModeLowerTemperatureThresholdTextBox.MaxLength = 2;
             this.consistencyModeLowerTemperatureThresholdTextBox.Name = "consistencyModeLowerTemperatureThresholdTextBox";
-            this.consistencyModeLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
+            this.consistencyModeLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(18, 23);
             this.consistencyModeLowerTemperatureThresholdTextBox.TabIndex = 1;
             this.consistencyModeLowerTemperatureThresholdTextBox.Text = "70";
             // 
@@ -651,9 +651,9 @@ namespace DellFanManagement.App
             // 
             this.aboutGroupBox.Controls.Add(this.richTextBox1);
             this.aboutGroupBox.Controls.Add(this.aboutProductLabel);
-            this.aboutGroupBox.Location = new System.Drawing.Point(632, 12);
+            this.aboutGroupBox.Location = new System.Drawing.Point(605, 12);
             this.aboutGroupBox.Name = "aboutGroupBox";
-            this.aboutGroupBox.Size = new System.Drawing.Size(356, 185);
+            this.aboutGroupBox.Size = new System.Drawing.Size(334, 185);
             this.aboutGroupBox.TabIndex = 8;
             this.aboutGroupBox.TabStop = false;
             this.aboutGroupBox.Text = "About:";
@@ -663,7 +663,7 @@ namespace DellFanManagement.App
             this.richTextBox1.Location = new System.Drawing.Point(6, 37);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(344, 141);
+            this.richTextBox1.Size = new System.Drawing.Size(322, 141);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
@@ -680,9 +680,9 @@ namespace DellFanManagement.App
             // 
             this.audioKeepAliveGroupBox.Controls.Add(this.audioKeepAliveComboBox);
             this.audioKeepAliveGroupBox.Controls.Add(this.audioKeepAliveCheckbox);
-            this.audioKeepAliveGroupBox.Location = new System.Drawing.Point(632, 203);
+            this.audioKeepAliveGroupBox.Location = new System.Drawing.Point(605, 203);
             this.audioKeepAliveGroupBox.Name = "audioKeepAliveGroupBox";
-            this.audioKeepAliveGroupBox.Size = new System.Drawing.Size(356, 79);
+            this.audioKeepAliveGroupBox.Size = new System.Drawing.Size(334, 79);
             this.audioKeepAliveGroupBox.TabIndex = 9;
             this.audioKeepAliveGroupBox.TabStop = false;
             this.audioKeepAliveGroupBox.Text = "Audio keep alive:";
@@ -693,7 +693,7 @@ namespace DellFanManagement.App
             this.audioKeepAliveComboBox.FormattingEnabled = true;
             this.audioKeepAliveComboBox.Location = new System.Drawing.Point(6, 49);
             this.audioKeepAliveComboBox.Name = "audioKeepAliveComboBox";
-            this.audioKeepAliveComboBox.Size = new System.Drawing.Size(344, 23);
+            this.audioKeepAliveComboBox.Size = new System.Drawing.Size(322, 23);
             this.audioKeepAliveComboBox.TabIndex = 1;
             // 
             // audioKeepAliveCheckbox
@@ -712,7 +712,7 @@ namespace DellFanManagement.App
             this.consistencyModeStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 293);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1000, 22);
+            this.statusStrip.Size = new System.Drawing.Size(951, 22);
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 11;
             // 
@@ -726,7 +726,7 @@ namespace DellFanManagement.App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 315);
+            this.ClientSize = new System.Drawing.Size(951, 315);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.audioKeepAliveGroupBox);
             this.Controls.Add(this.aboutGroupBox);
