@@ -35,7 +35,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates which configuration mode the app is currently running under.
         /// </summary>
-        private Configuration _configuration;
+        private OperationMode _configuration;
 
         /// <summary>
         /// Whether or not the "background thread" is running.
@@ -68,9 +68,9 @@ namespace DellFanManagement.App
         private FanLevel? _fanLevel2;
 
         /// <summary>
-        /// Status of the keep alive system.
+        /// Status of the consistency mode system.
         /// </summary>
-        private string _keepAliveStatus;
+        private string _consistencyModeStatus;
 
         /// <summary>
         /// The currently selected audio device.
@@ -104,7 +104,7 @@ namespace DellFanManagement.App
             _semaphore = new(1, 1);
             _changesAllowed = false;
 
-            _keepAliveStatus = " ";
+            _consistencyModeStatus = " ";
 
             _consecutiveThermalSettingFailures = 0;
             _thermalSettingReadBackoff = 0;
@@ -243,7 +243,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates which configuration mode the app is currently running under.
         /// </summary>
-        public Configuration Configuration
+        public OperationMode OperationMode
         {
             get { return _configuration; }
             set { AccessCheck(); _configuration = value; }
@@ -304,12 +304,12 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Status of the keep alive system.
+        /// Status of the consistency mode system.
         /// </summary>
-        public string KeepAliveStatus
+        public string ConsistencyModeStatus
         {
-            get { return _keepAliveStatus; }
-            set { AccessCheck(); _keepAliveStatus = value; }
+            get { return _consistencyModeStatus; }
+            set { AccessCheck(); _consistencyModeStatus = value; }
         }
 
         /// <summary>

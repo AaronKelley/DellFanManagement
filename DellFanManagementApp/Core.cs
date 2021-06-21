@@ -55,17 +55,17 @@ namespace DellFanManagement.App
         private FanLevel? _fan2LevelRequested;
 
         /// <summary>
-        /// Lower temperature threshold for keep alive.
+        /// Lower temperature threshold for consistency mode.
         /// </summary>
         public int? LowerTemperatureThreshold { get; private set; }
 
         /// <summary>
-        /// Upper temperature threshold for keep alive.
+        /// Upper temperature threshold for consistency mode.
         /// </summary>
         public int? UpperTemperatureThreshold { get; private set; }
 
         /// <summary>
-        /// Fan RPM threshold for keep alive.
+        /// Fan RPM threshold for consistency mode.
         /// </summary>
         public ulong? RpmThreshold { get; private set; }
 
@@ -97,8 +97,8 @@ namespace DellFanManagement.App
         public void SetAutomaticMode()
         {
             _state.WaitOne();
-            _state.Configuration = Configuration.Automatic;
-            _state.KeepAliveStatus = " ";
+            _state.OperationMode = OperationMode.Automatic;
+            _state.ConsistencyModeStatus = " ";
             _state.Release();
         }
 
@@ -108,19 +108,19 @@ namespace DellFanManagement.App
         public void SetManualMode()
         {
             _state.WaitOne();
-            _state.Configuration = Configuration.Manual;
+            _state.OperationMode = OperationMode.Manual;
             _ecFanControlRequested = _state.EcFanControlEnabled;
-            _state.KeepAliveStatus = " ";
+            _state.ConsistencyModeStatus = " ";
             _state.Release();
         }
 
         /// <summary>
-        /// Switch configuration to keep alive mode.
+        /// Switch configuration to consistency mode.
         /// </summary>
-        public void SetKeepAliveMode()
+        public void SetConsistencyMode()
         {
             _state.WaitOne();
-            _state.Configuration = Configuration.KeepAlive;
+            _state.OperationMode = OperationMode.Consistency;
             _state.Release();
         }
 
@@ -233,7 +233,7 @@ namespace DellFanManagement.App
                     _state.Update();
 
                     // Take action based on configuration.
-                    if (_state.Configuration == Configuration.Automatic)
+                    if (_state.OperationMode == OperationMode.Automatic)
                     {
                         if (!_state.EcFanControlEnabled)
                         {
@@ -241,7 +241,7 @@ namespace DellFanManagement.App
                             DellFanLib.EnableEcFanControl();
                         }
                     }
-                    else if (_state.Configuration == Configuration.Manual)
+                    else if (_state.OperationMode == OperationMode.Manual)
                     {
                         // Check for EC control state changes that need to be applied.
                         if (_ecFanControlRequested && !_state.EcFanControlEnabled)
@@ -281,10 +281,10 @@ namespace DellFanManagement.App
                             }
                         }
                     }
-                    else if (_state.Configuration == Configuration.KeepAlive)
+                    else if (_state.OperationMode == OperationMode.Consistency)
                     {
-                        // Keep alive logic.
-                        CheckKeepAlive();
+                        // Consistency mode logic.
+                        ConsistencyModeLogic();
                     }
 
                     if (_requestedThermalSetting != null)
@@ -338,9 +338,9 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Keep alive logic; lock the fans if temperature and RPM thresholds are met.
+        /// Consistency mode logic; lock the fans if temperature and RPM thresholds are met.
         /// </summary>
-        private void CheckKeepAlive()
+        private void ConsistencyModeLogic()
         {
             if (LowerTemperatureThreshold != null && UpperTemperatureThreshold != null && RpmThreshold != null)
             {
@@ -351,7 +351,7 @@ namespace DellFanManagement.App
                 {
                     if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
                     {
-                        _state.KeepAliveStatus = "Waiting for CPU or GPU temperature to fall";
+                        _state.ConsistencyModeStatus = "Waiting for CPU or GPU temperature to fall";
                         thresholdsMet = false;
                     }
                 }
@@ -360,18 +360,18 @@ namespace DellFanManagement.App
                 {
                     if (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold))
                     {
-                        _state.KeepAliveStatus = "Waiting for embedded controller to reduce the fan speed";
+                        _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
                         thresholdsMet = false;
                     }
                     else if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
                     {
                         if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
                         {
-                            _state.KeepAliveStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
+                            _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
                         }
                         else
                         {
-                            _state.KeepAliveStatus = "Waiting for embedded controller to raise the fan speed";
+                            _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
                         }
                         thresholdsMet = false;
                     }
@@ -384,9 +384,9 @@ namespace DellFanManagement.App
                         _state.EcFanControlEnabled = false;
                         DellFanLib.DisableEcFanControl();
                     }
-                    if (!_state.KeepAliveStatus.StartsWith("Fan speed locked"))
+                    if (!_state.ConsistencyModeStatus.StartsWith("Fan speed locked"))
                     {
-                        _state.KeepAliveStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
+                        _state.ConsistencyModeStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
                     }
                 }
                 else if (!_state.EcFanControlEnabled && !thresholdsMet)
@@ -485,12 +485,12 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Write the keep alive configuration.
+        /// Write the consistency mode configuration.
         /// </summary>
         /// <param name="lowerTemperatureThreshold">Lower temperature threshold</param>
         /// <param name="upperTemperatureThreshold">Upper temperature threshold</param>
         /// <param name="rpmThreshold">Fan speed threshold</param>
-        public void WriteKeepAliveConfiguration(int lowerTemperatureThreshold, int upperTemperatureThreshold, int rpmThreshold)
+        public void WriteConsistencyModeConfiguration(int lowerTemperatureThreshold, int upperTemperatureThreshold, int rpmThreshold)
         {
             LowerTemperatureThreshold = lowerTemperatureThreshold;
             UpperTemperatureThreshold = upperTemperatureThreshold;

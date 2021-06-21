@@ -3,10 +3,10 @@
     /// <summary>
     /// Represents the different configuration modes of the application.
     /// </summary>
-    enum Configuration
+    enum OperationMode
     {
         Automatic = 0,
         Manual = 1,
-        KeepAlive = 2
+        Consistency = 2
     }
 }

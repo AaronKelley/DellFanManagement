@@ -57,10 +57,10 @@ namespace DellFanManagement.App
             this.temperatureLabel3 = new System.Windows.Forms.Label();
             this.temperatureLabel2 = new System.Windows.Forms.Label();
             this.temperatureLabel1 = new System.Windows.Forms.Label();
-            this.configurationGroupBox = new System.Windows.Forms.GroupBox();
-            this.configurationRadioButtonKeepAlive = new System.Windows.Forms.RadioButton();
-            this.configurationRadioButtonManual = new System.Windows.Forms.RadioButton();
-            this.configurationRadioButtonAutomatic = new System.Windows.Forms.RadioButton();
+            this.operationModeGroupBox = new System.Windows.Forms.GroupBox();
+            this.operationModeRadioButtonConsistency = new System.Windows.Forms.RadioButton();
+            this.operationModeRadioButtonManual = new System.Windows.Forms.RadioButton();
+            this.operationModeRadioButtonAutomatic = new System.Windows.Forms.RadioButton();
             this.manualGroupBox = new System.Windows.Forms.GroupBox();
             this.manualFan2GroupBox = new System.Windows.Forms.GroupBox();
             this.manualFan2RadioButtonHigh = new System.Windows.Forms.RadioButton();
@@ -70,14 +70,14 @@ namespace DellFanManagement.App
             this.manualFan1RadioButtonHigh = new System.Windows.Forms.RadioButton();
             this.manualFan1RadioButtonMedium = new System.Windows.Forms.RadioButton();
             this.manualFan1RadioButtonOff = new System.Windows.Forms.RadioButton();
-            this.keepAliveGroupBox = new System.Windows.Forms.GroupBox();
-            this.keepAliveApplyChangesButton = new System.Windows.Forms.Button();
-            this.keepAliveRpmThresholdTextBox = new System.Windows.Forms.TextBox();
-            this.keepAliveRpmThresholdLabel = new System.Windows.Forms.Label();
-            this.keepAliveUpperTemperatureThresholdTextBox = new System.Windows.Forms.TextBox();
-            this.keepAliveUpperTemperatureThresholdLabel = new System.Windows.Forms.Label();
-            this.keepAliveLowerTemperatureThresholdTextBox = new System.Windows.Forms.TextBox();
-            this.keepAliveLowerTemperatureThresholdLabel = new System.Windows.Forms.Label();
+            this.consistencyModeGroupBox = new System.Windows.Forms.GroupBox();
+            this.consistencyModeApplyChangesButton = new System.Windows.Forms.Button();
+            this.consistencyModeRpmThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.consistencyModeRpmThresholdLabel = new System.Windows.Forms.Label();
+            this.consistencyModeUpperTemperatureThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.consistencyModeUpperTemperatureThresholdLabel = new System.Windows.Forms.Label();
+            this.consistencyModeLowerTemperatureThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.consistencyModeLowerTemperatureThresholdLabel = new System.Windows.Forms.Label();
             this.ecFanControlRadioButtonOn = new System.Windows.Forms.RadioButton();
             this.ecFanControlRadioButtonOff = new System.Windows.Forms.RadioButton();
             this.ecFanControlGroupBox = new System.Windows.Forms.GroupBox();
@@ -89,15 +89,15 @@ namespace DellFanManagement.App
             this.audioKeepAliveComboBox = new System.Windows.Forms.ComboBox();
             this.audioKeepAliveCheckbox = new System.Windows.Forms.CheckBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.keepAliveStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.consistencyModeStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.fansGroupBox.SuspendLayout();
             this.thermalSettingGroupBox.SuspendLayout();
             this.temperatureGroupBox.SuspendLayout();
-            this.configurationGroupBox.SuspendLayout();
+            this.operationModeGroupBox.SuspendLayout();
             this.manualGroupBox.SuspendLayout();
             this.manualFan2GroupBox.SuspendLayout();
             this.manualFan1GroupBox.SuspendLayout();
-            this.keepAliveGroupBox.SuspendLayout();
+            this.consistencyModeGroupBox.SuspendLayout();
             this.ecFanControlGroupBox.SuspendLayout();
             this.aboutGroupBox.SuspendLayout();
             this.audioKeepAliveGroupBox.SuspendLayout();
@@ -379,50 +379,50 @@ namespace DellFanManagement.App
             this.temperatureLabel1.TabIndex = 0;
             this.temperatureLabel1.Text = "CPU Core #1: 50";
             // 
-            // configurationGroupBox
+            // operationModeGroupBox
             // 
-            this.configurationGroupBox.Controls.Add(this.configurationRadioButtonKeepAlive);
-            this.configurationGroupBox.Controls.Add(this.configurationRadioButtonManual);
-            this.configurationGroupBox.Controls.Add(this.configurationRadioButtonAutomatic);
-            this.configurationGroupBox.Location = new System.Drawing.Point(288, 12);
-            this.configurationGroupBox.Name = "configurationGroupBox";
-            this.configurationGroupBox.Size = new System.Drawing.Size(112, 99);
-            this.configurationGroupBox.TabIndex = 2;
-            this.configurationGroupBox.TabStop = false;
-            this.configurationGroupBox.Text = "Configuration:";
+            this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonConsistency);
+            this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonManual);
+            this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonAutomatic);
+            this.operationModeGroupBox.Location = new System.Drawing.Point(288, 12);
+            this.operationModeGroupBox.Name = "operationModeGroupBox";
+            this.operationModeGroupBox.Size = new System.Drawing.Size(112, 99);
+            this.operationModeGroupBox.TabIndex = 2;
+            this.operationModeGroupBox.TabStop = false;
+            this.operationModeGroupBox.Text = "Operation mode:";
             // 
-            // configurationRadioButtonKeepAlive
+            // operationModeRadioButtonKeepAlive
             // 
-            this.configurationRadioButtonKeepAlive.AutoSize = true;
-            this.configurationRadioButtonKeepAlive.Location = new System.Drawing.Point(6, 72);
-            this.configurationRadioButtonKeepAlive.Name = "configurationRadioButtonKeepAlive";
-            this.configurationRadioButtonKeepAlive.Size = new System.Drawing.Size(78, 19);
-            this.configurationRadioButtonKeepAlive.TabIndex = 2;
-            this.configurationRadioButtonKeepAlive.TabStop = true;
-            this.configurationRadioButtonKeepAlive.Text = "&Keep alive";
-            this.configurationRadioButtonKeepAlive.UseVisualStyleBackColor = true;
+            this.operationModeRadioButtonConsistency.AutoSize = true;
+            this.operationModeRadioButtonConsistency.Location = new System.Drawing.Point(6, 72);
+            this.operationModeRadioButtonConsistency.Name = "operationModeRadioButtonKeepAlive";
+            this.operationModeRadioButtonConsistency.Size = new System.Drawing.Size(89, 19);
+            this.operationModeRadioButtonConsistency.TabIndex = 2;
+            this.operationModeRadioButtonConsistency.TabStop = true;
+            this.operationModeRadioButtonConsistency.Text = "Con&sistency";
+            this.operationModeRadioButtonConsistency.UseVisualStyleBackColor = true;
             // 
-            // configurationRadioButtonManual
+            // operationModeRadioButtonManual
             // 
-            this.configurationRadioButtonManual.AutoSize = true;
-            this.configurationRadioButtonManual.Location = new System.Drawing.Point(6, 47);
-            this.configurationRadioButtonManual.Name = "configurationRadioButtonManual";
-            this.configurationRadioButtonManual.Size = new System.Drawing.Size(65, 19);
-            this.configurationRadioButtonManual.TabIndex = 1;
-            this.configurationRadioButtonManual.TabStop = true;
-            this.configurationRadioButtonManual.Text = "&Manual";
-            this.configurationRadioButtonManual.UseVisualStyleBackColor = true;
+            this.operationModeRadioButtonManual.AutoSize = true;
+            this.operationModeRadioButtonManual.Location = new System.Drawing.Point(6, 47);
+            this.operationModeRadioButtonManual.Name = "operationModeRadioButtonManual";
+            this.operationModeRadioButtonManual.Size = new System.Drawing.Size(65, 19);
+            this.operationModeRadioButtonManual.TabIndex = 1;
+            this.operationModeRadioButtonManual.TabStop = true;
+            this.operationModeRadioButtonManual.Text = "&Manual";
+            this.operationModeRadioButtonManual.UseVisualStyleBackColor = true;
             // 
-            // configurationRadioButtonAutomatic
+            // operationModeRadioButtonAutomatic
             // 
-            this.configurationRadioButtonAutomatic.AutoSize = true;
-            this.configurationRadioButtonAutomatic.Location = new System.Drawing.Point(6, 22);
-            this.configurationRadioButtonAutomatic.Name = "configurationRadioButtonAutomatic";
-            this.configurationRadioButtonAutomatic.Size = new System.Drawing.Size(81, 19);
-            this.configurationRadioButtonAutomatic.TabIndex = 0;
-            this.configurationRadioButtonAutomatic.TabStop = true;
-            this.configurationRadioButtonAutomatic.Text = "&Automatic";
-            this.configurationRadioButtonAutomatic.UseVisualStyleBackColor = true;
+            this.operationModeRadioButtonAutomatic.AutoSize = true;
+            this.operationModeRadioButtonAutomatic.Location = new System.Drawing.Point(6, 22);
+            this.operationModeRadioButtonAutomatic.Name = "operationModeRadioButtonAutomatic";
+            this.operationModeRadioButtonAutomatic.Size = new System.Drawing.Size(81, 19);
+            this.operationModeRadioButtonAutomatic.TabIndex = 0;
+            this.operationModeRadioButtonAutomatic.TabStop = true;
+            this.operationModeRadioButtonAutomatic.Text = "&Automatic";
+            this.operationModeRadioButtonAutomatic.UseVisualStyleBackColor = true;
             // 
             // manualGroupBox
             // 
@@ -525,84 +525,84 @@ namespace DellFanManagement.App
             this.manualFan1RadioButtonOff.Text = "Off";
             this.manualFan1RadioButtonOff.UseVisualStyleBackColor = true;
             // 
-            // keepAliveGroupBox
+            // consistencyModeGroupBox
             // 
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveApplyChangesButton);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveRpmThresholdTextBox);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveRpmThresholdLabel);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveUpperTemperatureThresholdTextBox);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveUpperTemperatureThresholdLabel);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveLowerTemperatureThresholdTextBox);
-            this.keepAliveGroupBox.Controls.Add(this.keepAliveLowerTemperatureThresholdLabel);
-            this.keepAliveGroupBox.Location = new System.Drawing.Point(406, 144);
-            this.keepAliveGroupBox.Name = "keepAliveGroupBox";
-            this.keepAliveGroupBox.Size = new System.Drawing.Size(220, 138);
-            this.keepAliveGroupBox.TabIndex = 5;
-            this.keepAliveGroupBox.TabStop = false;
-            this.keepAliveGroupBox.Text = "Keep alive options:";
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeApplyChangesButton);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeRpmThresholdTextBox);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeRpmThresholdLabel);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeUpperTemperatureThresholdTextBox);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeUpperTemperatureThresholdLabel);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdTextBox);
+            this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdLabel);
+            this.consistencyModeGroupBox.Location = new System.Drawing.Point(406, 144);
+            this.consistencyModeGroupBox.Name = "consistencyModeGroupBox";
+            this.consistencyModeGroupBox.Size = new System.Drawing.Size(220, 138);
+            this.consistencyModeGroupBox.TabIndex = 5;
+            this.consistencyModeGroupBox.TabStop = false;
+            this.consistencyModeGroupBox.Text = "Consistency mode options:";
             // 
-            // keepAliveApplyChangesButton
+            // consistencyModeApplyChangesButton
             // 
-            this.keepAliveApplyChangesButton.Location = new System.Drawing.Point(5, 107);
-            this.keepAliveApplyChangesButton.Name = "keepAliveApplyChangesButton";
-            this.keepAliveApplyChangesButton.Size = new System.Drawing.Size(210, 25);
-            this.keepAliveApplyChangesButton.TabIndex = 6;
-            this.keepAliveApplyChangesButton.Text = "Appl&y changes";
-            this.keepAliveApplyChangesButton.UseVisualStyleBackColor = true;
+            this.consistencyModeApplyChangesButton.Location = new System.Drawing.Point(5, 107);
+            this.consistencyModeApplyChangesButton.Name = "consistencyModeApplyChangesButton";
+            this.consistencyModeApplyChangesButton.Size = new System.Drawing.Size(210, 25);
+            this.consistencyModeApplyChangesButton.TabIndex = 6;
+            this.consistencyModeApplyChangesButton.Text = "Appl&y changes";
+            this.consistencyModeApplyChangesButton.UseVisualStyleBackColor = true;
             // 
-            // keepAliveRpmThresholdTextBox
+            // consistencyModeRpmThresholdTextBox
             // 
-            this.keepAliveRpmThresholdTextBox.Location = new System.Drawing.Point(178, 78);
-            this.keepAliveRpmThresholdTextBox.MaxLength = 4;
-            this.keepAliveRpmThresholdTextBox.Name = "keepAliveRpmThresholdTextBox";
-            this.keepAliveRpmThresholdTextBox.Size = new System.Drawing.Size(36, 23);
-            this.keepAliveRpmThresholdTextBox.TabIndex = 5;
-            this.keepAliveRpmThresholdTextBox.Text = "2900";
+            this.consistencyModeRpmThresholdTextBox.Location = new System.Drawing.Point(178, 78);
+            this.consistencyModeRpmThresholdTextBox.MaxLength = 4;
+            this.consistencyModeRpmThresholdTextBox.Name = "consistencyModeRpmThresholdTextBox";
+            this.consistencyModeRpmThresholdTextBox.Size = new System.Drawing.Size(36, 23);
+            this.consistencyModeRpmThresholdTextBox.TabIndex = 5;
+            this.consistencyModeRpmThresholdTextBox.Text = "2900";
             // 
-            // keepAliveRpmThresholdLabel
+            // consistencyModeRpmThresholdLabel
             // 
-            this.keepAliveRpmThresholdLabel.AutoSize = true;
-            this.keepAliveRpmThresholdLabel.Location = new System.Drawing.Point(7, 81);
-            this.keepAliveRpmThresholdLabel.Name = "keepAliveRpmThresholdLabel";
-            this.keepAliveRpmThresholdLabel.Size = new System.Drawing.Size(88, 15);
-            this.keepAliveRpmThresholdLabel.TabIndex = 4;
-            this.keepAliveRpmThresholdLabel.Text = "RPM threshold:";
+            this.consistencyModeRpmThresholdLabel.AutoSize = true;
+            this.consistencyModeRpmThresholdLabel.Location = new System.Drawing.Point(7, 81);
+            this.consistencyModeRpmThresholdLabel.Name = "consistencyModeRpmThresholdLabel";
+            this.consistencyModeRpmThresholdLabel.Size = new System.Drawing.Size(88, 15);
+            this.consistencyModeRpmThresholdLabel.TabIndex = 4;
+            this.consistencyModeRpmThresholdLabel.Text = "RPM threshold:";
             // 
-            // keepAliveUpperTemperatureThresholdTextBox
+            // consistencyModeUpperTemperatureThresholdTextBox
             // 
-            this.keepAliveUpperTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 49);
-            this.keepAliveUpperTemperatureThresholdTextBox.MaxLength = 3;
-            this.keepAliveUpperTemperatureThresholdTextBox.Name = "keepAliveUpperTemperatureThresholdTextBox";
-            this.keepAliveUpperTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
-            this.keepAliveUpperTemperatureThresholdTextBox.TabIndex = 3;
-            this.keepAliveUpperTemperatureThresholdTextBox.Text = "85";
+            this.consistencyModeUpperTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 49);
+            this.consistencyModeUpperTemperatureThresholdTextBox.MaxLength = 3;
+            this.consistencyModeUpperTemperatureThresholdTextBox.Name = "consistencyModeUpperTemperatureThresholdTextBox";
+            this.consistencyModeUpperTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
+            this.consistencyModeUpperTemperatureThresholdTextBox.TabIndex = 3;
+            this.consistencyModeUpperTemperatureThresholdTextBox.Text = "85";
             // 
-            // keepAliveUpperTemperatureThresholdLabel
+            // consistencyModeUpperTemperatureThresholdLabel
             // 
-            this.keepAliveUpperTemperatureThresholdLabel.AutoSize = true;
-            this.keepAliveUpperTemperatureThresholdLabel.Location = new System.Drawing.Point(6, 52);
-            this.keepAliveUpperTemperatureThresholdLabel.Name = "keepAliveUpperTemperatureThresholdLabel";
-            this.keepAliveUpperTemperatureThresholdLabel.Size = new System.Drawing.Size(163, 15);
-            this.keepAliveUpperTemperatureThresholdLabel.TabIndex = 2;
-            this.keepAliveUpperTemperatureThresholdLabel.Text = "Upper temperature threshold:";
+            this.consistencyModeUpperTemperatureThresholdLabel.AutoSize = true;
+            this.consistencyModeUpperTemperatureThresholdLabel.Location = new System.Drawing.Point(6, 52);
+            this.consistencyModeUpperTemperatureThresholdLabel.Name = "consistencyModeUpperTemperatureThresholdLabel";
+            this.consistencyModeUpperTemperatureThresholdLabel.Size = new System.Drawing.Size(163, 15);
+            this.consistencyModeUpperTemperatureThresholdLabel.TabIndex = 2;
+            this.consistencyModeUpperTemperatureThresholdLabel.Text = "Upper temperature threshold:";
             // 
-            // keepAliveLowerTemperatureThresholdTextBox
+            // consistencyModeLowerTemperatureThresholdTextBox
             // 
-            this.keepAliveLowerTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 20);
-            this.keepAliveLowerTemperatureThresholdTextBox.MaxLength = 3;
-            this.keepAliveLowerTemperatureThresholdTextBox.Name = "keepAliveLowerTemperatureThresholdTextBox";
-            this.keepAliveLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
-            this.keepAliveLowerTemperatureThresholdTextBox.TabIndex = 1;
-            this.keepAliveLowerTemperatureThresholdTextBox.Text = "70";
+            this.consistencyModeLowerTemperatureThresholdTextBox.Location = new System.Drawing.Point(188, 20);
+            this.consistencyModeLowerTemperatureThresholdTextBox.MaxLength = 3;
+            this.consistencyModeLowerTemperatureThresholdTextBox.Name = "consistencyModeLowerTemperatureThresholdTextBox";
+            this.consistencyModeLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(26, 23);
+            this.consistencyModeLowerTemperatureThresholdTextBox.TabIndex = 1;
+            this.consistencyModeLowerTemperatureThresholdTextBox.Text = "70";
             // 
-            // keepAliveLowerTemperatureThresholdLabel
+            // consistencyModeLowerTemperatureThresholdLabel
             // 
-            this.keepAliveLowerTemperatureThresholdLabel.AutoSize = true;
-            this.keepAliveLowerTemperatureThresholdLabel.Location = new System.Drawing.Point(6, 23);
-            this.keepAliveLowerTemperatureThresholdLabel.Name = "keepAliveLowerTemperatureThresholdLabel";
-            this.keepAliveLowerTemperatureThresholdLabel.Size = new System.Drawing.Size(163, 15);
-            this.keepAliveLowerTemperatureThresholdLabel.TabIndex = 0;
-            this.keepAliveLowerTemperatureThresholdLabel.Text = "Lower temperature threshold:";
+            this.consistencyModeLowerTemperatureThresholdLabel.AutoSize = true;
+            this.consistencyModeLowerTemperatureThresholdLabel.Location = new System.Drawing.Point(6, 23);
+            this.consistencyModeLowerTemperatureThresholdLabel.Name = "consistencyModeLowerTemperatureThresholdLabel";
+            this.consistencyModeLowerTemperatureThresholdLabel.Size = new System.Drawing.Size(163, 15);
+            this.consistencyModeLowerTemperatureThresholdLabel.TabIndex = 0;
+            this.consistencyModeLowerTemperatureThresholdLabel.Text = "Lower temperature threshold:";
             // 
             // ecFanControlRadioButtonOn
             // 
@@ -709,7 +709,7 @@ namespace DellFanManagement.App
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.keepAliveStatusLabel});
+            this.consistencyModeStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 293);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1000, 22);
@@ -718,9 +718,9 @@ namespace DellFanManagement.App
             // 
             // keepAliveStatusLabel
             // 
-            this.keepAliveStatusLabel.Name = "keepAliveStatusLabel";
-            this.keepAliveStatusLabel.Size = new System.Drawing.Size(109, 17);
-            this.keepAliveStatusLabel.Text = "Fan speed is locked";
+            this.consistencyModeStatusLabel.Name = "keepAliveStatusLabel";
+            this.consistencyModeStatusLabel.Size = new System.Drawing.Size(109, 17);
+            this.consistencyModeStatusLabel.Text = "Fan speed is locked";
             // 
             // DellFanManagementGuiForm
             // 
@@ -732,9 +732,9 @@ namespace DellFanManagement.App
             this.Controls.Add(this.aboutGroupBox);
             this.Controls.Add(this.restartBackgroundThreadButton);
             this.Controls.Add(this.ecFanControlGroupBox);
-            this.Controls.Add(this.keepAliveGroupBox);
+            this.Controls.Add(this.consistencyModeGroupBox);
             this.Controls.Add(this.manualGroupBox);
-            this.Controls.Add(this.configurationGroupBox);
+            this.Controls.Add(this.operationModeGroupBox);
             this.Controls.Add(this.temperatureGroupBox);
             this.Controls.Add(this.thermalSettingGroupBox);
             this.Controls.Add(this.fansGroupBox);
@@ -749,15 +749,15 @@ namespace DellFanManagement.App
             this.thermalSettingGroupBox.PerformLayout();
             this.temperatureGroupBox.ResumeLayout(false);
             this.temperatureGroupBox.PerformLayout();
-            this.configurationGroupBox.ResumeLayout(false);
-            this.configurationGroupBox.PerformLayout();
+            this.operationModeGroupBox.ResumeLayout(false);
+            this.operationModeGroupBox.PerformLayout();
             this.manualGroupBox.ResumeLayout(false);
             this.manualFan2GroupBox.ResumeLayout(false);
             this.manualFan2GroupBox.PerformLayout();
             this.manualFan1GroupBox.ResumeLayout(false);
             this.manualFan1GroupBox.PerformLayout();
-            this.keepAliveGroupBox.ResumeLayout(false);
-            this.keepAliveGroupBox.PerformLayout();
+            this.consistencyModeGroupBox.ResumeLayout(false);
+            this.consistencyModeGroupBox.PerformLayout();
             this.ecFanControlGroupBox.ResumeLayout(false);
             this.ecFanControlGroupBox.PerformLayout();
             this.aboutGroupBox.ResumeLayout(false);
@@ -800,10 +800,10 @@ namespace DellFanManagement.App
         private System.Windows.Forms.Label temperatureLabel3;
         private System.Windows.Forms.Label temperatureLabel2;
         private System.Windows.Forms.Label temperatureLabel1;
-        private System.Windows.Forms.GroupBox configurationGroupBox;
-        private System.Windows.Forms.RadioButton configurationRadioButtonKeepAlive;
-        private System.Windows.Forms.RadioButton configurationRadioButtonManual;
-        private System.Windows.Forms.RadioButton configurationRadioButtonAutomatic;
+        private System.Windows.Forms.GroupBox operationModeGroupBox;
+        private System.Windows.Forms.RadioButton operationModeRadioButtonConsistency;
+        private System.Windows.Forms.RadioButton operationModeRadioButtonManual;
+        private System.Windows.Forms.RadioButton operationModeRadioButtonAutomatic;
         private System.Windows.Forms.GroupBox manualGroupBox;
         private System.Windows.Forms.GroupBox manualFan2GroupBox;
         private System.Windows.Forms.RadioButton manualFan2RadioButtonHigh;
@@ -813,14 +813,14 @@ namespace DellFanManagement.App
         private System.Windows.Forms.RadioButton manualFan1RadioButtonHigh;
         private System.Windows.Forms.RadioButton manualFan1RadioButtonMedium;
         private System.Windows.Forms.RadioButton manualFan1RadioButtonOff;
-        private System.Windows.Forms.GroupBox keepAliveGroupBox;
-        private System.Windows.Forms.Button keepAliveApplyChangesButton;
-        private System.Windows.Forms.TextBox keepAliveRpmThresholdTextBox;
-        private System.Windows.Forms.Label keepAliveRpmThresholdLabel;
-        private System.Windows.Forms.TextBox keepAliveUpperTemperatureThresholdTextBox;
-        private System.Windows.Forms.Label keepAliveUpperTemperatureThresholdLabel;
-        private System.Windows.Forms.TextBox keepAliveLowerTemperatureThresholdTextBox;
-        private System.Windows.Forms.Label keepAliveLowerTemperatureThresholdLabel;
+        private System.Windows.Forms.GroupBox consistencyModeGroupBox;
+        private System.Windows.Forms.Button consistencyModeApplyChangesButton;
+        private System.Windows.Forms.TextBox consistencyModeRpmThresholdTextBox;
+        private System.Windows.Forms.Label consistencyModeRpmThresholdLabel;
+        private System.Windows.Forms.TextBox consistencyModeUpperTemperatureThresholdTextBox;
+        private System.Windows.Forms.Label consistencyModeUpperTemperatureThresholdLabel;
+        private System.Windows.Forms.TextBox consistencyModeLowerTemperatureThresholdTextBox;
+        private System.Windows.Forms.Label consistencyModeLowerTemperatureThresholdLabel;
         private System.Windows.Forms.RadioButton ecFanControlRadioButtonOn;
         private System.Windows.Forms.RadioButton ecFanControlRadioButtonOff;
         private System.Windows.Forms.GroupBox ecFanControlGroupBox;
@@ -832,7 +832,7 @@ namespace DellFanManagement.App
         private System.Windows.Forms.ComboBox audioKeepAliveComboBox;
         private System.Windows.Forms.CheckBox audioKeepAliveCheckbox;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel keepAliveStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel consistencyModeStatusLabel;
     }
 }
 

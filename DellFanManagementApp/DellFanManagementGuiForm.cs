@@ -61,15 +61,15 @@ namespace DellFanManagement.App
             restartBackgroundThreadButton.Click += new EventHandler(ThermalSettingChangedEventHandler);
             
             // ...Configuration radio buttons...
-            configurationRadioButtonAutomatic.CheckedChanged += new EventHandler(ConfigurationRadioButtonAutomaticEventHandler);
-            configurationRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
-            configurationRadioButtonKeepAlive.CheckedChanged += new EventHandler(ConfigurationRadioButtonKeepAliveEventHandler);
+            operationModeRadioButtonAutomatic.CheckedChanged += new EventHandler(ConfigurationRadioButtonAutomaticEventHandler);
+            operationModeRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
+            operationModeRadioButtonConsistency.CheckedChanged += new EventHandler(ConfigurationRadioButtonConsistencyEventHandler);
 
-            // ...Keep alive section...
-            keepAliveLowerTemperatureThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
-            keepAliveUpperTemperatureThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
-            keepAliveRpmThresholdTextBox.TextChanged += new EventHandler(KeepAliveTextBoxesChangedEventHandler);
-            keepAliveApplyChangesButton.Click += new EventHandler(KeepAliveApplyChangesButtonClickedEventHandler);
+            // ...Consistency mode section...
+            consistencyModeLowerTemperatureThresholdTextBox.TextChanged += new EventHandler(ConsistencyModeTextBoxesChangedEventHandler);
+            consistencyModeUpperTemperatureThresholdTextBox.TextChanged += new EventHandler(ConsistencyModeTextBoxesChangedEventHandler);
+            consistencyModeRpmThresholdTextBox.TextChanged += new EventHandler(ConsistencyModeTextBoxesChangedEventHandler);
+            consistencyModeApplyChangesButton.Click += new EventHandler(ConsistencyApplyChangesButtonClickedEventHandler);
 
             // ...Audio keep alive controls...
             audioKeepAliveComboBox.SelectedValueChanged += new EventHandler(AudioDeviceChangedEventHandler);
@@ -97,10 +97,10 @@ namespace DellFanManagement.App
             temperatureLabel18.Text = string.Empty;
 
             // TODO: Read previous mode from configuration.
-            configurationRadioButtonAutomatic.Checked = true;
+            operationModeRadioButtonAutomatic.Checked = true;
 
             // Save initial keep alive configuration.
-            WriteKeepAliveConfiguration();
+            WriteConsistencyModeConfiguration();
 
             // Update form with default state values.
             UpdateForm();
@@ -184,7 +184,7 @@ namespace DellFanManagement.App
             }
 
             // Fan levels.
-            if (_state.Configuration == Configuration.Manual && !_state.EcFanControlEnabled)
+            if (_state.OperationMode == OperationMode.Manual && !_state.EcFanControlEnabled)
             {
                 switch (_state.Fan1Level)
                 {
@@ -223,8 +223,8 @@ namespace DellFanManagement.App
                 }
             }
 
-            // Keep alive status.
-            keepAliveStatusLabel.Text = _state.KeepAliveStatus;
+            // Consistency mode status.
+            consistencyModeStatusLabel.Text = _state.ConsistencyModeStatus;
 
             // Thermal setting.
             switch (_state.ThermalSetting)
@@ -313,7 +313,7 @@ namespace DellFanManagement.App
             _core.SetAutomaticMode();
 
             SetFanControlsAvailability(false);
-            SetKeepAliveControlsAvailability(false);
+            SetConsistencyModeControlsAvailability(false);
             SetEcFanControlsAvailability(false);
         }
 
@@ -333,19 +333,19 @@ namespace DellFanManagement.App
                 SetFanControlsAvailability(true);
             }
 
-            SetKeepAliveControlsAvailability(false);
+            SetConsistencyModeControlsAvailability(false);
             SetEcFanControlsAvailability(true);
         }
 
         /// <summary>
-        /// Called when "Keep alive" configuration radio button is clicked.
+        /// Called when "Consistency" configuration radio button is clicked.
         /// </summary>
-        private void ConfigurationRadioButtonKeepAliveEventHandler(Object sender, EventArgs e)
+        private void ConfigurationRadioButtonConsistencyEventHandler(Object sender, EventArgs e)
         {
-            _core.SetKeepAliveMode();
+            _core.SetConsistencyMode();
 
             SetFanControlsAvailability(false);
-            SetKeepAliveControlsAvailability(true);
+            SetConsistencyModeControlsAvailability(true);
             SetEcFanControlsAvailability(false);
         }
 
@@ -369,12 +369,12 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Enable or disbale the keep alive configuration controls.
+        /// Enable or disbale the consistency mode configuration controls.
         /// </summary>
         /// <param name="enabled">Indicates whether to enable or disable the controls</param>
-        private void SetKeepAliveControlsAvailability(bool enabled)
+        private void SetConsistencyModeControlsAvailability(bool enabled)
         {
-            keepAliveGroupBox.Enabled = enabled;
+            consistencyModeGroupBox.Enabled = enabled;
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace DellFanManagement.App
             else if (ecFanControlRadioButtonOff.Checked)
             {
                 _core.RequestEcFanControl(false);
-                if (configurationRadioButtonManual.Checked)
+                if (operationModeRadioButtonManual.Checked)
                 {
                     SetFanControlsAvailability(true);
                 }
@@ -554,73 +554,73 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Called when the keep alive configuration text boxes are modified.
+        /// Called when the consistency mode configuration text boxes are modified.
         /// </summary>
-        private void KeepAliveTextBoxesChangedEventHandler(Object sender, EventArgs e)
+        private void ConsistencyModeTextBoxesChangedEventHandler(Object sender, EventArgs e)
         {
             // Enforce digits only in these text boxes.
-            if (Regex.IsMatch(keepAliveLowerTemperatureThresholdTextBox.Text, "[^0-9]"))
+            if (Regex.IsMatch(consistencyModeLowerTemperatureThresholdTextBox.Text, "[^0-9]"))
             {
-                keepAliveLowerTemperatureThresholdTextBox.Text = Regex.Replace(keepAliveLowerTemperatureThresholdTextBox.Text, "[^0-9]", "");
+                consistencyModeLowerTemperatureThresholdTextBox.Text = Regex.Replace(consistencyModeLowerTemperatureThresholdTextBox.Text, "[^0-9]", "");
             }
 
-            if (Regex.IsMatch(keepAliveUpperTemperatureThresholdTextBox.Text, "[^0-9]"))
+            if (Regex.IsMatch(consistencyModeUpperTemperatureThresholdTextBox.Text, "[^0-9]"))
             {
-                keepAliveUpperTemperatureThresholdTextBox.Text = Regex.Replace(keepAliveUpperTemperatureThresholdTextBox.Text, "[^0-9]", "");
+                consistencyModeUpperTemperatureThresholdTextBox.Text = Regex.Replace(consistencyModeUpperTemperatureThresholdTextBox.Text, "[^0-9]", "");
             }
 
-            if (Regex.IsMatch(keepAliveRpmThresholdTextBox.Text, "[^0-9]"))
+            if (Regex.IsMatch(consistencyModeRpmThresholdTextBox.Text, "[^0-9]"))
             {
-                keepAliveRpmThresholdTextBox.Text = Regex.Replace(keepAliveRpmThresholdTextBox.Text, "[^0-9]", "");
+                consistencyModeRpmThresholdTextBox.Text = Regex.Replace(consistencyModeRpmThresholdTextBox.Text, "[^0-9]", "");
             }
 
-            CheckKeepAliveOptionsConsistency();
+            CheckConsistencyModeOptionsConsistency();
         }
 
         /// <summary>
-        /// Called when the keep alive "Apply changes" button is clicked.
+        /// Called when the consistency mode "Apply changes" button is clicked.
         /// </summary>
-        private void KeepAliveApplyChangesButtonClickedEventHandler(Object sender, EventArgs e)
+        private void ConsistencyApplyChangesButtonClickedEventHandler(Object sender, EventArgs e)
         {
-            WriteKeepAliveConfiguration();
+            WriteConsistencyModeConfiguration();
         }
 
         /// <summary>
-        /// Check to see if the GUI keep alive options text boxes match the currently stored configuration, and enable
-        /// or disable the "apply changes" button accordingly.
+        /// Check to see if the GUI consistency mode options text boxes match the currently stored configuration, and
+        /// enable or disable the "apply changes" button accordingly.
         /// </summary>
-        private void CheckKeepAliveOptionsConsistency()
+        private void CheckConsistencyModeOptionsConsistency()
         {
-            if (keepAliveLowerTemperatureThresholdTextBox.Text == _core.LowerTemperatureThreshold.ToString() &&
-                keepAliveUpperTemperatureThresholdTextBox.Text == _core.UpperTemperatureThreshold.ToString() &&
-                keepAliveRpmThresholdTextBox.Text == _core.RpmThreshold.ToString())
+            if (consistencyModeLowerTemperatureThresholdTextBox.Text == _core.LowerTemperatureThreshold.ToString() &&
+                consistencyModeUpperTemperatureThresholdTextBox.Text == _core.UpperTemperatureThreshold.ToString() &&
+                consistencyModeRpmThresholdTextBox.Text == _core.RpmThreshold.ToString())
             {
                 // Configuration matches.
-                keepAliveApplyChangesButton.Enabled = false;
+                consistencyModeApplyChangesButton.Enabled = false;
             }
             else
             {
                 // Configuration has changed.
-                keepAliveApplyChangesButton.Enabled = true;
+                consistencyModeApplyChangesButton.Enabled = true;
             }
         }
 
         /// <summary>
-        /// Take the keep alive configuration and save it to the core.
+        /// Take the consistency mode configuration and save it to the core.
         /// </summary>
-        public void WriteKeepAliveConfiguration()
+        public void WriteConsistencyModeConfiguration()
         {
-            bool success = int.TryParse(keepAliveLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
+            bool success = int.TryParse(consistencyModeLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
             if (success)
             {
-                success = int.TryParse(keepAliveUpperTemperatureThresholdTextBox.Text, out int upperTemperatureThreshold);
+                success = int.TryParse(consistencyModeUpperTemperatureThresholdTextBox.Text, out int upperTemperatureThreshold);
                 if (success)
                 {
-                    success = int.TryParse(keepAliveRpmThresholdTextBox.Text, out int rpmThreshold);
+                    success = int.TryParse(consistencyModeRpmThresholdTextBox.Text, out int rpmThreshold);
                     if (success)
                     {
-                        _core.WriteKeepAliveConfiguration(lowerTemperatureThreshold, upperTemperatureThreshold, rpmThreshold);
-                        CheckKeepAliveOptionsConsistency();
+                        _core.WriteConsistencyModeConfiguration(lowerTemperatureThreshold, upperTemperatureThreshold, rpmThreshold);
+                        CheckConsistencyModeOptionsConsistency();
                     }
                 }
             }
