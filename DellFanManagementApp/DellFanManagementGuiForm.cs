@@ -183,46 +183,6 @@ namespace DellFanManagement.App
                 ecFanControlRadioButtonOff.Checked = true;
             }
 
-            // Fan levels.
-            if (_state.OperationMode == OperationMode.Manual && !_state.EcFanControlEnabled)
-            {
-                switch (_state.Fan1Level)
-                {
-                    case FanLevel.Level0:
-                        manualFan1RadioButtonOff.Checked = true;
-                        break;
-                    case FanLevel.Level1:
-                        manualFan1RadioButtonMedium.Checked = true;
-                        break;
-                    case FanLevel.Level2:
-                        manualFan1RadioButtonHigh.Checked = true;
-                        break;
-                    default:
-                        manualFan1RadioButtonOff.Checked = false;
-                        manualFan1RadioButtonMedium.Checked = false;
-                        manualFan1RadioButtonHigh.Checked = false;
-                        break;
-                }
-
-                switch (_state.Fan2Level)
-                {
-                    case FanLevel.Level0:
-                        manualFan2RadioButtonOff.Checked = true;
-                        break;
-                    case FanLevel.Level1:
-                        manualFan2RadioButtonMedium.Checked = true;
-                        break;
-                    case FanLevel.Level2:
-                        manualFan2RadioButtonHigh.Checked = true;
-                        break;
-                    default:
-                        manualFan2RadioButtonOff.Checked = false;
-                        manualFan2RadioButtonMedium.Checked = false;
-                        manualFan2RadioButtonHigh.Checked = false;
-                        break;
-                }
-            }
-
             // Consistency mode status.
             consistencyModeStatusLabel.Text = _state.ConsistencyModeStatus;
 
