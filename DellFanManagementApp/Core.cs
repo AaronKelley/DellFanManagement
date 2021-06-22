@@ -322,6 +322,8 @@ namespace DellFanManagement.App
                     Thread.Sleep(Core.RefreshInterval);
                 }
 
+                // If we got out of the loop without error, the program is terminating.
+                DellFanLib.EnableEcFanControl();
                 DellFanLib.Shutdown();
             }
             catch (Exception exception)
