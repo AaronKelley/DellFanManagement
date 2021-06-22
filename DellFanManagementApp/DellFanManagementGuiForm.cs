@@ -174,13 +174,16 @@ namespace DellFanManagement.App
             }
 
             // EC fan control enabled?
-            if (_state.EcFanControlEnabled && !ecFanControlRadioButtonOn.Checked)
+            if (_state.OperationMode != OperationMode.Manual)
             {
-                ecFanControlRadioButtonOn.Checked = true;
-            }
-            else if (!_state.EcFanControlEnabled && !ecFanControlRadioButtonOff.Checked)
-            {
-                ecFanControlRadioButtonOff.Checked = true;
+                if (_state.EcFanControlEnabled && !ecFanControlRadioButtonOn.Checked)
+                {
+                    ecFanControlRadioButtonOn.Checked = true;
+                }
+                else if (!_state.EcFanControlEnabled && !ecFanControlRadioButtonOff.Checked)
+                {
+                    ecFanControlRadioButtonOff.Checked = true;
+                }
             }
 
             // Consistency mode status.
@@ -282,17 +285,10 @@ namespace DellFanManagement.App
         /// </summary>
         private void ConfigurationRadioButtonManualEventHandler(Object sender, EventArgs e)
         {
+            ecFanControlRadioButtonOn.Checked = true;
             _core.SetManualMode();
 
-            if (ecFanControlRadioButtonOn.Checked)
-            {
-                SetFanControlsAvailability(false);
-            }
-            else
-            {
-                SetFanControlsAvailability(true);
-            }
-
+            SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
             SetEcFanControlsAvailability(true);
         }
