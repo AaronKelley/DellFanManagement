@@ -10,6 +10,6 @@
 /packages
 /DellSmmIoLib/bin
 /DellSmmIoLib/obj
-/DellSetThermalSetting/bin
-/DellSetThermalSetting/obj
 /DellFanLib/DellFanLib.aps
+/DellFanManagementApp/bin
+/DellFanManagementApp/obj
