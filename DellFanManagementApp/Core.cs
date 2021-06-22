@@ -274,6 +274,16 @@ namespace DellFanManagement.App
                                 }
                             }
                         }
+
+                        // Warn if a fan is set to completely off.
+                        if (!_state.EcFanControlEnabled && (_state.Fan1Level == FanLevel.Level0 || (_state.Fan2Present && _state.Fan2Level == FanLevel.Level0)))
+                        {
+                            _state.ConsistencyModeStatus = "Warning: Fans set to \"off\" will not turn on regardless of temperature or load on the system";
+                        }
+                        else
+                        {
+                            _state.ConsistencyModeStatus = " ";
+                        }
                     }
                     else if (_state.OperationMode == OperationMode.Consistency)
                     {
