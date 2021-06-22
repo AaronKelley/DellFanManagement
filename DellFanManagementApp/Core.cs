@@ -111,6 +111,10 @@ namespace DellFanManagement.App
             _state.OperationMode = OperationMode.Manual;
             _ecFanControlRequested = _state.EcFanControlEnabled;
             _state.ConsistencyModeStatus = " ";
+            _state.Fan1Level = null;
+            _state.Fan2Level = null;
+            _fan1LevelRequested = null;
+            _fan2LevelRequested = null;
             _state.Release();
         }
 
@@ -242,14 +246,14 @@ namespace DellFanManagement.App
                         {
                             _state.EcFanControlEnabled = true;
                             DellFanLib.EnableEcFanControl();
-                        }
-                        else if (!_ecFanControlRequested && _state.EcFanControlEnabled)
-                        {
-                            _state.EcFanControlEnabled = false;
                             _state.Fan1Level = null;
                             _state.Fan2Level = null;
                             _fan1LevelRequested = null;
                             _fan2LevelRequested = null;
+                        }
+                        else if (!_ecFanControlRequested && _state.EcFanControlEnabled)
+                        {
+                            _state.EcFanControlEnabled = false;
                             DellFanLib.DisableEcFanControl();
                         }
 
