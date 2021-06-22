@@ -19,10 +19,21 @@ namespace DellFanManagement.App
                 {
                     if (UacHelper.IsProcessElevated())
                     {
-                        Application.SetHighDpiMode(HighDpiMode.SystemAware);
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-                        Application.Run(new DellFanManagementGuiForm());
+                        // First thing's first...  Attempt to load the EC control driver.
+                        // Shutdown happens immediately after the background thread main loop ends.
+                        if (DellFanLib.Initialize())
+                        {
+                            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                            Application.EnableVisualStyles();
+                            Application.SetCompatibleTextRenderingDefault(false);
+                            Application.Run(new DellFanManagementGuiForm());
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to load driver.  Make sure that bzh_dell_smm_io_x64.sys is present in the working directory.  Reboot the system if the EV sign check pass registry setting was just set.",
+                                "Dell Fan Management driver check", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return 1;
+                        }
                     }
                     else
                     {
@@ -31,7 +42,8 @@ namespace DellFanManagement.App
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show(string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace), "Error starting application", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("{0}: {1}\n{2}", exception.GetType().ToString(), exception.Message, exception.StackTrace),
+                        "Error starting application", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return 1;
                 }
 

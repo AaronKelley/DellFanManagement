@@ -215,12 +215,6 @@ namespace DellFanManagement.App
 
             try
             {
-                // Initialize and turn on EC control.
-                if (!DellFanLib.Initialize())
-                {
-                    throw new Exception("Failed to load driver");
-                }
-
                 DellFanLib.EnableEcFanControl();
 
                 while (_state.BackgroundThreadRunning)
@@ -313,6 +307,8 @@ namespace DellFanManagement.App
 
                     Thread.Sleep(Core.RefreshInterval);
                 }
+
+                DellFanLib.Shutdown();
             }
             catch (Exception exception)
             {
@@ -327,8 +323,6 @@ namespace DellFanManagement.App
 
                 Log.Write(_state.Error);
             }
-
-            DellFanLib.Shutdown();
 
             _state.WaitOne();
             _state.BackgroundThreadRunning = false;
