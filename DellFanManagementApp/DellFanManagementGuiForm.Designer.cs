@@ -563,7 +563,7 @@ namespace DellFanManagement.App
             this.consistencyModeApplyChangesButton.Location = new System.Drawing.Point(5, 107);
             this.consistencyModeApplyChangesButton.Name = "consistencyModeApplyChangesButton";
             this.consistencyModeApplyChangesButton.Size = new System.Drawing.Size(184, 25);
-            this.consistencyModeApplyChangesButton.TabIndex = 6;
+            this.consistencyModeApplyChangesButton.TabIndex = 14;
             this.consistencyModeApplyChangesButton.Text = "Appl&y changes";
             this.consistencyModeApplyChangesButton.UseVisualStyleBackColor = true;
             // 
