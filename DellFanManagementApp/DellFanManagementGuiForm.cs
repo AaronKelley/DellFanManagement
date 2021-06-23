@@ -675,18 +675,14 @@ namespace DellFanManagement.App
                 if (trayIconCheckBox.Checked)
                 {
                     // Grab state information that we need.
-                    ulong rpm1 = _state.Fan1Rpm;
-                    ulong rpm2 = _state.Fan2Rpm;
-                    bool fan2Present = _state.Fan2Present;
-
                     ulong averageRpm;
-                    if (fan2Present)
+                    if (_state.Fan2Present)
                     {
-                        averageRpm = (rpm1 + rpm2) / 2;
+                        averageRpm = (_state.Fan1Rpm + _state.Fan2Rpm) / 2;
                     }
                     else
                     {
-                        averageRpm = rpm1;
+                        averageRpm = _state.Fan1Rpm;
                     }
 
                     if (averageRpm > 0 && averageRpm < 10000)
