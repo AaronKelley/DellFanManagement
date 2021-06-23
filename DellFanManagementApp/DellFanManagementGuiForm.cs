@@ -51,7 +51,7 @@ namespace DellFanManagement.App
             _core = new Core(_state, this);
             _formClosed = false;
 
-            _trayIcons = new Icon[8];
+            _trayIcons = new Icon[16];
             _trayIconIndex = 0;
             LoadTrayIcons();
             UpdateTrayIcon();
@@ -642,6 +642,14 @@ namespace DellFanManagement.App
             _trayIcons[5] = new Icon(@"Resources\Fan-Grey-6.ico");
             _trayIcons[6] = new Icon(@"Resources\Fan-Grey-7.ico");
             _trayIcons[7] = new Icon(@"Resources\Fan-Grey-8.ico");
+            _trayIcons[8] = new Icon(@"Resources\Fan-Grey-9.ico");
+            _trayIcons[9] = new Icon(@"Resources\Fan-Grey-10.ico");
+            _trayIcons[10] = new Icon(@"Resources\Fan-Grey-11.ico");
+            _trayIcons[11] = new Icon(@"Resources\Fan-Grey-12.ico");
+            _trayIcons[12] = new Icon(@"Resources\Fan-Grey-13.ico");
+            _trayIcons[13] = new Icon(@"Resources\Fan-Grey-14.ico");
+            _trayIcons[14] = new Icon(@"Resources\Fan-Grey-15.ico");
+            _trayIcons[15] = new Icon(@"Resources\Fan-Grey-16.ico");
         }
 
         /// <summary>
@@ -650,7 +658,7 @@ namespace DellFanManagement.App
         private void UpdateTrayIcon()
         {
             trayIcon.Icon = _trayIcons[_trayIconIndex];
-            _trayIconIndex = (_trayIconIndex + 1) % 8;
+            _trayIconIndex = (_trayIconIndex + 1) % _trayIcons.Length;
         }
 
         /// <summary>
@@ -700,7 +708,7 @@ namespace DellFanManagement.App
                             }
 
                             // Higher RPM = lower wait time = faster animation.
-                            waitTime = 500000 / (int)averageRpm;
+                            waitTime = 250000 / (int)averageRpm;
                         }
                     }
 
