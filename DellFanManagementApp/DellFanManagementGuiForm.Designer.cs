@@ -72,6 +72,7 @@ namespace DellFanManagement.App
             this.manualFan1RadioButtonMedium = new System.Windows.Forms.RadioButton();
             this.manualFan1RadioButtonOff = new System.Windows.Forms.RadioButton();
             this.consistencyModeGroupBox = new System.Windows.Forms.GroupBox();
+            this.alertsCheckBox = new System.Windows.Forms.CheckBox();
             this.consistencyModeApplyChangesButton = new System.Windows.Forms.Button();
             this.consistencyModeRpmThresholdTextBox = new System.Windows.Forms.TextBox();
             this.consistencyModeRpmThresholdLabel = new System.Windows.Forms.Label();
@@ -93,7 +94,7 @@ namespace DellFanManagement.App
             this.consistencyModeStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayIconCheckBox = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.animatedCheckBox = new System.Windows.Forms.CheckBox();
             this.fansGroupBox.SuspendLayout();
             this.thermalSettingGroupBox.SuspendLayout();
             this.temperatureGroupBox.SuspendLayout();
@@ -531,6 +532,7 @@ namespace DellFanManagement.App
             // 
             // consistencyModeGroupBox
             // 
+            this.consistencyModeGroupBox.Controls.Add(this.alertsCheckBox);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeApplyChangesButton);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeRpmThresholdTextBox);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeRpmThresholdLabel);
@@ -545,6 +547,17 @@ namespace DellFanManagement.App
             this.consistencyModeGroupBox.TabStop = false;
             this.consistencyModeGroupBox.Text = "Consistency mode options:";
             // 
+            // alertsCheckBox
+            // 
+            this.alertsCheckBox.AutoSize = true;
+            this.alertsCheckBox.Enabled = false;
+            this.alertsCheckBox.Location = new System.Drawing.Point(137, 80);
+            this.alertsCheckBox.Name = "alertsCheckBox";
+            this.alertsCheckBox.Size = new System.Drawing.Size(56, 19);
+            this.alertsCheckBox.TabIndex = 13;
+            this.alertsCheckBox.Text = "A&lerts";
+            this.alertsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // consistencyModeApplyChangesButton
             // 
             this.consistencyModeApplyChangesButton.Location = new System.Drawing.Point(5, 107);
@@ -556,7 +569,7 @@ namespace DellFanManagement.App
             // 
             // consistencyModeRpmThresholdTextBox
             // 
-            this.consistencyModeRpmThresholdTextBox.Location = new System.Drawing.Point(158, 78);
+            this.consistencyModeRpmThresholdTextBox.Location = new System.Drawing.Point(96, 78);
             this.consistencyModeRpmThresholdTextBox.MaxLength = 4;
             this.consistencyModeRpmThresholdTextBox.Name = "consistencyModeRpmThresholdTextBox";
             this.consistencyModeRpmThresholdTextBox.Size = new System.Drawing.Size(30, 23);
@@ -743,23 +756,25 @@ namespace DellFanManagement.App
             this.trayIconCheckBox.Text = "&Tray icon";
             this.trayIconCheckBox.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // animatedCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(294, 266);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(94, 19);
-            this.checkBox1.TabIndex = 13;
-            this.checkBox1.Text = "Not&ifications";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.animatedCheckBox.AutoSize = true;
+            this.animatedCheckBox.Checked = true;
+            this.animatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.animatedCheckBox.Enabled = false;
+            this.animatedCheckBox.Location = new System.Drawing.Point(294, 266);
+            this.animatedCheckBox.Name = "animatedCheckBox";
+            this.animatedCheckBox.Size = new System.Drawing.Size(78, 19);
+            this.animatedCheckBox.TabIndex = 13;
+            this.animatedCheckBox.Text = "An&imated";
+            this.animatedCheckBox.UseVisualStyleBackColor = true;
             // 
             // DellFanManagementGuiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(951, 315);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.animatedCheckBox);
             this.Controls.Add(this.trayIconCheckBox);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.audioKeepAliveGroupBox);
@@ -869,7 +884,8 @@ namespace DellFanManagement.App
         private System.Windows.Forms.ToolStripStatusLabel consistencyModeStatusLabel;
         private System.Windows.Forms.NotifyIcon trayIcon;
         private System.Windows.Forms.CheckBox trayIconCheckBox;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox alertsCheckBox;
+        private System.Windows.Forms.CheckBox animatedCheckBox;
     }
 }
 

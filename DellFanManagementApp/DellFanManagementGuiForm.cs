@@ -695,7 +695,7 @@ namespace DellFanManagement.App
                             averageRpm = _state.Fan1Rpm;
                         }
 
-                        if (averageRpm > 0 && averageRpm < 10000)
+                        if (averageRpm > 250 && averageRpm < 10000)
                         {
                             try
                             {
