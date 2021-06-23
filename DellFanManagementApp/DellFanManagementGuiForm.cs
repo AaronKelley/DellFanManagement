@@ -51,10 +51,10 @@ namespace DellFanManagement.App
             _core = new Core(_state, this);
             _formClosed = false;
 
-            _trayIcons = new Icon[16];
+            _trayIcons = new Icon[48];
             _trayIconIndex = 0;
             LoadTrayIcons();
-            UpdateTrayIcon();
+            UpdateTrayIcon(false);
 
             // Version number in the about box.
             aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
@@ -315,6 +315,8 @@ namespace DellFanManagement.App
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
             SetEcFanControlsAvailability(false);
+
+            UpdateTrayIcon(false);
         }
 
         /// <summary>
@@ -328,6 +330,8 @@ namespace DellFanManagement.App
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
             SetEcFanControlsAvailability(true);
+
+            UpdateTrayIcon(false);
         }
 
         /// <summary>
@@ -340,6 +344,8 @@ namespace DellFanManagement.App
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(true);
             SetEcFanControlsAvailability(false);
+
+            UpdateTrayIcon(false);
         }
 
         /// <summary>
@@ -650,15 +656,80 @@ namespace DellFanManagement.App
             _trayIcons[13] = new Icon(@"Resources\Fan-Grey-14.ico");
             _trayIcons[14] = new Icon(@"Resources\Fan-Grey-15.ico");
             _trayIcons[15] = new Icon(@"Resources\Fan-Grey-16.ico");
+
+            _trayIcons[16] = new Icon(@"Resources\Fan-Blue-1.ico");
+            _trayIcons[17] = new Icon(@"Resources\Fan-Blue-2.ico");
+            _trayIcons[18] = new Icon(@"Resources\Fan-Blue-3.ico");
+            _trayIcons[19] = new Icon(@"Resources\Fan-Blue-4.ico");
+            _trayIcons[20] = new Icon(@"Resources\Fan-Blue-5.ico");
+            _trayIcons[21] = new Icon(@"Resources\Fan-Blue-6.ico");
+            _trayIcons[22] = new Icon(@"Resources\Fan-Blue-7.ico");
+            _trayIcons[23] = new Icon(@"Resources\Fan-Blue-8.ico");
+            _trayIcons[24] = new Icon(@"Resources\Fan-Blue-9.ico");
+            _trayIcons[25] = new Icon(@"Resources\Fan-Blue-10.ico");
+            _trayIcons[26] = new Icon(@"Resources\Fan-Blue-11.ico");
+            _trayIcons[27] = new Icon(@"Resources\Fan-Blue-12.ico");
+            _trayIcons[28] = new Icon(@"Resources\Fan-Blue-13.ico");
+            _trayIcons[29] = new Icon(@"Resources\Fan-Blue-14.ico");
+            _trayIcons[30] = new Icon(@"Resources\Fan-Blue-15.ico");
+            _trayIcons[31] = new Icon(@"Resources\Fan-Blue-16.ico");
+
+            _trayIcons[32] = new Icon(@"Resources\Fan-Red-1.ico");
+            _trayIcons[33] = new Icon(@"Resources\Fan-Red-2.ico");
+            _trayIcons[34] = new Icon(@"Resources\Fan-Red-3.ico");
+            _trayIcons[35] = new Icon(@"Resources\Fan-Red-4.ico");
+            _trayIcons[36] = new Icon(@"Resources\Fan-Red-5.ico");
+            _trayIcons[37] = new Icon(@"Resources\Fan-Red-6.ico");
+            _trayIcons[38] = new Icon(@"Resources\Fan-Red-7.ico");
+            _trayIcons[39] = new Icon(@"Resources\Fan-Red-8.ico");
+            _trayIcons[40] = new Icon(@"Resources\Fan-Red-9.ico");
+            _trayIcons[41] = new Icon(@"Resources\Fan-Red-10.ico");
+            _trayIcons[42] = new Icon(@"Resources\Fan-Red-11.ico");
+            _trayIcons[43] = new Icon(@"Resources\Fan-Red-12.ico");
+            _trayIcons[44] = new Icon(@"Resources\Fan-Red-13.ico");
+            _trayIcons[45] = new Icon(@"Resources\Fan-Red-14.ico");
+            _trayIcons[46] = new Icon(@"Resources\Fan-Red-15.ico");
+            _trayIcons[47] = new Icon(@"Resources\Fan-Red-16.ico");
         }
 
         /// <summary>
-        /// Advance the tray icon animation.
+        /// Update the system tray icon.
+        /// </summary>
+        /// <param name="advance">Whether or not to advance a frame</param>
+        private void UpdateTrayIcon(bool advance)
+        {
+            if (advance)
+            {
+                _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+            }
+
+            int offset;
+
+            if (_state.OperationMode != OperationMode.Consistency)
+            {
+                offset = 0;
+            }
+            else
+            {
+                if (!_state.EcFanControlEnabled)
+                {
+                    offset = 16;
+                }
+                else
+                {
+                    offset = 32;
+                }
+            }
+
+            trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
+        }
+
+        /// <summary>
+        /// Update the system tray icon (advance one frame).
         /// </summary>
         private void UpdateTrayIcon()
         {
-            trayIcon.Icon = _trayIcons[_trayIconIndex];
-            _trayIconIndex = (_trayIconIndex + 1) % _trayIcons.Length;
+            UpdateTrayIcon(true);
         }
 
         /// <summary>
