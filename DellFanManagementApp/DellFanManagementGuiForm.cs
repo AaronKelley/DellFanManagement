@@ -51,7 +51,7 @@ namespace DellFanManagement.App
             _core = new Core(_state, this);
             _formClosed = false;
 
-            _trayIcons = new Icon[4];
+            _trayIcons = new Icon[8];
             _trayIconIndex = 0;
             LoadTrayIcons();
             UpdateTrayIcon();
@@ -638,6 +638,10 @@ namespace DellFanManagement.App
             _trayIcons[1] = new Icon(@"Resources\Fan-Grey-2.ico");
             _trayIcons[2] = new Icon(@"Resources\Fan-Grey-3.ico");
             _trayIcons[3] = new Icon(@"Resources\Fan-Grey-4.ico");
+            _trayIcons[4] = new Icon(@"Resources\Fan-Grey-5.ico");
+            _trayIcons[5] = new Icon(@"Resources\Fan-Grey-6.ico");
+            _trayIcons[6] = new Icon(@"Resources\Fan-Grey-7.ico");
+            _trayIcons[7] = new Icon(@"Resources\Fan-Grey-8.ico");
         }
 
         /// <summary>
@@ -646,7 +650,7 @@ namespace DellFanManagement.App
         private void UpdateTrayIcon()
         {
             trayIcon.Icon = _trayIcons[_trayIconIndex];
-            _trayIconIndex = (_trayIconIndex + 1) % 4;
+            _trayIconIndex = (_trayIconIndex + 1) % 8;
         }
 
         /// <summary>
@@ -664,7 +668,7 @@ namespace DellFanManagement.App
         {
             MethodInvoker updateInvoker = new(UpdateTrayIcon);
 
-            while (!_formClosed)
+            while (!_formClosed && trayIconCheckBox.Checked)
             {
                 // Grab state information that we need.
                 ulong rpm1 = _state.Fan1Rpm;
@@ -694,6 +698,7 @@ namespace DellFanManagement.App
                         // Silently ignore.
                     }
 
+                    // Higher RPM = lower wait time = faster animation.
                     waitTime = 500000 / (int)averageRpm;
                 }
 
