@@ -666,43 +666,50 @@ namespace DellFanManagement.App
         /// </summary>
         private void TrayIconThread()
         {
-            MethodInvoker updateInvoker = new(UpdateTrayIcon);
-
-            while (!_formClosed)
+            try
             {
-                int waitTime = 1000; // One second.
+                MethodInvoker updateInvoker = new(UpdateTrayIcon);
 
-                if (trayIconCheckBox.Checked)
+                while (!_formClosed)
                 {
-                    // Grab state information that we need.
-                    ulong averageRpm;
-                    if (_state.Fan2Present)
-                    {
-                        averageRpm = (_state.Fan1Rpm + _state.Fan2Rpm) / 2;
-                    }
-                    else
-                    {
-                        averageRpm = _state.Fan1Rpm;
-                    }
+                    int waitTime = 1000; // One second.
 
-                    if (averageRpm > 0 && averageRpm < 10000)
+                    if (trayIconCheckBox.Checked)
                     {
-                        try
+                        // Grab state information that we need.
+                        ulong averageRpm;
+                        if (_state.Fan2Present)
                         {
-                            BeginInvoke(updateInvoker);
+                            averageRpm = (_state.Fan1Rpm + _state.Fan2Rpm) / 2;
                         }
-                        catch (Exception)
+                        else
                         {
-                            // If the window handle is not here (not open yet, or closing), there could be an error.
-                            // Silently ignore.
+                            averageRpm = _state.Fan1Rpm;
                         }
 
-                        // Higher RPM = lower wait time = faster animation.
-                        waitTime = 500000 / (int)averageRpm;
+                        if (averageRpm > 0 && averageRpm < 10000)
+                        {
+                            try
+                            {
+                                BeginInvoke(updateInvoker);
+                            }
+                            catch (Exception)
+                            {
+                                // If the window handle is not here (not open yet, or closing), there could be an error.
+                                // Silently ignore.
+                            }
+
+                            // Higher RPM = lower wait time = faster animation.
+                            waitTime = 500000 / (int)averageRpm;
+                        }
                     }
+
+                    Thread.Sleep(waitTime);
                 }
-
-                Thread.Sleep(waitTime);
+            }
+            catch (Exception exception)
+            {
+                Log.Write(exception);
             }
         }
     }
