@@ -116,7 +116,7 @@ namespace DellFanManagement.App
             this.fansGroupBox.Location = new System.Drawing.Point(12, 12);
             this.fansGroupBox.Name = "fansGroupBox";
             this.fansGroupBox.Size = new System.Drawing.Size(161, 65);
-            this.fansGroupBox.TabIndex = 6;
+            this.fansGroupBox.TabIndex = 1;
             this.fansGroupBox.TabStop = false;
             this.fansGroupBox.Text = "Fans:";
             // 
@@ -147,7 +147,7 @@ namespace DellFanManagement.App
             this.thermalSettingGroupBox.Location = new System.Drawing.Point(288, 117);
             this.thermalSettingGroupBox.Name = "thermalSettingGroupBox";
             this.thermalSettingGroupBox.Size = new System.Drawing.Size(111, 124);
-            this.thermalSettingGroupBox.TabIndex = 3;
+            this.thermalSettingGroupBox.TabIndex = 6;
             this.thermalSettingGroupBox.TabStop = false;
             this.thermalSettingGroupBox.Text = "Thermal setting:";
             // 
@@ -218,7 +218,7 @@ namespace DellFanManagement.App
             this.temperatureGroupBox.Location = new System.Drawing.Point(12, 83);
             this.temperatureGroupBox.Name = "temperatureGroupBox";
             this.temperatureGroupBox.Size = new System.Drawing.Size(270, 199);
-            this.temperatureGroupBox.TabIndex = 7;
+            this.temperatureGroupBox.TabIndex = 4;
             this.temperatureGroupBox.TabStop = false;
             this.temperatureGroupBox.Text = "Temperatures:";
             // 
@@ -392,7 +392,7 @@ namespace DellFanManagement.App
             this.operationModeGroupBox.Location = new System.Drawing.Point(288, 12);
             this.operationModeGroupBox.Name = "operationModeGroupBox";
             this.operationModeGroupBox.Size = new System.Drawing.Size(111, 99);
-            this.operationModeGroupBox.TabIndex = 2;
+            this.operationModeGroupBox.TabIndex = 5;
             this.operationModeGroupBox.TabStop = false;
             this.operationModeGroupBox.Text = "Operation mode:";
             // 
@@ -436,7 +436,7 @@ namespace DellFanManagement.App
             this.manualGroupBox.Location = new System.Drawing.Point(405, 12);
             this.manualGroupBox.Name = "manualGroupBox";
             this.manualGroupBox.Size = new System.Drawing.Size(194, 126);
-            this.manualGroupBox.TabIndex = 4;
+            this.manualGroupBox.TabIndex = 9;
             this.manualGroupBox.TabStop = false;
             this.manualGroupBox.Text = "Manual control:";
             // 
@@ -543,7 +543,7 @@ namespace DellFanManagement.App
             this.consistencyModeGroupBox.Location = new System.Drawing.Point(405, 144);
             this.consistencyModeGroupBox.Name = "consistencyModeGroupBox";
             this.consistencyModeGroupBox.Size = new System.Drawing.Size(194, 138);
-            this.consistencyModeGroupBox.TabIndex = 5;
+            this.consistencyModeGroupBox.TabIndex = 10;
             this.consistencyModeGroupBox.TabStop = false;
             this.consistencyModeGroupBox.Text = "Consistency mode options:";
             // 
@@ -650,7 +650,7 @@ namespace DellFanManagement.App
             this.ecFanControlGroupBox.Location = new System.Drawing.Point(179, 12);
             this.ecFanControlGroupBox.Name = "ecFanControlGroupBox";
             this.ecFanControlGroupBox.Size = new System.Drawing.Size(103, 48);
-            this.ecFanControlGroupBox.TabIndex = 0;
+            this.ecFanControlGroupBox.TabIndex = 2;
             this.ecFanControlGroupBox.TabStop = false;
             this.ecFanControlGroupBox.Text = "EC fan control:";
             // 
@@ -660,7 +660,7 @@ namespace DellFanManagement.App
             this.restartBackgroundThreadButton.Location = new System.Drawing.Point(178, 65);
             this.restartBackgroundThreadButton.Name = "restartBackgroundThreadButton";
             this.restartBackgroundThreadButton.Size = new System.Drawing.Size(105, 21);
-            this.restartBackgroundThreadButton.TabIndex = 1;
+            this.restartBackgroundThreadButton.TabIndex = 3;
             this.restartBackgroundThreadButton.Text = "&Restart BG thread";
             this.restartBackgroundThreadButton.UseVisualStyleBackColor = true;
             // 
@@ -671,7 +671,7 @@ namespace DellFanManagement.App
             this.aboutGroupBox.Location = new System.Drawing.Point(605, 12);
             this.aboutGroupBox.Name = "aboutGroupBox";
             this.aboutGroupBox.Size = new System.Drawing.Size(334, 185);
-            this.aboutGroupBox.TabIndex = 8;
+            this.aboutGroupBox.TabIndex = 11;
             this.aboutGroupBox.TabStop = false;
             this.aboutGroupBox.Text = "About:";
             // 
@@ -700,7 +700,7 @@ namespace DellFanManagement.App
             this.audioKeepAliveGroupBox.Location = new System.Drawing.Point(605, 203);
             this.audioKeepAliveGroupBox.Name = "audioKeepAliveGroupBox";
             this.audioKeepAliveGroupBox.Size = new System.Drawing.Size(334, 79);
-            this.audioKeepAliveGroupBox.TabIndex = 9;
+            this.audioKeepAliveGroupBox.TabIndex = 12;
             this.audioKeepAliveGroupBox.TabStop = false;
             this.audioKeepAliveGroupBox.Text = "Audio keep alive:";
             // 
@@ -731,7 +731,7 @@ namespace DellFanManagement.App
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(951, 22);
             this.statusStrip.SizingGrip = false;
-            this.statusStrip.TabIndex = 11;
+            this.statusStrip.TabIndex = 13;
             // 
             // consistencyModeStatusLabel
             // 
@@ -752,7 +752,7 @@ namespace DellFanManagement.App
             this.trayIconCheckBox.Location = new System.Drawing.Point(294, 246);
             this.trayIconCheckBox.Name = "trayIconCheckBox";
             this.trayIconCheckBox.Size = new System.Drawing.Size(73, 19);
-            this.trayIconCheckBox.TabIndex = 12;
+            this.trayIconCheckBox.TabIndex = 7;
             this.trayIconCheckBox.Text = "&Tray icon";
             this.trayIconCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -765,7 +765,7 @@ namespace DellFanManagement.App
             this.animatedCheckBox.Location = new System.Drawing.Point(294, 266);
             this.animatedCheckBox.Name = "animatedCheckBox";
             this.animatedCheckBox.Size = new System.Drawing.Size(78, 19);
-            this.animatedCheckBox.TabIndex = 13;
+            this.animatedCheckBox.TabIndex = 8;
             this.animatedCheckBox.Text = "An&imated";
             this.animatedCheckBox.UseVisualStyleBackColor = true;
             // 
