@@ -64,7 +64,8 @@ Licensed under GPLv3
 Uses Dell SMM I/O driver by 424778940z
 https://github.com/424778940z/bzh-windrv-dell-smm-io
 
-Also uses Libre Hardware Monitor, NVAPI, and irrKlang.</value>
+Also uses Libre Hardware Monitor, NVAPI, and irrKlang.
+Icon made from Icon Fonts, licensed by CC BY 3.0.</value>
   </data>
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
