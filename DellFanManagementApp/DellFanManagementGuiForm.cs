@@ -640,56 +640,15 @@ namespace DellFanManagement.App
         /// </summary>
         private void LoadTrayIcons()
         {
-            _trayIcons[0] = new Icon(@"Resources\Fan-Grey-1.ico");
-            _trayIcons[1] = new Icon(@"Resources\Fan-Grey-2.ico");
-            _trayIcons[2] = new Icon(@"Resources\Fan-Grey-3.ico");
-            _trayIcons[3] = new Icon(@"Resources\Fan-Grey-4.ico");
-            _trayIcons[4] = new Icon(@"Resources\Fan-Grey-5.ico");
-            _trayIcons[5] = new Icon(@"Resources\Fan-Grey-6.ico");
-            _trayIcons[6] = new Icon(@"Resources\Fan-Grey-7.ico");
-            _trayIcons[7] = new Icon(@"Resources\Fan-Grey-8.ico");
-            _trayIcons[8] = new Icon(@"Resources\Fan-Grey-9.ico");
-            _trayIcons[9] = new Icon(@"Resources\Fan-Grey-10.ico");
-            _trayIcons[10] = new Icon(@"Resources\Fan-Grey-11.ico");
-            _trayIcons[11] = new Icon(@"Resources\Fan-Grey-12.ico");
-            _trayIcons[12] = new Icon(@"Resources\Fan-Grey-13.ico");
-            _trayIcons[13] = new Icon(@"Resources\Fan-Grey-14.ico");
-            _trayIcons[14] = new Icon(@"Resources\Fan-Grey-15.ico");
-            _trayIcons[15] = new Icon(@"Resources\Fan-Grey-16.ico");
+            int globalIndex = 0;
 
-            _trayIcons[16] = new Icon(@"Resources\Fan-Blue-1.ico");
-            _trayIcons[17] = new Icon(@"Resources\Fan-Blue-2.ico");
-            _trayIcons[18] = new Icon(@"Resources\Fan-Blue-3.ico");
-            _trayIcons[19] = new Icon(@"Resources\Fan-Blue-4.ico");
-            _trayIcons[20] = new Icon(@"Resources\Fan-Blue-5.ico");
-            _trayIcons[21] = new Icon(@"Resources\Fan-Blue-6.ico");
-            _trayIcons[22] = new Icon(@"Resources\Fan-Blue-7.ico");
-            _trayIcons[23] = new Icon(@"Resources\Fan-Blue-8.ico");
-            _trayIcons[24] = new Icon(@"Resources\Fan-Blue-9.ico");
-            _trayIcons[25] = new Icon(@"Resources\Fan-Blue-10.ico");
-            _trayIcons[26] = new Icon(@"Resources\Fan-Blue-11.ico");
-            _trayIcons[27] = new Icon(@"Resources\Fan-Blue-12.ico");
-            _trayIcons[28] = new Icon(@"Resources\Fan-Blue-13.ico");
-            _trayIcons[29] = new Icon(@"Resources\Fan-Blue-14.ico");
-            _trayIcons[30] = new Icon(@"Resources\Fan-Blue-15.ico");
-            _trayIcons[31] = new Icon(@"Resources\Fan-Blue-16.ico");
-
-            _trayIcons[32] = new Icon(@"Resources\Fan-Red-1.ico");
-            _trayIcons[33] = new Icon(@"Resources\Fan-Red-2.ico");
-            _trayIcons[34] = new Icon(@"Resources\Fan-Red-3.ico");
-            _trayIcons[35] = new Icon(@"Resources\Fan-Red-4.ico");
-            _trayIcons[36] = new Icon(@"Resources\Fan-Red-5.ico");
-            _trayIcons[37] = new Icon(@"Resources\Fan-Red-6.ico");
-            _trayIcons[38] = new Icon(@"Resources\Fan-Red-7.ico");
-            _trayIcons[39] = new Icon(@"Resources\Fan-Red-8.ico");
-            _trayIcons[40] = new Icon(@"Resources\Fan-Red-9.ico");
-            _trayIcons[41] = new Icon(@"Resources\Fan-Red-10.ico");
-            _trayIcons[42] = new Icon(@"Resources\Fan-Red-11.ico");
-            _trayIcons[43] = new Icon(@"Resources\Fan-Red-12.ico");
-            _trayIcons[44] = new Icon(@"Resources\Fan-Red-13.ico");
-            _trayIcons[45] = new Icon(@"Resources\Fan-Red-14.ico");
-            _trayIcons[46] = new Icon(@"Resources\Fan-Red-15.ico");
-            _trayIcons[47] = new Icon(@"Resources\Fan-Red-16.ico");
+            foreach (string color in new string[] { "Grey", "Blue", "Red" })
+            {
+                for (int index = 1; index <= 16; index++)
+                {
+                    _trayIcons[globalIndex++] = new Icon(string.Format(@"Resources\Fan-{0}-{1}.ico", color, index));
+                }
+            }
         }
 
         /// <summary>
