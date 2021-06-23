@@ -29,6 +29,7 @@ namespace DellFanManagement.App
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DellFanManagementGuiForm));
             this.fansGroupBox = new System.Windows.Forms.GroupBox();
             this.fan2RpmLabel = new System.Windows.Forms.Label();
@@ -90,6 +91,9 @@ namespace DellFanManagement.App
             this.audioKeepAliveCheckbox = new System.Windows.Forms.CheckBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.consistencyModeStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayIconCheckBox = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.fansGroupBox.SuspendLayout();
             this.thermalSettingGroupBox.SuspendLayout();
             this.temperatureGroupBox.SuspendLayout();
@@ -722,11 +726,41 @@ namespace DellFanManagement.App
             this.consistencyModeStatusLabel.Size = new System.Drawing.Size(109, 17);
             this.consistencyModeStatusLabel.Text = "Fan speed is locked";
             // 
+            // trayIcon
+            // 
+            this.trayIcon.Text = "Dell Fan Management";
+            this.trayIcon.Visible = true;
+            // 
+            // trayIconCheckBox
+            // 
+            this.trayIconCheckBox.AutoSize = true;
+            this.trayIconCheckBox.Checked = true;
+            this.trayIconCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.trayIconCheckBox.Location = new System.Drawing.Point(294, 246);
+            this.trayIconCheckBox.Name = "trayIconCheckBox";
+            this.trayIconCheckBox.Size = new System.Drawing.Size(73, 19);
+            this.trayIconCheckBox.TabIndex = 12;
+            this.trayIconCheckBox.Text = "&Tray icon";
+            this.trayIconCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(294, 266);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(94, 19);
+            this.checkBox1.TabIndex = 13;
+            this.checkBox1.Text = "Not&ifications";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // DellFanManagementGuiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(951, 315);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.trayIconCheckBox);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.audioKeepAliveGroupBox);
             this.Controls.Add(this.aboutGroupBox);
@@ -833,6 +867,9 @@ namespace DellFanManagement.App
         private System.Windows.Forms.CheckBox audioKeepAliveCheckbox;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel consistencyModeStatusLabel;
+        private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.CheckBox trayIconCheckBox;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

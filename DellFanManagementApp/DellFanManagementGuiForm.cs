@@ -2,7 +2,9 @@
 using DellFanManagement.SmmIo;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace DellFanManagement.App
@@ -23,6 +25,21 @@ namespace DellFanManagement.App
         private readonly Core _core;
 
         /// <summary>
+        /// Pre-loaded icons to use in the system tray.
+        /// </summary>
+        private readonly Icon[] _trayIcons;
+
+        /// <summary>
+        /// Next tray icon animation to be displayed.
+        /// </summary>
+        private int _trayIconIndex;
+
+        /// <summary>
+        /// Indicates that the program is closing, so background threads should stop.
+        /// </summary>
+        private bool _formClosed;
+
+        /// <summary>
         /// Constructor.  Get everything set up before the window is displayed.
         /// </summary>
         public DellFanManagementGuiForm()
@@ -32,6 +49,12 @@ namespace DellFanManagement.App
             // Initialize objects.
             _state = new State();
             _core = new Core(_state, this);
+            _formClosed = false;
+
+            _trayIcons = new Icon[4];
+            _trayIconIndex = 0;
+            LoadTrayIcons();
+            UpdateTrayIcon();
 
             // Version number in the about box.
             aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
@@ -75,6 +98,9 @@ namespace DellFanManagement.App
             audioKeepAliveComboBox.SelectedValueChanged += new EventHandler(AudioDeviceChangedEventHandler);
             audioKeepAliveCheckbox.CheckedChanged += new EventHandler(AudioKeepAliveCheckboxChangedEventHandler);
 
+            // ...Tray icon checkbox...
+            trayIconCheckBox.CheckedChanged += new EventHandler(TrayIconCheckBoxChangedEventHandler);
+
             // Empty out pre-populated temperature label text fields.
             // (There are so many to allow support for lots of CPU cores, which many systems will not have.)
             temperatureLabel1.Text = string.Empty;
@@ -105,8 +131,9 @@ namespace DellFanManagement.App
             // Update form with default state values.
             UpdateForm();
 
-            // Start thread to do background work.
+            // Start threads to do background work.
             _core.StartBackgroundThread();
+            StartTrayIconThread();
         }
 
         /// <summary>
@@ -258,6 +285,16 @@ namespace DellFanManagement.App
                 audioKeepAliveCheckbox.Checked = false;
             }
 
+            // Tray icon hover text.
+            if (_state.Fan2Present)
+            {
+                trayIcon.Text = string.Format("Dell Fan Management\n{0}\n{1}", fan1RpmLabel.Text, fan2RpmLabel.Text);
+            }
+            else
+            {
+                trayIcon.Text = string.Format("Dell Fan Management\n{0}", fan1RpmLabel.Text);
+            }
+
             // Error message.
             if (_state.Error != null)
             {
@@ -373,6 +410,8 @@ namespace DellFanManagement.App
         /// </summary>
         private void FormClosedEventHandler(Object sender, FormClosedEventArgs e)
         {
+            _formClosed = true;
+
             _state.WaitOne();
             _state.BackgroundThreadRunning = false; // Request termination of background thread.
             _core.StopAudioThread(); // Request termination of the audio thread.
@@ -542,6 +581,14 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
+        /// Called when the "tray icon" checkbox is clicked.
+        /// </summary>
+        private void TrayIconCheckBoxChangedEventHandler(Object sender, EventArgs e)
+        {
+            trayIcon.Visible = trayIconCheckBox.Checked;
+        }
+
+        /// <summary>
         /// Check to see if the GUI consistency mode options text boxes match the currently stored configuration, and
         /// enable or disable the "apply changes" button accordingly.
         /// </summary>
@@ -564,7 +611,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Take the consistency mode configuration and save it to the core.
         /// </summary>
-        public void WriteConsistencyModeConfiguration()
+        private void WriteConsistencyModeConfiguration()
         {
             bool success = int.TryParse(consistencyModeLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
             if (success)
@@ -579,6 +626,78 @@ namespace DellFanManagement.App
                         CheckConsistencyModeOptionsConsistency();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Load system tray icons.
+        /// </summary>
+        private void LoadTrayIcons()
+        {
+            _trayIcons[0] = new Icon(@"Resources\Fan-Grey-1.ico");
+            _trayIcons[1] = new Icon(@"Resources\Fan-Grey-2.ico");
+            _trayIcons[2] = new Icon(@"Resources\Fan-Grey-3.ico");
+            _trayIcons[3] = new Icon(@"Resources\Fan-Grey-4.ico");
+        }
+
+        /// <summary>
+        /// Advance the tray icon animation.
+        /// </summary>
+        private void UpdateTrayIcon()
+        {
+            trayIcon.Icon = _trayIcons[_trayIconIndex];
+            _trayIconIndex = (_trayIconIndex + 1) % 4;
+        }
+
+        /// <summary>
+        /// Kicks off the thread that handles the tray icon animation.
+        /// </summary>
+        private void StartTrayIconThread()
+        {
+            new Thread(new ThreadStart(TrayIconThread)).Start();
+        }
+
+        /// <summary>
+        /// Update the tray icon, changing speed with the fan RPM.
+        /// </summary>
+        private void TrayIconThread()
+        {
+            MethodInvoker updateInvoker = new(UpdateTrayIcon);
+
+            while (!_formClosed)
+            {
+                // Grab state information that we need.
+                ulong rpm1 = _state.Fan1Rpm;
+                ulong rpm2 = _state.Fan2Rpm;
+                bool fan2Present = _state.Fan2Present;
+
+                ulong averageRpm;
+                if (fan2Present)
+                {
+                    averageRpm = (rpm1 + rpm2) / 2;
+                }
+                else
+                {
+                    averageRpm = rpm1;
+                }
+
+                int waitTime = 1000; // One second.
+                if (averageRpm > 0 && averageRpm < 10000)
+                {
+                    try
+                    {
+                        BeginInvoke(updateInvoker);
+                    }
+                    catch (Exception)
+                    {
+                        // If the window handle is not here (not open yet, or closing), there could be an error.
+                        // Silently ignore.
+                    }
+
+                    waitTime = 500000 / (int)averageRpm;
+                }
+
+                Thread.Sleep(waitTime);
             }
         }
     }
