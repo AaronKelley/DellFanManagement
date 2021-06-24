@@ -98,8 +98,9 @@ namespace DellFanManagement.App
             audioKeepAliveComboBox.SelectedValueChanged += new EventHandler(AudioDeviceChangedEventHandler);
             audioKeepAliveCheckbox.CheckedChanged += new EventHandler(AudioKeepAliveCheckboxChangedEventHandler);
 
-            // ...Tray icon checkbox...
+            // ...Tray icon checkboxes...
             trayIconCheckBox.CheckedChanged += new EventHandler(TrayIconCheckBoxChangedEventHandler);
+            animatedCheckBox.CheckedChanged += new EventHandler(AnimatedCheckBoxChangedEventHandler);
 
             // Empty out pre-populated temperature label text fields.
             // (There are so many to allow support for lots of CPU cores, which many systems will not have.)
@@ -592,6 +593,15 @@ namespace DellFanManagement.App
         private void TrayIconCheckBoxChangedEventHandler(Object sender, EventArgs e)
         {
             trayIcon.Visible = trayIconCheckBox.Checked;
+            animatedCheckBox.Enabled = trayIconCheckBox.Checked;
+        }
+
+        /// <summary>
+        /// Called when the "animated" checkbox is clicked.
+        /// </summary>
+        private void AnimatedCheckBoxChangedEventHandler(Object sender, EventArgs e)
+        {
+            UpdateTrayIcon(false);
         }
 
         /// <summary>
@@ -657,11 +667,6 @@ namespace DellFanManagement.App
         /// <param name="advance">Whether or not to advance a frame</param>
         private void UpdateTrayIcon(bool advance)
         {
-            if (advance)
-            {
-                _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
-            }
-
             int offset;
 
             if (_state.OperationMode != OperationMode.Consistency)
@@ -678,6 +683,18 @@ namespace DellFanManagement.App
                 {
                     offset = 32;
                 }
+            }
+
+            if (animatedCheckBox.Checked)
+            {
+                if (advance)
+                {
+                    _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+                }
+            }
+            else
+            {
+                _trayIconIndex = 0;
             }
 
             trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
@@ -712,7 +729,7 @@ namespace DellFanManagement.App
                 {
                     int waitTime = 1000; // One second.
 
-                    if (trayIconCheckBox.Checked)
+                    if (trayIconCheckBox.Checked && animatedCheckBox.Checked)
                     {
                         // Grab state information that we need.
                         ulong averageRpm;

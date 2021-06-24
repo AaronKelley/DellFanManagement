@@ -761,7 +761,6 @@ namespace DellFanManagement.App
             this.animatedCheckBox.AutoSize = true;
             this.animatedCheckBox.Checked = true;
             this.animatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.animatedCheckBox.Enabled = false;
             this.animatedCheckBox.Location = new System.Drawing.Point(294, 266);
             this.animatedCheckBox.Name = "animatedCheckBox";
             this.animatedCheckBox.Size = new System.Drawing.Size(78, 19);
