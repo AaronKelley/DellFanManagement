@@ -12,7 +12,7 @@ namespace DellFanManagement.App
     /// <see cref="https://stackoverflow.com/a/17492949/4647297"/>
     public static class UacHelper
     {
-        private const string uacRegistryKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+        private const string uacRegistryKey = @"Software\Microsoft\Windows\CurrentVersion\Policies\System";
         private const string uacRegistryValue = "EnableLUA";
 
         private static readonly uint STANDARD_RIGHTS_READ = 0x00020000;
