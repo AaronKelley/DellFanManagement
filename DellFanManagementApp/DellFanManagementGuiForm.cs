@@ -25,6 +25,11 @@ namespace DellFanManagement.App
         private readonly Core _core;
 
         /// <summary>
+        /// Handles storing the options selected in the program in the registry.
+        /// </summary>
+        private readonly ConfigurationStore _configurationStore;
+
+        /// <summary>
         /// Pre-loaded icons to use in the system tray.
         /// </summary>
         private readonly Icon[] _trayIcons;
@@ -49,12 +54,12 @@ namespace DellFanManagement.App
             // Initialize objects.
             _state = new State();
             _core = new Core(_state, this);
+            _configurationStore = new();
             _formClosed = false;
 
             _trayIcons = new Icon[48];
             _trayIconIndex = 0;
             LoadTrayIcons();
-            UpdateTrayIcon(false);
 
             // Version number in the about box.
             aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
@@ -123,11 +128,20 @@ namespace DellFanManagement.App
             temperatureLabel17.Text = string.Empty;
             temperatureLabel18.Text = string.Empty;
 
+            // Check configuration store and set options accordingly.
+            if (_configurationStore.GetIntOption(ConfigurationOption.TrayIconEnabled) == 0)
+            {
+                // Tray icon is enabled by defualt; if it was explicitly disabled, adjust for that.
+                trayIconCheckBox.Checked = false;
+            }
+
             // TODO: Read previous mode from configuration.
             operationModeRadioButtonAutomatic.Checked = true;
 
             // Save initial keep alive configuration.
             WriteConsistencyModeConfiguration();
+
+            UpdateTrayIcon(false);
 
             // Update form with default state values.
             UpdateForm();
@@ -592,8 +606,10 @@ namespace DellFanManagement.App
         /// </summary>
         private void TrayIconCheckBoxChangedEventHandler(Object sender, EventArgs e)
         {
-            trayIcon.Visible = trayIconCheckBox.Checked;
+            UpdateTrayIcon(false);
             animatedCheckBox.Enabled = trayIconCheckBox.Checked;
+
+            _configurationStore.SetOption(ConfigurationOption.TrayIconEnabled, trayIconCheckBox.Checked ? 1 : 0);
         }
 
         /// <summary>
@@ -667,37 +683,43 @@ namespace DellFanManagement.App
         /// <param name="advance">Whether or not to advance a frame</param>
         private void UpdateTrayIcon(bool advance)
         {
-            int offset;
+            // Actually, hide tray icon if it is not enabled.
+            trayIcon.Visible = trayIconCheckBox.Checked;
 
-            if (_state.OperationMode != OperationMode.Consistency)
+            if (trayIconCheckBox.Checked)
             {
-                offset = 0;
-            }
-            else
-            {
-                if (!_state.EcFanControlEnabled)
+                int offset;
+
+                if (_state.OperationMode != OperationMode.Consistency)
                 {
-                    offset = 16;
+                    offset = 0;
                 }
                 else
                 {
-                    offset = 32;
+                    if (!_state.EcFanControlEnabled)
+                    {
+                        offset = 16;
+                    }
+                    else
+                    {
+                        offset = 32;
+                    }
                 }
-            }
 
-            if (animatedCheckBox.Checked)
-            {
-                if (advance)
+                if (animatedCheckBox.Checked)
                 {
-                    _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+                    if (advance)
+                    {
+                        _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+                    }
                 }
-            }
-            else
-            {
-                _trayIconIndex = 0;
-            }
+                else
+                {
+                    _trayIconIndex = 0;
+                }
 
-            trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
+                trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
+            }
         }
 
         /// <summary>

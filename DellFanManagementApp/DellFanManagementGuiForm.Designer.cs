@@ -742,7 +742,6 @@ namespace DellFanManagement.App
             // trayIcon
             // 
             this.trayIcon.Text = "Dell Fan Management";
-            this.trayIcon.Visible = true;
             // 
             // trayIconCheckBox
             // 
