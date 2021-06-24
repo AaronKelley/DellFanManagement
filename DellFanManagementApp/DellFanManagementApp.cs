@@ -1,5 +1,6 @@
 using DellFanManagement.Interop;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace DellFanManagement.App
@@ -23,7 +24,12 @@ namespace DellFanManagement.App
                         // Shutdown happens immediately after the background thread main loop ends.
                         if (DellFanLib.Initialize())
                         {
-                            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                            // Looks like we're ready to start up the GUI app.
+                            // Set process priority to high.
+                            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+
+                            // Boilerplate code to start the app.
+                            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
                             Application.EnableVisualStyles();
                             Application.SetCompatibleTextRenderingDefault(false);
                             Application.Run(new DellFanManagementGuiForm());
