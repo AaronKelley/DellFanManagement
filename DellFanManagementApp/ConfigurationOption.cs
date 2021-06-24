@@ -17,6 +17,22 @@ namespace DellFanManagement.App
         /// </summary>
         public static readonly ConfigurationOption TrayIconAnimationEnabled = new(ConfigurationOptionType.Integer, "TrayIconAnimationEnabled");
 
+        /// <summary>
+        /// Lower temperature threshold for consistency mode.
+        /// </summary>
+        public static readonly ConfigurationOption ConsistencyModeLowerTemperatureThreshold = new(ConfigurationOptionType.Integer, "ConsistencyModeLowerTemperatureThreshold");
+
+        /// <summary>
+        /// Upper temperature threshold for consistency mode.
+        /// </summary>
+        public static readonly ConfigurationOption ConsistencyModeUpperTemperatureThreshold = new(ConfigurationOptionType.Integer, "ConsistencyModeUpperTemperatureThreshold");
+
+        /// <summary>
+        /// RPM threshold for consistency mode.
+        /// </summary>
+        public static readonly ConfigurationOption ConsistencyModeRpmThreshold = new(ConfigurationOptionType.Integer, "ConsistencyModeRpmThreshold");
+
+
         public ConfigurationOptionType Type { get; private set; }
         public string Key { get; private set; }
 

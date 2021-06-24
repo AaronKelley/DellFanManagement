@@ -162,6 +162,25 @@ namespace DellFanManagement.App
                 animatedCheckBox.Checked = false;
             }
 
+            // Consistency mode settings.
+            int? lowerTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeLowerTemperatureThreshold);
+            if (lowerTemperatureThreshold != null && lowerTemperatureThreshold > 0 && lowerTemperatureThreshold < 100)
+            {
+                consistencyModeLowerTemperatureThresholdTextBox.Text = lowerTemperatureThreshold.ToString();
+            }
+
+            int? upperTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold);
+            if (upperTemperatureThreshold != null && upperTemperatureThreshold > 0 && upperTemperatureThreshold < 100)
+            {
+                consistencyModeUpperTemperatureThresholdTextBox.Text = upperTemperatureThreshold.ToString();
+            }
+
+            int? rpmThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeRpmThreshold);
+            if (rpmThreshold != null && rpmThreshold > 0 && rpmThreshold < 10000)
+            {
+                consistencyModeRpmThresholdTextBox.Text = rpmThreshold.ToString();
+            }
+
             // TODO: Read previous mode from configuration.
             operationModeRadioButtonAutomatic.Checked = true;
         }
@@ -672,6 +691,11 @@ namespace DellFanManagement.App
                     if (success)
                     {
                         _core.WriteConsistencyModeConfiguration(lowerTemperatureThreshold, upperTemperatureThreshold, rpmThreshold);
+
+                        _configurationStore.SetOption(ConfigurationOption.ConsistencyModeLowerTemperatureThreshold, lowerTemperatureThreshold);
+                        _configurationStore.SetOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold, upperTemperatureThreshold);
+                        _configurationStore.SetOption(ConfigurationOption.ConsistencyModeRpmThreshold, rpmThreshold);
+
                         CheckConsistencyModeOptionsConsistency();
                     }
                 }
