@@ -7,7 +7,15 @@ namespace DellFanManagement.App
     /// </summary>
     class ConfigurationOption
     {
+        /// <summary>
+        /// Store the state of the "Tray icon" checkbox.
+        /// </summary>
         public static readonly ConfigurationOption TrayIconEnabled = new(ConfigurationOptionType.Integer, "TrayIconEnabled");
+
+        /// <summary>
+        /// Store the state of the tray icon "Animated" checkbox.
+        /// </summary>
+        public static readonly ConfigurationOption TrayIconAnimationEnabled = new(ConfigurationOptionType.Integer, "TrayIconAnimationEnabled");
 
         public ConfigurationOptionType Type { get; private set; }
         public string Key { get; private set; }

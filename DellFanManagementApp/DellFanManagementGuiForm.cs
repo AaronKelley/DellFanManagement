@@ -128,19 +128,13 @@ namespace DellFanManagement.App
             temperatureLabel17.Text = string.Empty;
             temperatureLabel18.Text = string.Empty;
 
-            // Check configuration store and set options accordingly.
-            if (_configurationStore.GetIntOption(ConfigurationOption.TrayIconEnabled) == 0)
-            {
-                // Tray icon is enabled by defualt; if it was explicitly disabled, adjust for that.
-                trayIconCheckBox.Checked = false;
-            }
-
-            // TODO: Read previous mode from configuration.
-            operationModeRadioButtonAutomatic.Checked = true;
+            // Apply configuration loaded from registry.
+            ApplyConfiguration();
 
             // Save initial keep alive configuration.
             WriteConsistencyModeConfiguration();
 
+            // Initial update of the tray icon (required for it to appear for display).
             UpdateTrayIcon(false);
 
             // Update form with default state values.
@@ -149,6 +143,27 @@ namespace DellFanManagement.App
             // Start threads to do background work.
             _core.StartBackgroundThread();
             StartTrayIconThread();
+        }
+
+        /// <summary>
+        /// Apply configuration settings loaded from the registry.
+        /// </summary>
+        private void ApplyConfiguration()
+        {
+            // The tray icon is enabled by default; disable only if that has been explicitly set.
+            if (_configurationStore.GetIntOption(ConfigurationOption.TrayIconEnabled) == 0)
+            {
+                trayIconCheckBox.Checked = false;
+            }
+
+            // Similar for tray icon animation.
+            if (_configurationStore.GetIntOption(ConfigurationOption.TrayIconAnimationEnabled) == 0)
+            {
+                animatedCheckBox.Checked = false;
+            }
+
+            // TODO: Read previous mode from configuration.
+            operationModeRadioButtonAutomatic.Checked = true;
         }
 
         /// <summary>
@@ -618,6 +633,8 @@ namespace DellFanManagement.App
         private void AnimatedCheckBoxChangedEventHandler(Object sender, EventArgs e)
         {
             UpdateTrayIcon(false);
+
+            _configurationStore.SetOption(ConfigurationOption.TrayIconAnimationEnabled, animatedCheckBox.Checked ? 1 : 0);
         }
 
         /// <summary>
