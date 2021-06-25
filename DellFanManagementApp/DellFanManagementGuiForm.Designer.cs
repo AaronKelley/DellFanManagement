@@ -574,7 +574,7 @@ namespace DellFanManagement.App
             this.consistencyModeRpmThresholdTextBox.Name = "consistencyModeRpmThresholdTextBox";
             this.consistencyModeRpmThresholdTextBox.Size = new System.Drawing.Size(30, 23);
             this.consistencyModeRpmThresholdTextBox.TabIndex = 5;
-            this.consistencyModeRpmThresholdTextBox.Text = "2900";
+            this.consistencyModeRpmThresholdTextBox.Text = "2400";
             // 
             // consistencyModeRpmThresholdLabel
             // 
@@ -610,7 +610,7 @@ namespace DellFanManagement.App
             this.consistencyModeLowerTemperatureThresholdTextBox.Name = "consistencyModeLowerTemperatureThresholdTextBox";
             this.consistencyModeLowerTemperatureThresholdTextBox.Size = new System.Drawing.Size(18, 23);
             this.consistencyModeLowerTemperatureThresholdTextBox.TabIndex = 1;
-            this.consistencyModeLowerTemperatureThresholdTextBox.Text = "70";
+            this.consistencyModeLowerTemperatureThresholdTextBox.Text = "65";
             // 
             // consistencyModeLowerTemperatureThresholdLabel
             // 
