@@ -1,12 +1,15 @@
-﻿using System;
-
-namespace DellFanManagement.App
+﻿namespace DellFanManagement.App
 {
     /// <summary>
     /// Just some string constants used when dealing with the ConfigurationStore class.
     /// </summary>
     class ConfigurationOption
     {
+        /// <summary>
+        /// Store the "operation mode".
+        /// </summary>
+        public static readonly ConfigurationOption OperationMode = new(ConfigurationOptionType.String, "OperationMode");
+
         /// <summary>
         /// Store the state of the "Tray icon" checkbox.
         /// </summary>
@@ -32,10 +35,21 @@ namespace DellFanManagement.App
         /// </summary>
         public static readonly ConfigurationOption ConsistencyModeRpmThreshold = new(ConfigurationOptionType.Integer, "ConsistencyModeRpmThreshold");
 
-
+        /// <summary>
+        /// Indicates whether this configuration option is for a "number" or a "string".
+        /// </summary>
         public ConfigurationOptionType Type { get; private set; }
+
+        /// <summary>
+        /// Key, or basically the name of this configuration option.
+        /// </summary>
         public string Key { get; private set; }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="type">What type of data is going to be stored.</param>
+        /// <param name="key">Name of this configuration option.</param>
         private ConfigurationOption(ConfigurationOptionType type, string key)
         {
             Type = type;

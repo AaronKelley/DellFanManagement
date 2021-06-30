@@ -88,7 +88,7 @@ namespace DellFanManagement.App
             // ...Restart background thread button...
             restartBackgroundThreadButton.Click += new EventHandler(ThermalSettingChangedEventHandler);
             
-            // ...Configuration radio buttons...
+            // ...Operation mode radio buttons...
             operationModeRadioButtonAutomatic.CheckedChanged += new EventHandler(ConfigurationRadioButtonAutomaticEventHandler);
             operationModeRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
             operationModeRadioButtonConsistency.CheckedChanged += new EventHandler(ConfigurationRadioButtonConsistencyEventHandler);
@@ -181,8 +181,27 @@ namespace DellFanManagement.App
                 consistencyModeRpmThresholdTextBox.Text = rpmThreshold.ToString();
             }
 
-            // TODO: Read previous mode from configuration.
-            operationModeRadioButtonAutomatic.Checked = true;
+            // Read previous operation mode from configuration.
+            if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.OperationMode), out OperationMode operationMode))
+            {
+                switch (operationMode)
+                {
+                    case OperationMode.Automatic:
+                        operationModeRadioButtonAutomatic.Checked = true;
+                        break;
+                    case OperationMode.Manual:
+                        operationModeRadioButtonManual.Checked = true;
+                        break;
+                    case OperationMode.Consistency:
+                        operationModeRadioButtonConsistency.Checked = true;
+                        break;
+                }
+            }
+            else
+            {
+                // Default to automatic mode.
+                operationModeRadioButtonAutomatic.Checked = true;
+            }
         }
 
         /// <summary>
@@ -360,6 +379,7 @@ namespace DellFanManagement.App
         private void ConfigurationRadioButtonAutomaticEventHandler(Object sender, EventArgs e)
         {
             _core.SetAutomaticMode();
+            _configurationStore.SetOption(ConfigurationOption.OperationMode, OperationMode.Automatic);
 
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
@@ -375,6 +395,7 @@ namespace DellFanManagement.App
         {
             ecFanControlRadioButtonOn.Checked = true;
             _core.SetManualMode();
+            _configurationStore.SetOption(ConfigurationOption.OperationMode, OperationMode.Manual);
 
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
@@ -389,6 +410,7 @@ namespace DellFanManagement.App
         private void ConfigurationRadioButtonConsistencyEventHandler(Object sender, EventArgs e)
         {
             _core.SetConsistencyMode();
+            _configurationStore.SetOption(ConfigurationOption.OperationMode, OperationMode.Consistency);
 
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(true);

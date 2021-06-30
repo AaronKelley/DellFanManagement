@@ -36,9 +36,9 @@ namespace DellFanManagement.App
             {
                 _registryKey.SetValue(option.Key, optionValue, RegistryValueKind.DWord);
             }
-            else if (option.Type == ConfigurationOptionType.String && optionValue is string)
+            else if (option.Type == ConfigurationOptionType.String)
             {
-                _registryKey.SetValue(option.Key, optionValue, RegistryValueKind.String);
+                _registryKey.SetValue(option.Key, optionValue.ToString(), RegistryValueKind.String);
             }
             else
             {
