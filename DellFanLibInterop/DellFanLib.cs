@@ -7,7 +7,7 @@ namespace DellFanManagement.Interop
         /// <summary>
         /// Version number for the entire package.
         /// </summary>
-        public static readonly string Version = "2.1.1";
+        public static readonly string Version = "3.0.0 beta";
 
         /// <summary>
         /// Load the EC I/O driver and set things up.
