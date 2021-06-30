@@ -31,8 +31,13 @@ namespace DellFanManagement.App
         {
             _options[option.Key] = optionValue;
 
-            // TODO: Write to registry.
-            if (option.Type == ConfigurationOptionType.Integer && optionValue is int)
+            // Write to registry.
+            if (optionValue == null)
+            {
+                // Acutally, null means delete from registry.
+                _registryKey.DeleteValue(option.Key, false);
+            }
+            else if (option.Type == ConfigurationOptionType.Integer && optionValue is int)
             {
                 _registryKey.SetValue(option.Key, optionValue, RegistryValueKind.DWord);
             }
@@ -49,8 +54,8 @@ namespace DellFanManagement.App
         /// <summary>
         /// Get the value of a string option from the configuration store.
         /// </summary>
-        /// <param name="optionName">Option to retrieve value of</param>
-        /// <returns>Option value (NULL if none set)</returns>
+        /// <param name="option">Option to retrieve value of.</param>
+        /// <returns>Option value (NULL if none set).</returns>
         public string GetStringOption(ConfigurationOption option)
         {
             if (!_options.Keys.Contains(option.Key))
@@ -67,6 +72,11 @@ namespace DellFanManagement.App
             }
         }
 
+        /// <summary>
+        /// Get the value of a numeric option from the configuration store.
+        /// </summary>
+        /// <param name="option">Option to retrieve value of.</param>
+        /// <returns>Option value (NULL if none set).</returns>
         public int? GetIntOption(ConfigurationOption option)
         {
             if (!_options.Keys.Contains(option.Key))
