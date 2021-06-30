@@ -45,10 +45,17 @@ namespace DellFanManagement.App
         private bool _formClosed;
 
         /// <summary>
+        /// Indicates whether the initial setup code has finished or not.
+        /// </summary>
+        private bool _initializationComplete;
+
+        /// <summary>
         /// Constructor.  Get everything set up before the window is displayed.
         /// </summary>
         public DellFanManagementGuiForm()
         {
+            _initializationComplete = false;
+
             InitializeComponent();
 
             // Initialize objects.
@@ -140,9 +147,17 @@ namespace DellFanManagement.App
             // Update form with default state values.
             UpdateForm();
 
+            // Apply audio keep alive configuration from registry.
+            ApplyAudioKeepAliveConfiguration();
+
+            // Apply manual fan control configuration from registry.
+            ApplyManualModeConfiguration();
+
             // Start threads to do background work.
             _core.StartBackgroundThread();
             StartTrayIconThread();
+
+            _initializationComplete = true;
         }
 
         /// <summary>
@@ -202,6 +217,93 @@ namespace DellFanManagement.App
                 // Default to automatic mode.
                 operationModeRadioButtonAutomatic.Checked = true;
             }
+        }
+
+        /// <summary>
+        /// Apply audio keep alive configuration using values from the registry.
+        /// </summary>
+        private void ApplyAudioKeepAliveConfiguration()
+        {
+            if (_configurationStore.GetIntOption(ConfigurationOption.AudioKeepAliveEnabled) == 1)
+            {
+                // Audio keep alive should be enabled.  Let's see if the audio device is present.
+                string storedAudioDeviceId = _configurationStore.GetStringOption(ConfigurationOption.AudioKeepAliveSelectedDevice);
+
+                foreach (object deviceObject in audioKeepAliveComboBox.Items)
+                {
+                    AudioDevice device = (AudioDevice)deviceObject;
+                    if (device.DeviceId == storedAudioDeviceId)
+                    {
+                        // Found it!
+                        audioKeepAliveComboBox.SelectedItem = deviceObject;
+                        audioKeepAliveCheckbox.Checked = true; // This will kick off the audio thread.
+                        break;
+                    }
+                }
+
+                // If we get down here and the checkbox is not checked, then the device was not in the list.
+                if (!audioKeepAliveCheckbox.Checked)
+                {
+                    _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Apply manual mode configuration from the registry.
+        /// </summary>
+        private void ApplyManualModeConfiguration()
+        {
+            if (operationModeRadioButtonManual.Checked)
+            {
+                // Apply saved manual mode configuration.
+                if (_configurationStore.GetIntOption(ConfigurationOption.ManualModeEcFanControlEnabled) == 0)
+                {
+                    ecFanControlRadioButtonOff.Checked = true;
+
+                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan1Level), out FanLevel fan1Level))
+                    {
+                        switch (fan1Level)
+                        {
+                            case FanLevel.Level0:
+                                manualFan1RadioButtonOff.Checked = true;
+                                break;
+                            case FanLevel.Level1:
+                                manualFan1RadioButtonMedium.Checked = true;
+                                break;
+                            case FanLevel.Level2:
+                                manualFan1RadioButtonHigh.Checked = true;
+                                break;
+                        }
+                    }
+
+                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan2Level), out FanLevel fan2Level))
+                    {
+                        switch (fan2Level)
+                        {
+                            case FanLevel.Level0:
+                                manualFan2RadioButtonOff.Checked = true;
+                                break;
+                            case FanLevel.Level1:
+                                manualFan2RadioButtonMedium.Checked = true;
+                                break;
+                            case FanLevel.Level2:
+                                manualFan2RadioButtonHigh.Checked = true;
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clear the manual operation mode configuration (when we switch to a different mode, it should be reset).
+        /// </summary>
+        private void ClearManualControlConfiguration()
+        {
+            _configurationStore.SetOption(ConfigurationOption.ManualModeEcFanControlEnabled, null);
+            _configurationStore.SetOption(ConfigurationOption.ManualModeFan1Level, null);
+            _configurationStore.SetOption(ConfigurationOption.ManualModeFan2Level, null);
         }
 
         /// <summary>
@@ -380,6 +482,7 @@ namespace DellFanManagement.App
         {
             _core.SetAutomaticMode();
             _configurationStore.SetOption(ConfigurationOption.OperationMode, OperationMode.Automatic);
+            ClearManualControlConfiguration();
 
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(false);
@@ -411,6 +514,7 @@ namespace DellFanManagement.App
         {
             _core.SetConsistencyMode();
             _configurationStore.SetOption(ConfigurationOption.OperationMode, OperationMode.Consistency);
+            ClearManualControlConfiguration();
 
             SetFanControlsAvailability(false);
             SetConsistencyModeControlsAvailability(true);
@@ -536,6 +640,12 @@ namespace DellFanManagement.App
             {
                 _core.RequestEcFanControl(true);
                 SetFanControlsAvailability(false);
+                if (operationModeRadioButtonManual.Checked && _initializationComplete)
+                {
+                    _configurationStore.SetOption(ConfigurationOption.ManualModeEcFanControlEnabled, 1);
+                    _configurationStore.SetOption(ConfigurationOption.ManualModeFan1Level, null);
+                    _configurationStore.SetOption(ConfigurationOption.ManualModeFan2Level, null);
+                }
             }
             else if (ecFanControlRadioButtonOff.Checked)
             {
@@ -543,6 +653,7 @@ namespace DellFanManagement.App
                 if (operationModeRadioButtonManual.Checked)
                 {
                     SetFanControlsAvailability(true);
+                    _configurationStore.SetOption(ConfigurationOption.ManualModeEcFanControlEnabled, 0);
                 }
             }
         }
@@ -570,6 +681,7 @@ namespace DellFanManagement.App
             if (fan1LevelRequested != null)
             {
                 _core.RequestFan1Level(fan1LevelRequested);
+                _configurationStore.SetOption(ConfigurationOption.ManualModeFan1Level, fan1LevelRequested);
             }
 
             // Fan 2.
@@ -590,6 +702,7 @@ namespace DellFanManagement.App
             if (fan2LevelRequested != null)
             {
                 _core.RequestFan2Level(fan2LevelRequested);
+                _configurationStore.SetOption(ConfigurationOption.ManualModeFan2Level, fan2LevelRequested);
             }
         }
 
@@ -618,10 +731,18 @@ namespace DellFanManagement.App
             if (audioKeepAliveCheckbox.Checked)
             {
                 _core.StartAudioThread();
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 1);
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, ((AudioDevice)audioKeepAliveComboBox.SelectedItem).DeviceId);
             }
             else
             {
                 _core.StopAudioThread();
+
+                if (!_formClosed)
+                {
+                    _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 0);
+                    _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, null);
+                }
             }
         }
 
