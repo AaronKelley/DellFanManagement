@@ -7,7 +7,7 @@ namespace DellFanManagement.Interop
         /// <summary>
         /// Version number for the entire package.
         /// </summary>
-        public static readonly string Version = "2.1.1";
+        public static readonly string Version = "3.0.0 beta";
 
         /// <summary>
         /// Load the EC I/O driver and set things up.
@@ -62,7 +62,12 @@ namespace DellFanManagement.Interop
     public enum FanIndex : ulong
     {
         Fan1 = 0,
-        Fan2 = 1
+        Fan2 = 1,
+        Fan3 = 2,
+        Fan4 = 3,
+        Fan5 = 4,
+        Fan6 = 5,
+        Fan7 = 6
     }
 
     /// <summary>

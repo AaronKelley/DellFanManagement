@@ -18,6 +18,11 @@ constexpr auto DELL_SMM_IO_FAN_LV2 = 2;
 
 constexpr auto DELL_SMM_IO_FAN1 = 0;
 constexpr auto DELL_SMM_IO_FAN2 = 1;
+constexpr auto DELL_SMM_IO_FAN3 = 2;
+constexpr auto DELL_SMM_IO_FAN4 = 3;
+constexpr auto DELL_SMM_IO_FAN5 = 4;
+constexpr auto DELL_SMM_IO_FAN6 = 5;
+constexpr auto DELL_SMM_IO_FAN7 = 6;
 
 constexpr auto DELL_SMM_IO_NO_ARG = 0;
 
@@ -134,25 +139,12 @@ unsigned long SetFanLevel(unsigned long fanIndex, unsigned long fanLevel)
 
 bool GetDriverPath()
 {
-    PWSTR slash;
-
-    if (!GetModuleFileName(GetModuleHandle(NULL), driverPath, sizeof(driverPath)))
+    if (!GetCurrentDirectory(sizeof(driverPath) / 2, driverPath))
     {
         return false;
     }
 
-    slash = wcsrchr(driverPath, '\\');
-
-    if (slash)
-    {
-        slash[1] = 0;
-    }
-    else
-    {
-        return false;
-    }
-
-    wcscat_s(driverPath, L"bzh_dell_smm_io_x64.sys");
+    wcscat_s(driverPath, L"\\bzh_dell_smm_io_x64.sys");
 
     return true;
 }
@@ -242,7 +234,7 @@ bool _stdcall RemoveDriver()
         }
 
         // If service is set to load automatically, don't delete it!
-        if (serviceConfiguration->dwStartType == SERVICE_DEMAND_START)
+        if (serviceConfiguration != NULL && serviceConfiguration->dwStartType == SERVICE_DEMAND_START)
         {
             result = DeleteService(serviceHandle);
         }
