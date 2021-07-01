@@ -21,9 +21,16 @@ namespace DellFanManagement.App
         {
             bool nvidiaGpuPresent = false;
 
-            if (PhysicalGPU.GetPhysicalGPUs().Length > 0)
+            try
             {
-                nvidiaGpuPresent = true;
+                if (PhysicalGPU.GetPhysicalGPUs().Length > 0)
+                {
+                    nvidiaGpuPresent = true;
+                }
+            }
+            catch (Exception)
+            {
+                // Silently fail.
             }
 
             _computer = new Computer
