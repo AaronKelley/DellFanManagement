@@ -61,7 +61,8 @@ namespace DellFanManagement.App
                     {
                         if (!sensor.Name.Contains("TjMax") && !sensor.Name.Contains("Average") && !sensor.Name.Contains("Max"))
                         {
-                            temperatures.Add(sensor.Name, int.Parse(sensor.Value.Value.ToString()));
+                            int temperature = sensor.Value != null ? (int)Math.Round(sensor.Value.Value) : 0;
+                            temperatures.Add(sensor.Name, temperature);
                         }
                     }
                 }
