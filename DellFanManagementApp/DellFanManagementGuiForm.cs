@@ -1,4 +1,5 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
 using System;
 using System.Collections.Generic;
@@ -340,34 +341,37 @@ namespace DellFanManagement.App
 
             // Temperatures.
             int labelIndex = 0;
-            foreach (string key in _state.Temperatures.Keys)
+            foreach (TemperatureComponent component in _state.Temperatures.Keys)
             {
-                string temperature = _state.Temperatures[key] != 0 ? _state.Temperatures[key].ToString() : "--";
-                string labelValue = string.Format("{0}: {1}", key, temperature);
-
-                switch (labelIndex)
+                foreach (string key in _state.Temperatures[component].Keys)
                 {
-                    case 0: temperatureLabel1.Text = labelValue; break;
-                    case 1: temperatureLabel2.Text = labelValue; break;
-                    case 2: temperatureLabel3.Text = labelValue; break;
-                    case 3: temperatureLabel4.Text = labelValue; break;
-                    case 4: temperatureLabel5.Text = labelValue; break;
-                    case 5: temperatureLabel6.Text = labelValue; break;
-                    case 6: temperatureLabel7.Text = labelValue; break;
-                    case 7: temperatureLabel8.Text = labelValue; break;
-                    case 8: temperatureLabel9.Text = labelValue; break;
-                    case 9: temperatureLabel10.Text = labelValue; break;
-                    case 10: temperatureLabel11.Text = labelValue; break;
-                    case 11: temperatureLabel12.Text = labelValue; break;
-                    case 12: temperatureLabel13.Text = labelValue; break;
-                    case 13: temperatureLabel14.Text = labelValue; break;
-                    case 14: temperatureLabel15.Text = labelValue; break;
-                    case 15: temperatureLabel16.Text = labelValue; break;
-                    case 16: temperatureLabel17.Text = labelValue; break;
-                    case 17: temperatureLabel18.Text = labelValue; break;
-                }
+                    string temperature = _state.Temperatures[component][key] != 0 ? _state.Temperatures[component][key].ToString() : "--";
+                    string labelValue = string.Format("{0}: {1}", key, temperature);
 
-                labelIndex++;
+                    switch (labelIndex)
+                    {
+                        case 0: temperatureLabel1.Text = labelValue; break;
+                        case 1: temperatureLabel2.Text = labelValue; break;
+                        case 2: temperatureLabel3.Text = labelValue; break;
+                        case 3: temperatureLabel4.Text = labelValue; break;
+                        case 4: temperatureLabel5.Text = labelValue; break;
+                        case 5: temperatureLabel6.Text = labelValue; break;
+                        case 6: temperatureLabel7.Text = labelValue; break;
+                        case 7: temperatureLabel8.Text = labelValue; break;
+                        case 8: temperatureLabel9.Text = labelValue; break;
+                        case 9: temperatureLabel10.Text = labelValue; break;
+                        case 10: temperatureLabel11.Text = labelValue; break;
+                        case 11: temperatureLabel12.Text = labelValue; break;
+                        case 12: temperatureLabel13.Text = labelValue; break;
+                        case 13: temperatureLabel14.Text = labelValue; break;
+                        case 14: temperatureLabel15.Text = labelValue; break;
+                        case 15: temperatureLabel16.Text = labelValue; break;
+                        case 16: temperatureLabel17.Text = labelValue; break;
+                        case 17: temperatureLabel18.Text = labelValue; break;
+                    }
+
+                    labelIndex++;
+                }
             }
 
             // EC fan control enabled?

@@ -1,4 +1,5 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
 using System;
 using System.Collections.Generic;
@@ -375,12 +376,28 @@ namespace DellFanManagement.App
                 // Is the CPU or GPU too hot?
                 if (thresholdsMet)
                 {
-                    foreach (KeyValuePair<string, int> temperature in _state.Temperatures)
+                    foreach (TemperatureComponent component in _state.Temperatures.Keys)
                     {
-                        if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                        foreach (KeyValuePair<string, int> temperature in _state.Temperatures[component])
                         {
-                            _state.ConsistencyModeStatus = "Waiting for CPU or GPU temperature to fall";
-                            thresholdsMet = false;
+                            if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                            {
+                                if (component == TemperatureComponent.CPU)
+                                {
+                                    _state.ConsistencyModeStatus = "Waiting for CPU temperature to fall";
+                                }
+                                else
+                                {
+                                    _state.ConsistencyModeStatus = "Waiting for GPU temperature to fall";
+                                }
+                                thresholdsMet = false;
+                                break;
+                            }
+                        }
+
+                        if (!thresholdsMet)
+                        {
+                            break;
                         }
                     }
                 }

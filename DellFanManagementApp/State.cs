@@ -1,6 +1,6 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.Interop;
 using DellFanManagement.SmmIo;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -15,7 +15,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Object for reading CPU and GPU temperatures from the system.
         /// </summary>
-        private readonly TemperatureReader _temperatureReader;
+        private readonly Dictionary<TemperatureComponent, TemperatureReader> _temperatureReaders;
 
         /// <summary>
         /// Semaphore for protecting access to state changes.
@@ -100,7 +100,6 @@ namespace DellFanManagement.App
             _selectedAudioDevice = null;
             _error = null;
 
-            _temperatureReader = new();
             _semaphore = new(1, 1);
             _changesAllowed = false;
 
@@ -108,6 +107,21 @@ namespace DellFanManagement.App
 
             _consecutiveThermalSettingFailures = 0;
             _thermalSettingReadBackoff = 0;
+
+            // Initialize temperature readers.
+            _temperatureReaders = new();
+            _temperatureReaders.Add(TemperatureComponent.CPU, new CpuTemperatureReader());
+            if (NvidiaGpuTemperatureReader.IsNvapiSupported())
+            {
+                // Use NVAPI if it is available.
+                _temperatureReaders.Add(TemperatureComponent.GPU, new NvidiaGpuTemperatureReader());
+            }
+            else
+            {
+                _temperatureReaders.Add(TemperatureComponent.GPU, new GenericGpuTemperatureReader());
+            }
+
+            Temperatures = new();
 
             Fan2Present = true;
 
@@ -187,7 +201,8 @@ namespace DellFanManagement.App
         /// <param name="reader">A temperature reader</param>
         private void UpdateTemperatures()
         {
-            Temperatures = _temperatureReader.ReadTemperatures();
+            Temperatures[TemperatureComponent.CPU] = _temperatureReaders[TemperatureComponent.CPU].ReadTemperatures();
+            Temperatures[TemperatureComponent.GPU] = _temperatureReaders[TemperatureComponent.GPU].ReadTemperatures();
         }
 
         /// <summary>
@@ -340,7 +355,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Current temperatures.
         /// </summary>
-        public IReadOnlyDictionary<string, int> Temperatures { get; private set; }
+        public Dictionary<TemperatureComponent, IReadOnlyDictionary<string, int>> Temperatures { get; private set; }
 
         /// <summary>
         /// Current "thermal setting".
