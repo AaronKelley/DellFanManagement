@@ -382,14 +382,7 @@ namespace DellFanManagement.App
                         {
                             if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
                             {
-                                if (component == TemperatureComponent.CPU)
-                                {
-                                    _state.ConsistencyModeStatus = "Waiting for CPU temperature to fall";
-                                }
-                                else
-                                {
-                                    _state.ConsistencyModeStatus = "Waiting for GPU temperature to fall";
-                                }
+                                _state.ConsistencyModeStatus = string.Format("Waiting for {0} temperature to fall", component);
                                 thresholdsMet = false;
                                 break;
                             }

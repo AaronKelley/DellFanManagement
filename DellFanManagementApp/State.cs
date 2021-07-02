@@ -201,8 +201,10 @@ namespace DellFanManagement.App
         /// <param name="reader">A temperature reader</param>
         private void UpdateTemperatures()
         {
-            Temperatures[TemperatureComponent.CPU] = _temperatureReaders[TemperatureComponent.CPU].ReadTemperatures();
-            Temperatures[TemperatureComponent.GPU] = _temperatureReaders[TemperatureComponent.GPU].ReadTemperatures();
+            foreach (TemperatureComponent component in _temperatureReaders.Keys)
+            {
+                Temperatures[component] = _temperatureReaders[component].ReadTemperatures();
+            }
         }
 
         /// <summary>
