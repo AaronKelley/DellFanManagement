@@ -357,34 +357,39 @@ namespace DellFanManagement.App
                 bool thresholdsMet = true;
                 ulong? rpmLowerThreshold = RpmThreshold - 400;
 
-                foreach (KeyValuePair<string, int> temperature in _state.Temperatures)
+                // Is the fan speed too low?
+                if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
                 {
-                    if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                    if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
                     {
-                        _state.ConsistencyModeStatus = "Waiting for CPU or GPU temperature to fall";
-                        thresholdsMet = false;
+                        _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
+                    }
+                    else
+                    {
+                        _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
+                    }
+
+                    thresholdsMet = false;
+                }
+
+                // Is the CPU or GPU too hot?
+                if (thresholdsMet)
+                {
+                    foreach (KeyValuePair<string, int> temperature in _state.Temperatures)
+                    {
+                        if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                        {
+                            _state.ConsistencyModeStatus = "Waiting for CPU or GPU temperature to fall";
+                            thresholdsMet = false;
+                        }
                     }
                 }
 
-                if (thresholdsMet)
+                // Is the fan speed too high?
+                if (thresholdsMet && (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold)))
                 {
-                    if (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold))
-                    {
-                        _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
-                        thresholdsMet = false;
-                    }
-                    else if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
-                    {
-                        if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
-                        {
-                            _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
-                        }
-                        else
-                        {
-                            _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
-                        }
-                        thresholdsMet = false;
-                    }
+                    _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
+                    thresholdsMet = false;
                 }
 
                 if (thresholdsMet)
