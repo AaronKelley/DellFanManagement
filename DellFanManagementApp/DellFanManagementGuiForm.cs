@@ -469,6 +469,8 @@ namespace DellFanManagement.App
                 trayIcon.Text = string.Format("Dell Fan Management\n{0}", fan1RpmLabel.Text);
             }
 
+            UpdateTrayIcon(false);
+
             // Error message.
             if (_state.Error != null)
             {
@@ -894,19 +896,20 @@ namespace DellFanManagement.App
                     }
                 }
 
-                if (animatedCheckBox.Checked)
+                if (advance && animatedCheckBox.Checked)
                 {
-                    if (advance)
-                    {
-                        _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
-                    }
+                    _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
                 }
                 else
                 {
                     _trayIconIndex = 0;
                 }
 
-                trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
+                Icon newIcon = _trayIcons[_trayIconIndex + offset];
+                if (trayIcon.Icon != newIcon)
+                {
+                    trayIcon.Icon = newIcon;
+                }
             }
         }
 
