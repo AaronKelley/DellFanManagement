@@ -965,11 +965,11 @@ namespace DellFanManagement.App
                             }
 
                             // Higher RPM = lower wait time = faster animation.
-                            waitTime = Math.Min(250000 / (int)averageRpm, waitTime);
+                            waitTime = 250000 / (int)averageRpm;
                         }
                     }
 
-                    Thread.Sleep(waitTime);
+                    Thread.Sleep(Math.Min(waitTime, 1000));
                 }
             }
             catch (Exception exception)

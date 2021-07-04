@@ -220,7 +220,11 @@ namespace DellFanManagement.App
 
             try
             {
-                DellFanLib.EnableEcFanControl();
+                if (_state.EcFanControlEnabled)
+                {
+                    DellFanLib.EnableEcFanControl();
+                    Log.Write("Enabled EC fan control – startup");
+                }
 
                 while (_state.BackgroundThreadRunning)
                 {
@@ -238,6 +242,7 @@ namespace DellFanManagement.App
                         {
                             _state.EcFanControlEnabled = true;
                             DellFanLib.EnableEcFanControl();
+                            Log.Write("Enabled EC fan control – automatic mode");
                         }
                     }
                     else if (_state.OperationMode == OperationMode.Manual)
@@ -247,6 +252,8 @@ namespace DellFanManagement.App
                         {
                             _state.EcFanControlEnabled = true;
                             DellFanLib.EnableEcFanControl();
+                            Log.Write("Enabled EC fan control – manual mode");
+
                             _state.Fan1Level = null;
                             _state.Fan2Level = null;
                             _fan1LevelRequested = null;
@@ -256,6 +263,7 @@ namespace DellFanManagement.App
                         {
                             _state.EcFanControlEnabled = false;
                             DellFanLib.DisableEcFanControl();
+                            Log.Write("Disabled EC fan control – manual mode");
                         }
 
                         // Check for fan control state changes that need to be applied.
@@ -325,6 +333,7 @@ namespace DellFanManagement.App
 
                 // If we got out of the loop without error, the program is terminating.
                 DellFanLib.EnableEcFanControl();
+                Log.Write("Enabled EC fan control – shutdown");
                 DellFanLib.Shutdown();
             }
             catch (Exception exception)
@@ -408,7 +417,9 @@ namespace DellFanManagement.App
                     {
                         _state.EcFanControlEnabled = false;
                         DellFanLib.DisableEcFanControl();
+                        Log.Write("Disabled EC fan control – consistency mode – thresholds met");
                     }
+
                     if (!_state.ConsistencyModeStatus.StartsWith("Fan speed locked"))
                     {
                         _state.ConsistencyModeStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
@@ -418,6 +429,7 @@ namespace DellFanManagement.App
                 {
                     _state.EcFanControlEnabled = true;
                     DellFanLib.EnableEcFanControl();
+                    Log.Write(string.Format("Enabled EC fan control – consistency mode – {0}", _state.ConsistencyModeStatus));
                 }
             }
         }
