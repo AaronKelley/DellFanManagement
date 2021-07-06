@@ -896,9 +896,12 @@ namespace DellFanManagement.App
                     }
                 }
 
-                if (advance && animatedCheckBox.Checked)
+                if (animatedCheckBox.Checked)
                 {
-                    _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+                    if (advance)
+                    {
+                        _trayIconIndex = (_trayIconIndex + 1) % (_trayIcons.Length / 3);
+                    }
                 }
                 else
                 {

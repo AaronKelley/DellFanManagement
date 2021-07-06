@@ -16,6 +16,11 @@ namespace DellFanManagement.App
         private static readonly int RefreshInterval = 1000;
 
         /// <summary>
+        /// RPM values above this are most likely bogus.
+        /// </summary>
+        private static readonly ulong RpmSanityCheck = 6500;
+
+        /// <summary>
         /// Shared object which contains the state of the application.
         /// </summary>
         private readonly State _state;
@@ -380,6 +385,11 @@ namespace DellFanManagement.App
                     }
 
                     thresholdsMet = false;
+
+                    if (!_state.EcFanControlEnabled)
+                    {
+                        Log.Write(string.Format("EC fan control disabled, but fan speed is too low: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
+                    }
                 }
 
                 // Is the CPU or GPU too hot?
@@ -407,8 +417,20 @@ namespace DellFanManagement.App
                 // Is the fan speed too high?
                 if (thresholdsMet && (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold)))
                 {
-                    _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
-                    thresholdsMet = false;
+                    if (_state.Fan1Rpm < RpmSanityCheck && (!_state.Fan2Present || _state.Fan2Rpm < RpmSanityCheck))
+                    {
+                        _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
+                        thresholdsMet = false;
+
+                        if (!_state.EcFanControlEnabled)
+                        {
+                            Log.Write(string.Format("EC fan control disabled, but fan speed is too high: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
+                        }
+                    }
+                    else
+                    {
+                        Log.Write(string.Format("Recorded fan speed above sanity check level: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
+                    }
                 }
 
                 if (thresholdsMet)
