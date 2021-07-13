@@ -78,6 +78,11 @@ namespace DellFanManagement.App
         private AudioDevice _selectedAudioDevice;
 
         /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        private AudioDevice _bringBackAudioDevice;
+
+        /// <summary>
         /// Number of times in a row that the thermal setting has failed to update.
         /// </summary>
         private int _consecutiveThermalSettingFailures;
@@ -338,6 +343,14 @@ namespace DellFanManagement.App
             set { AccessCheck(); _selectedAudioDevice = value; }
         }
 
+        /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        public AudioDevice BringBackAudioDevice
+        {
+            get { return _bringBackAudioDevice; }
+            set { AccessCheck(); _bringBackAudioDevice = value; }
+        }
 
         /// <summary>
         /// RPM value for fan 1.

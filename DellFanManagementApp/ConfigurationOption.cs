@@ -61,6 +61,11 @@
         public static readonly ConfigurationOption AudioKeepAliveSelectedDevice = new(ConfigurationOptionType.String, "AudioKeepAliveSelectedDevice");
 
         /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        public static readonly ConfigurationOption AudioKeepAliveBringBackDevice = new(ConfigurationOptionType.String, "AudioKeepAliveBringBackDevice");
+
+        /// <summary>
         /// Indicates whether this configuration option is for a "number" or a "string".
         /// </summary>
         public ConfigurationOptionType Type { get; private set; }

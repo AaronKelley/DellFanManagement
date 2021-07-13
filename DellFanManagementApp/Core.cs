@@ -188,9 +188,14 @@ namespace DellFanManagement.App
 
             _state.WaitOne();
 
-            if (device != null && device != _state.SelectedAudioDevice && _state.AudioThreadRunning)
+            if (device != null)
             {
-                activeAudioDeviceChanged = true;
+                _state.BringBackAudioDevice = null;
+
+                if (device != _state.SelectedAudioDevice && _state.AudioThreadRunning)
+                {
+                    activeAudioDeviceChanged = true;
+                }
             }
 
             _state.SelectedAudioDevice = device;
@@ -323,6 +328,9 @@ namespace DellFanManagement.App
                     // Check to see if the active audio device has disappeared.
                     if (_state.AudioThreadRunning && !_state.AudioDevices.Contains(_state.SelectedAudioDevice))
                     {
+                        // Remember the audio device in case it reappears.
+                        _state.BringBackAudioDevice = _state.SelectedAudioDevice;
+
                         // Terminate the audio thread.
                         _soundPlayer?.RequestTermination();
                     }

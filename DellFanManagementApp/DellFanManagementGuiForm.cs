@@ -316,6 +316,8 @@ namespace DellFanManagement.App
             // during the update.
             _state.WaitOne();
 
+            AudioDevice bringBackAudioDevice = null;
+
             // Fan RPM.
             fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm);
 
@@ -443,6 +445,13 @@ namespace DellFanManagement.App
             foreach (AudioDevice audioDevice in devicesToAdd)
             {
                 audioKeepAliveComboBox.Items.Add(audioDevice);
+
+                // ...If this happens to be the previously selected audio device that disappeared, set it back and start
+                // the thread.
+                if (audioDevice == _state.BringBackAudioDevice || audioDevice.DeviceId == _configurationStore.GetStringOption(ConfigurationOption.AudioKeepAliveBringBackDevice))
+                {
+                    bringBackAudioDevice = audioDevice;
+                }
             }
             foreach (AudioDevice audioDevice in devicesToRemove)
             {
@@ -479,6 +488,12 @@ namespace DellFanManagement.App
             }
 
             _state.Release();
+
+            if (bringBackAudioDevice != null)
+            {
+                audioKeepAliveComboBox.SelectedItem = bringBackAudioDevice;
+                audioKeepAliveCheckbox.Checked = true;
+            }
         }
 
         /// <summary>
@@ -722,6 +737,7 @@ namespace DellFanManagement.App
             if (audioKeepAliveComboBox.SelectedItem != null)
             {
                 audioKeepAliveCheckbox.Enabled = true;
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, null);
             }
             else
             {
@@ -739,6 +755,7 @@ namespace DellFanManagement.App
                 _core.StartAudioThread();
                 _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 1);
                 _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, ((AudioDevice)audioKeepAliveComboBox.SelectedItem).DeviceId);
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, null);
             }
             else
             {
@@ -748,6 +765,11 @@ namespace DellFanManagement.App
                 {
                     _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 0);
                     _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, null);
+
+                    if (_state.BringBackAudioDevice != null)
+                    {
+                        _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, _state.BringBackAudioDevice.DeviceId);
+                    }
                 }
             }
         }
