@@ -37,6 +37,11 @@ namespace DellFanManagement.App.TemperatureReaders
                         // GPU is currently powered off.
                         temperatures.Add(name, 0);
                     }
+                    else if (exception.Message == "NVAPI_NVIDIA_DEVICE_NOT_FOUND")
+                    {
+                        // NVIDIA device was present previously, but it disappeared?  (Driver update in progress?)
+                        // Silently ignore.
+                    }
                     else
                     {
                         throw;
