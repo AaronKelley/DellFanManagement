@@ -180,14 +180,13 @@ namespace DellFanManagement.App
 
             // Consistency mode settings.
             int? lowerTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeLowerTemperatureThreshold);
-            if (lowerTemperatureThreshold != null && lowerTemperatureThreshold > 0 && lowerTemperatureThreshold < 100)
+            int? upperTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold);
+
+            if (lowerTemperatureThreshold != null && lowerTemperatureThreshold >= 0 && lowerTemperatureThreshold < 100 &&
+                upperTemperatureThreshold != null && upperTemperatureThreshold >= 0 && upperTemperatureThreshold < 100 &&
+                lowerTemperatureThreshold <= upperTemperatureThreshold)
             {
                 consistencyModeLowerTemperatureThresholdTextBox.Text = lowerTemperatureThreshold.ToString();
-            }
-
-            int? upperTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold);
-            if (upperTemperatureThreshold != null && upperTemperatureThreshold > 0 && upperTemperatureThreshold < 100)
-            {
                 consistencyModeUpperTemperatureThresholdTextBox.Text = upperTemperatureThreshold.ToString();
             }
 
@@ -842,18 +841,29 @@ namespace DellFanManagement.App
         /// </summary>
         private void CheckConsistencyModeOptionsConsistency()
         {
-            if (consistencyModeLowerTemperatureThresholdTextBox.Text == _core.LowerTemperatureThreshold.ToString() &&
-                consistencyModeUpperTemperatureThresholdTextBox.Text == _core.UpperTemperatureThreshold.ToString() &&
-                consistencyModeRpmThresholdTextBox.Text == _core.RpmThreshold.ToString())
+            bool result = false;
+
+            if (consistencyModeLowerTemperatureThresholdTextBox.Text != _core.LowerTemperatureThreshold.ToString() ||
+                consistencyModeUpperTemperatureThresholdTextBox.Text != _core.UpperTemperatureThreshold.ToString() ||
+                consistencyModeRpmThresholdTextBox.Text != _core.RpmThreshold.ToString())
             {
-                // Configuration matches.
-                consistencyModeApplyChangesButton.Enabled = false;
+                // Configuration doesn't match.  Check for flip-flop.
+                bool success = int.TryParse(consistencyModeLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
+                if (success)
+                {
+                    success = int.TryParse(consistencyModeUpperTemperatureThresholdTextBox.Text, out int upperTemperatureThreshold);
+                    if (success)
+                    {
+                        if (upperTemperatureThreshold >= lowerTemperatureThreshold)
+                        {
+                            // Looks good, we can enable the button.
+                            result = true;
+                        }
+                    }
+                }
             }
-            else
-            {
-                // Configuration has changed.
-                consistencyModeApplyChangesButton.Enabled = true;
-            }
+
+            consistencyModeApplyChangesButton.Enabled = result;
         }
 
         /// <summary>
