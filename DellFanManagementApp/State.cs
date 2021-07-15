@@ -127,6 +127,8 @@ namespace DellFanManagement.App
             }
 
             Temperatures = new();
+            MinimumTemperatures = new();
+            MaximumTemperatures = new();
 
             Fan2Present = true;
 
@@ -209,6 +211,32 @@ namespace DellFanManagement.App
             foreach (TemperatureComponent component in _temperatureReaders.Keys)
             {
                 Temperatures[component] = _temperatureReaders[component].ReadTemperatures();
+
+                // Check minimum and maximum temperatures.
+                if (!MinimumTemperatures.ContainsKey(component))
+                {
+                    MinimumTemperatures[component] = new();
+                }
+
+                if (!MaximumTemperatures.ContainsKey(component))
+                {
+                    MaximumTemperatures[component] = new();
+                }
+
+                foreach (string key in Temperatures[component].Keys)
+                {
+                    int temperature = Temperatures[component][key];
+
+                    if (!MinimumTemperatures[component].ContainsKey(key) || temperature < MinimumTemperatures[component][key])
+                    {
+                        MinimumTemperatures[component][key] = temperature;
+                    }
+
+                    if (!MaximumTemperatures[component].ContainsKey(key) || temperature > MaximumTemperatures[component][key])
+                    {
+                        MaximumTemperatures[component][key] = temperature;
+                    }
+                }
             }
         }
 
@@ -371,6 +399,16 @@ namespace DellFanManagement.App
         /// Current temperatures.
         /// </summary>
         public Dictionary<TemperatureComponent, IReadOnlyDictionary<string, int>> Temperatures { get; private set; }
+
+        /// <summary>
+        /// Minimum temperatures.
+        /// </summary>
+        public Dictionary<TemperatureComponent, Dictionary<string, int>> MinimumTemperatures { get; private set; }
+
+        /// <summary>
+        /// Maximum temperatures.
+        /// </summary>
+        public Dictionary<TemperatureComponent, Dictionary<string, int>> MaximumTemperatures { get; private set; }
 
         /// <summary>
         /// Current "thermal setting".

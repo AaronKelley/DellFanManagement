@@ -348,7 +348,16 @@ namespace DellFanManagement.App
                 foreach (string key in _state.Temperatures[component].Keys)
                 {
                     string temperature = _state.Temperatures[component][key] != 0 ? _state.Temperatures[component][key].ToString() : "--";
-                    string labelValue = string.Format("{0}: {1}", key, temperature);
+
+                    string labelValue;
+                    if (_state.MinimumTemperatures[component].ContainsKey(key) && _state.MaximumTemperatures[component].ContainsKey(key))
+                    {
+                        labelValue = string.Format("{0}: {1} ({2}-{3})", key, temperature, _state.MinimumTemperatures[component][key], _state.MaximumTemperatures[component][key]);
+                    }
+                    else
+                    {
+                        labelValue = string.Format("{0}: {1}", key, temperature);
+                    }
 
                     switch (labelIndex)
                     {
