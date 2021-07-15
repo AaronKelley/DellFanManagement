@@ -48,7 +48,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates whether the initial setup code has finished or not.
         /// </summary>
-        private bool _initializationComplete;
+        private readonly bool _initializationComplete;
 
         /// <summary>
         /// Constructor.  Get everything set up before the window is displayed.
@@ -69,6 +69,13 @@ namespace DellFanManagement.App
             _trayIconIndex = 0;
             LoadTrayIcons();
 
+            // Disclaimer.
+            if (_configurationStore.GetIntOption(ConfigurationOption.DisclaimerShown) != 1)
+            {
+                MessageBox.Show("Note: This program is not created by or affiliated with Dell Inc. or Dell Technologies Inc., and while every has been made to make it safe to use, it does interact with the embedded controller and system BIOS using undocumented methods and may have adverse effects on your system.  Use at your own risk.  If you experience odd behavior, a full system shutdown should restore everything back to the original state.", "Dell Fan Management – Disclaimer");
+                _configurationStore.SetOption(ConfigurationOption.DisclaimerShown, 1);
+            }
+            
             // Version number in the about box.
             aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
 

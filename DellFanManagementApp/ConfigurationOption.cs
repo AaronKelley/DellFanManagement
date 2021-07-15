@@ -6,6 +6,11 @@
     class ConfigurationOption
     {
         /// <summary>
+        /// Record whether or not the disclaimer message has been shown.
+        /// </summary>
+        public static readonly ConfigurationOption DisclaimerShown = new(ConfigurationOptionType.Integer, "DisclaimerShown");
+
+        /// <summary>
         /// Store the "operation mode".
         /// </summary>
         public static readonly ConfigurationOption OperationMode = new(ConfigurationOptionType.String, "OperationMode");
