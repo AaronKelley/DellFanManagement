@@ -1,0 +1,10 @@
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\bin\Debug\DellSmmIoLibTest.exe.config
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\bin\Debug\DellSmmIoLibTest.exe
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\bin\Debug\DellSmmIoLibTest.pdb
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\bin\Debug\DellSmmIoLib.dll
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\bin\Debug\DellSmmIoLib.pdb
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\obj\Debug\DellSmmIoLibTest.csproj.AssemblyReference.cache
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\obj\Debug\DellSmmIoLibTest.csproj.CoreCompileInputs.cache
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\obj\Debug\DellSmmIoLibTest.csproj.CopyComplete
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\obj\Debug\DellSmmIoLibTest.exe
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\DellSmmIoLibTest\obj\Debug\DellSmmIoLibTest.pdb

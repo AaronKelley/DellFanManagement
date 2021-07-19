@@ -9,10 +9,6 @@ namespace DellFanManagement.SmmIo
     /// </summary>
     public static class DellSmmIoLib
     {
-        private static readonly ushort ThermalModeClass = 17;
-        private static readonly ushort ThermalModeSelector = 19;
-        private static readonly uint DefaultResult1 = 4294967293; // This doesn't seem to be necessary as commands work without it; however, it's what Dell Power Manager does
-
         private static readonly string WmiScopeRoot = "root/wmi";
         private static readonly string WmiClassNameBdat = "BDat";
         private static readonly string WmiClassNameBfn = "BFn";
@@ -32,15 +28,14 @@ namespace DellFanManagement.SmmIo
             {
                 DellSmmBiosMessage message = new DellSmmBiosMessage
                 {
-                    Class = ThermalModeClass,
-                    Selector = ThermalModeSelector,
-                    Result1 = DefaultResult1
+                    Class = ClassToken.Info,
+                    Selector = SelectToken.ThermalMode
                 };
 
                 bool result = ExecuteCommand(ref message);
                 if (result)
                 {
-                    return (ThermalSetting)message.Result3;
+                    return (ThermalSetting)message.Output3;
                 }
                 else
                 {
@@ -66,11 +61,10 @@ namespace DellFanManagement.SmmIo
                 {
                     DellSmmBiosMessage message = new DellSmmBiosMessage
                     {
-                        Class = ThermalModeClass,
-                        Selector = ThermalModeSelector,
-                        Result1 = DefaultResult1,
-                        Parameter1 = 1,
-                        Parameter2 = (uint)thermalSetting
+                        Class = ClassToken.Info,
+                        Selector = SelectToken.ThermalMode,
+                        Input1 = 1,
+                        Input2 = (uint)thermalSetting
                     };
 
                     return ExecuteCommand(ref message);
@@ -86,12 +80,25 @@ namespace DellFanManagement.SmmIo
             }
         }
 
+        public static bool SetToken(Token token)
+        {
+            DellSmmBiosMessage message = new DellSmmBiosMessage
+            {
+                Class = ClassToken.TokenWrite,
+                Selector = SelectToken.Standard
+                // Input1 = Token location ???
+                // Input2 = Token value
+            };
+
+            return ExecuteCommand(ref message);
+        }
+
         /// <summary>
         /// Execute a command against the SMM BIOS via the ACPI/WMI interface.
         /// </summary>
         /// <param name="message">SMM BIOS message (a packaged-up command to be executed)</param>
         /// <returns>True if successful, false if not; note that exceptions on error conditions can come back from this method as well</returns>
-        private static bool ExecuteCommand(ref DellSmmBiosMessage message)
+        public static bool ExecuteCommand(ref DellSmmBiosMessage message)
         {
             byte[] bytes = StructToByteArray(message);
             byte[] buffer = new byte[BufferLength];

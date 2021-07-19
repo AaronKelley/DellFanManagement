@@ -2,20 +2,54 @@
 
 namespace DellFanManagement.SmmIo
 {
+    /// <summary>
+    /// Structure used to interact with the BIOS.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct DellSmmBiosMessage
+    public struct DellSmmBiosMessage
     {
-        public ushort Class;
-        public ushort Selector;
-        public uint Parameter1;
-        public uint Parameter2;
-        public uint Parameter3;
-        public uint Parameter4;
-        public uint Result1;
-        public uint Result2;
-        public uint Result3;
-        public uint Result4;
-        public uint ArgumentAttribute;
-        public uint BufferLength;
+        public ClassToken Class;
+
+        public SelectToken Selector;
+
+        /// <summary>
+        /// First input parameter.
+        /// </summary>
+        public uint Input1;
+
+        /// <summary>
+        /// Second input parameter.
+        /// </summary>
+        public uint Input2;
+
+        /// <summary>
+        /// Third input parameter.
+        /// </summary>
+        public uint Input3;
+
+        /// <summary>
+        /// Fourth input parameter.
+        /// </summary>
+        public uint Input4;
+
+        /// <summary>
+        /// First output value.
+        /// </summary>
+        public uint Output1;
+
+        /// <summary>
+        /// Second output value.
+        /// </summary>
+        public uint Output2;
+
+        /// <summary>
+        /// Third output value.
+        /// </summary>
+        public uint Output3;
+
+        /// <summary>
+        /// Fourth output value.
+        /// </summary>
+        public uint Output4;
     }
 }
