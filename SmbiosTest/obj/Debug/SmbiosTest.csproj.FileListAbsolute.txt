@@ -1,0 +1,10 @@
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\bin\Debug\SmbiosTest.exe.config
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\bin\Debug\SmbiosTest.exe
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\bin\Debug\SmbiosTest.pdb
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\bin\Debug\DellFanLibInterop.dll
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\bin\Debug\DellFanLibInterop.pdb
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\obj\Debug\SmbiosTest.csproj.AssemblyReference.cache
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\obj\Debug\SmbiosTest.csproj.CoreCompileInputs.cache
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\obj\Debug\SmbiosTest.csproj.CopyComplete
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\obj\Debug\SmbiosTest.exe
+D:\OneDrive - aaron-kelley.net\Projects\DellFanManagement\SmbiosTest\obj\Debug\SmbiosTest.pdb

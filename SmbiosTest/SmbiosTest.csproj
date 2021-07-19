@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{84CECE63-519A-406B-BB8F-2991F6191817}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DellFanManagement.Interop</RootNamespace>
-    <AssemblyName>DellFanLibInterop</AssemblyName>
+    <ProjectGuid>{DF33B7FA-3AED-44DE-957E-A0932A23608C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DellFanManagement.SmbiosTest</RootNamespace>
+    <AssemblyName>SmbiosTest</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,16 +22,16 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,16 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DellFanLib.cs" />
-    <Compile Include="FanIndex.cs" />
-    <Compile Include="FanLevel.cs" />
-    <Compile Include="PInvoke\QueryServiceConfig.cs" />
-    <Compile Include="PInvoke\ServiceErrorControl.cs" />
-    <Compile Include="PInvoke\ServiceStartType.cs" />
+    <Compile Include="SmbiosTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PInvoke\ServiceAccess.cs" />
-    <Compile Include="PInvoke\ServiceType.cs" />
-    <Compile Include="SmbiosCommand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DellFanLibInterop\DellFanLibInterop.csproj">
+      <Project>{84cece63-519a-406b-bb8f-2991f6191817}</Project>
+      <Name>DellFanLibInterop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

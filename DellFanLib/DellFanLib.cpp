@@ -2,30 +2,6 @@
 #include <winioctl.h>
 #include "DellFanLib.h"
 
-// Constants for controls.
-
-constexpr auto DELL_SMM_IO_DISABLE_FAN_CTL1 = 0x30A3;
-constexpr auto DELL_SMM_IO_ENABLE_FAN_CTL1 = 0x31A3;
-constexpr auto DELL_SMM_IO_DISABLE_FAN_CTL2 = 0x34A3;
-constexpr auto DELL_SMM_IO_ENABLE_FAN_CTL2 = 0x35A3;
-
-constexpr auto DELL_SMM_IO_SET_FAN_LV = 0x01A3;
-constexpr auto DELL_SMM_IO_GET_FAN_RPM = 0x02A3;
-
-constexpr auto DELL_SMM_IO_FAN_LV0 = 0;
-constexpr auto DELL_SMM_IO_FAN_LV1 = 1;
-constexpr auto DELL_SMM_IO_FAN_LV2 = 2;
-
-constexpr auto DELL_SMM_IO_FAN1 = 0;
-constexpr auto DELL_SMM_IO_FAN2 = 1;
-constexpr auto DELL_SMM_IO_FAN3 = 2;
-constexpr auto DELL_SMM_IO_FAN4 = 3;
-constexpr auto DELL_SMM_IO_FAN5 = 4;
-constexpr auto DELL_SMM_IO_FAN6 = 5;
-constexpr auto DELL_SMM_IO_FAN7 = 6;
-
-constexpr auto DELL_SMM_IO_NO_ARG = 0;
-
 // Other constants.
 
 constexpr auto FILE_DEVICE_BZH_DELL_SMM = 0xB424;
@@ -114,27 +90,6 @@ DllExport void _stdcall Shutdown()
     }
     RemoveDriver();
     IsInitialized = false;
-}
-
-unsigned long GetFanRpm(unsigned long fanIndex)
-{
-    return DellSmmIo(DELL_SMM_IO_GET_FAN_RPM, fanIndex);
-}
-
-unsigned long DisableEcFanControl(bool alternate)
-{
-    return DellSmmIo(alternate ? DELL_SMM_IO_DISABLE_FAN_CTL2 : DELL_SMM_IO_DISABLE_FAN_CTL1, DELL_SMM_IO_NO_ARG);
-}
-
-unsigned long EnableEcFanControl(bool alternate)
-{
-    return DellSmmIo(alternate ? DELL_SMM_IO_ENABLE_FAN_CTL2 : DELL_SMM_IO_ENABLE_FAN_CTL1, DELL_SMM_IO_NO_ARG);
-}
-
-unsigned long SetFanLevel(unsigned long fanIndex, unsigned long fanLevel)
-{
-    ULONG argument = (fanLevel << 8) | fanIndex;
-    return DellSmmIo(DELL_SMM_IO_SET_FAN_LV, argument);
 }
 
 bool GetDriverPath()

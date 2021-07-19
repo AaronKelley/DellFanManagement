@@ -145,7 +145,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y</Command>
+      <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y
+copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)SmbiosTest\bin\$(Configuration)" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,7 +168,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y</Command>
+      <Command>copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)DellFanManagementApp\bin\$(Configuration)\net5.0-windows" /Y
+copy "$(ProjectDir)$(Platform)\$(Configuration)\DellFanLib.dll" "$(SolutionDir)SmbiosTest\bin\$(Configuration)" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
