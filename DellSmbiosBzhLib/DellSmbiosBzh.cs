@@ -135,6 +135,19 @@ namespace DellFanManagement.DellSmbiozBzhLib
         }
 
         /// <summary>
+        /// Unload the EC I/O driver.
+        /// </summary>
+        public static void Shutdown()
+        {
+            if (DriverHandle != ServiceMethods.InvalidHandleValue)
+            {
+                ServiceMethods.CloseHandle(DriverHandle);
+            }
+            RemoveDriver();
+            IsInitialized = false;
+        }
+
+        /// <summary>
         /// Install the SMM I/O driver.
         /// </summary>
         /// <returns>True if successful, false if not.</returns>
@@ -301,19 +314,6 @@ namespace DellFanManagement.DellSmbiozBzhLib
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Unload the EC I/O driver.
-        /// </summary>
-        public static void Shutdown()
-        {
-            if (DriverHandle != ServiceMethods.InvalidHandleValue)
-            {
-                ServiceMethods.CloseHandle(DriverHandle);
-            }
-            RemoveDriver();
-            IsInitialized = false;
         }
 
         /// <summary>
