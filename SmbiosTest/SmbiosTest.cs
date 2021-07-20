@@ -17,8 +17,8 @@ namespace SmbiosTest
 
                 ulong result;
 
-                result = DellFanLib.ExecuteCommand(SmbiosCommand.GetFanRpm, 0);
-                Console.WriteLine(result);
+                //result = DellFanLib.ExecuteCommand(SmbiosCommand.GetFanRpm, 0);
+                //Console.WriteLine(result);
             }
             catch (Exception exception)
             {

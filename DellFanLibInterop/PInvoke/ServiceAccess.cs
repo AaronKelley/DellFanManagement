@@ -26,6 +26,7 @@
             Stop |
             PauseContinue |
             Interrogate |
-            UserDefinedControl)
+            UserDefinedControl),
+        ServiceManagerAllAccess = 0xF003F
     }
 }
