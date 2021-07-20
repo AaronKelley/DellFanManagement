@@ -67,7 +67,7 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// Enable EC fan control.
         /// </summary>
         /// <param name="alternate">If ture, attempt alternate method to enable EC fan control.</param>
-        /// <returns>ulong-max means failure.</returns>0
+        /// <returns>ulong-max means failure.</returns>
         public static ulong EnableEcFanControl(bool alternate = false)
         {
             return ExecuteCommand(alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl);
