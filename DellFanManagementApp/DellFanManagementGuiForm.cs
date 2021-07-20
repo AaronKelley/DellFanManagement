@@ -1,5 +1,5 @@
 ﻿using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.Interop;
+using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using System;
 using System.Collections.Generic;
@@ -77,7 +77,7 @@ namespace DellFanManagement.App
             }
             
             // Version number in the about box.
-            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
+            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellSmbiosBzh.Version);
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);

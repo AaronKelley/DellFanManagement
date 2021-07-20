@@ -1,4 +1,4 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using LibreHardwareMonitor.Hardware;
 using NvAPIWrapper.GPU;
@@ -124,16 +124,16 @@ namespace DellFanManagement.App
             {
                 Console.WriteLine("Running DellFanLib test.");
 
-                if (!DellFanLib.Initialize())
+                if (!DellSmbiosBzh.Initialize())
                 {
                     Console.WriteLine("  Failed to load driver.");
                     return false;
                 }
 
-                ulong result = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                ulong result = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1);
                 Console.WriteLine("  Fan 1 RPM: {0}", result);
 
-                DellFanLib.Shutdown();
+                DellSmbiosBzh.Shutdown();
             }
             catch (Exception exception)
             {

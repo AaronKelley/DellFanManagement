@@ -1,5 +1,5 @@
 ﻿using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.Interop;
+using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using System.Collections.Generic;
 using System.Threading;
@@ -157,8 +157,8 @@ namespace DellFanManagement.App
         private void UpdateFanRpms()
         {
             // Update state: RPM.
-            Fan1Rpm = DellFanLib.GetFanRpm(FanIndex.Fan1);
-            Fan2Rpm = DellFanLib.GetFanRpm(FanIndex.Fan2);
+            Fan1Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1);
+            Fan2Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan2);
 
             if (Fan1Rpm != uint.MaxValue && Fan2Rpm == uint.MaxValue)
             {
