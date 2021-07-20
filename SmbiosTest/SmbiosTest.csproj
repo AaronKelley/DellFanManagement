@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DellFanLibInterop\DellFanLibInterop.csproj">
+    <ProjectReference Include="..\DellSmbiosBzhLib\DellSmbiosBzhLib.csproj">
       <Project>{84cece63-519a-406b-bb8f-2991f6191817}</Project>
-      <Name>DellFanLibInterop</Name>
+      <Name>DellSmbiosBzhLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,10 +1,10 @@
-﻿namespace DellFanManagement.Interop
+﻿namespace DellFanManagement.DellSmbiozBzhLib
 {
     /// <summary>
     /// Identifiers for the different SMBIOS commands.
     /// </summary>
     /// <seealso cref="https://lkml.org/lkml/2008/12/18/44"/>
-    public enum SmbiosCommand : ulong
+    public enum SmbiosCommand : uint
     {
         /// <summary>
         /// Get the current speed indicator of a fan; takes fan index.

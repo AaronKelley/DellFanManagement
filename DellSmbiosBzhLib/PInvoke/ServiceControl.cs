@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DellFanManagement.Interop.PInvoke
+namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     /// <summary>
     /// Service control codes.

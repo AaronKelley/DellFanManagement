@@ -1,9 +1,9 @@
-﻿namespace DellFanManagement.Interop
+﻿namespace DellFanManagement.DellSmbiozBzhLib
 {
     /// <summary>
     /// Used to specify which fan level to set.
     /// </summary>
-    public enum FanLevel : ulong
+    public enum FanLevel : uint
     {
         /// <summary>
         /// Fan off.

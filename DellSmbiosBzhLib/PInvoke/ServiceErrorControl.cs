@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.Interop.PInvoke
+﻿namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     /// <summary>
     /// The severity of the error, and action taken, if this service fails to start.

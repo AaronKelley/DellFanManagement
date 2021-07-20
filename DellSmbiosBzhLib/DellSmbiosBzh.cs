@@ -1,36 +1,47 @@
-﻿using DellFanManagement.Interop.PInvoke;
+﻿using DellFanManagement.DellSmbiozBzhLib.PInvoke;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace DellFanManagement.Interop
+namespace DellFanManagement.DellSmbiozBzhLib
 {
-    public static class DellFanLib
+    /// <summary>
+    /// Handles issuing commands to the Dell SMBIOS via the BZH SMM I/O driver.
+    /// </summary>
+    /// <remarks>Derived from "Dell Fan Utility" by 424778940z.</remarks>
+    /// <seealso cref="https://github.com/424778940z/bzh-windrv-dell-smm-io"/>
+    /// <seealso cref="https://github.com/424778940z/dell-fan-utility"/>
+    public static class DellSmbiosBzh
     {
         /// <summary>
         /// Version number for the entire package.
         /// </summary>
-        public static readonly string Version = "DEV";
+        public const string Version = "DEV";
 
         /// <summary>
         /// Value to pass to ExecuteCommand when no parameter is needed.
         /// </summary>
-        private static readonly ulong NoParameter = 0;
+        private const uint NoParameter = 0;
 
         /// <summary>
         /// Internal name of the SMM I/O driver/service.
         /// </summary>
-        private static readonly string DriverName = "BZHDELLSMMIO";
+        private const string DriverName = "BZHDELLSMMIO";
 
         /// <summary>
         /// Path to use when opening a handle to the driver.
         /// </summary>
-        private static readonly string DriverDevicePath = @"\\.\" + DriverName;
+        private const string DriverDevicePath = @"\\.\" + DriverName;
 
         /// <summary>
         /// Name of the driver file.
         /// </summary>
-        private static readonly string DriverFilename = "bzh_dell_smm_io_x64.sys";
+        private const string DriverFilename = "bzh_dell_smm_io_x64.sys";
+
+        /// <summary>
+        /// "Secret key" used to communicate with teh driver.
+        /// </summary>
+        private const int IoctlCode = (0xB424 << 16) | (0xB42 << 2);
 
         /// <summary>
         /// Driver handle, set during initialization.
@@ -49,7 +60,7 @@ namespace DellFanManagement.Interop
         /// <returns>ulong-max means failure.</returns>
         public static ulong DisableEcFanControl(bool alternate = false)
         {
-            return ExecuteCommand(DriverHandle, alternate ? SmbiosCommand.DisableEcFanControlAlternate : SmbiosCommand.DisableEcFanControl, NoParameter);
+            return ExecuteCommand(alternate ? SmbiosCommand.DisableEcFanControlAlternate : SmbiosCommand.DisableEcFanControl);
         }
 
         /// <summary>
@@ -59,7 +70,7 @@ namespace DellFanManagement.Interop
         /// <returns>ulong-max means failure.</returns>0
         public static ulong EnableEcFanControl(bool alternate = false)
         {
-            return ExecuteCommand(DriverHandle, alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl, NoParameter);
+            return ExecuteCommand(alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl);
         }
 
         /// <summary>
@@ -70,8 +81,8 @@ namespace DellFanManagement.Interop
         /// <returns>ulong-max means failure.</returns>
         public static ulong SetFanLevel(FanIndex fanIndex, FanLevel fanLevel)
         {
-            ulong parameter = ((ulong)fanLevel << 8) | (ulong)fanIndex;
-            return ExecuteCommand(DriverHandle, SmbiosCommand.SetFanLevel, parameter);
+            uint parameter = ((uint)fanLevel << 8) | (uint)fanIndex;
+            return ExecuteCommand(SmbiosCommand.SetFanLevel, parameter);
         }
 
         /// <summary>
@@ -81,7 +92,7 @@ namespace DellFanManagement.Interop
         /// <returns>Speed in RPM; uint-max means failure.</returns>
         public static ulong GetFanRpm(FanIndex fanIndex)
         {
-            return ExecuteCommand(DriverHandle, SmbiosCommand.GetFanRpm, (ulong)fanIndex);
+            return ExecuteCommand(SmbiosCommand.GetFanRpm, (uint)fanIndex);
         }
 
         /// <summary>
@@ -311,8 +322,34 @@ namespace DellFanManagement.Interop
         /// <param name="driverHandle">Handle to the SMM I/O driver/service.</param>
         /// <param name="command">Command identifier.</param>
         /// <param name="argument">Command argument/parameter.</param>
-        /// <returns>Command result *ulong-max means failure).</returns>
-        [DllImport(@"DellFanLib.dll", EntryPoint = "DellSmmIo", CallingConvention = CallingConvention.Cdecl)]
-        public static extern ulong ExecuteCommand(IntPtr driverHandle, SmbiosCommand command, ulong argument);
+        /// <returns>Command result *uint-max means failure).</returns>
+        public static uint ExecuteCommand(SmbiosCommand command, uint argument = NoParameter)
+        {
+            if (!IsInitialized)
+            {
+                return uint.MaxValue;
+            }
+
+            SmbiosPackage package = new SmbiosPackage
+            {
+                Command = (uint)command,
+                Data = argument,
+                Output1 = 0,
+                Output2 = 0
+            };
+
+            uint resultSize = 0;
+
+            bool status = ServiceMethods.DeviceIoControl(DriverHandle, IoctlCode, ref package, Marshal.SizeOf(package), ref package, Marshal.SizeOf(package), ref resultSize, IntPtr.Zero);
+
+            if (status == false)
+            {
+                return uint.MaxValue;
+            }
+            else
+            {
+                return package.Command;
+            }
+        }
     }
 }

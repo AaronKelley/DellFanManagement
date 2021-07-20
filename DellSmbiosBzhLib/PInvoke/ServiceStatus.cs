@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DellFanManagement.Interop.PInvoke
+namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     /// <summary>
     /// Contains status information for a service.

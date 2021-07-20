@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace DellFanManagement.Interop.PInvoke
+namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     static class ServiceMethods
     {
@@ -11,6 +11,7 @@ namespace DellFanManagement.Interop.PInvoke
         /// </summary>
         /// <param name="hObject">A valid handle to an open object.</param>
         /// <returns>If the function succeeds, the return value is nonzero.</returns>
+        /// <seealso cref="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"/>
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool CloseHandle(IntPtr hObject);
@@ -21,6 +22,7 @@ namespace DellFanManagement.Interop.PInvoke
         /// <param name="scObject">A handle to the service control manager object or the service object to
         /// close.</param>
         /// <returns>If the function succeeds, the return value is nonzero.</returns>
+        /// <seealso cref="https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle"/>
         [DllImport("advapi32.dll", SetLastError = true)]
         public static extern bool CloseServiceHandle(IntPtr scObject);
 
@@ -114,6 +116,36 @@ namespace DellFanManagement.Interop.PInvoke
         /// <seealso cref="https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-deleteservice"/>
         [DllImport("advapi32.dll", SetLastError = true)]
         public static extern bool DeleteService(IntPtr hService);
+
+        /// <summary>
+        /// Sends a control code directly to a specified device driver, causing the corresponding device to perform the
+        /// corresponding operation.
+        /// </summary>
+        /// <param name="hDevice">A handle to the device on which the operation is to be performed.</param>
+        /// <param name="IoControlCode">The control code for the operation.</param>
+        /// <param name="InBuffer">A pointer to the input buffer that contains the data required to perform the
+        /// operation.</param>
+        /// <param name="nInBufferSize">The size of the input buffer, in bytes.</param>
+        /// <param name="OutBuffer">A pointer to the output buffer that is to receive the data returned by the
+        /// operation.</param>
+        /// <param name="nOutBufferSize">The size of the output buffer, in bytes.</param>
+        /// <param name="bytesReturned">A pointer to a variable that receives the size of the data stored in the output
+        /// buffer, in bytes.</param>
+        /// <param name="overlapped">A pointer to an OVERLAPPED structure.  (Not used in this application.)</param>
+        /// <returns></returns>
+        /// <seealso cref="https://www.pinvoke.net/default.aspx/kernel32.deviceiocontrol"/>
+        /// <seealso cref="https://docs.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-deviceiocontrol"/>
+        [DllImport("Kernel32.dll", SetLastError = false, CharSet = CharSet.Auto)]
+        public static extern bool DeviceIoControl(
+            IntPtr hDevice,
+            int IoControlCode,
+            ref SmbiosPackage InBuffer,
+            int nInBufferSize,
+            ref SmbiosPackage OutBuffer,
+            int nOutBufferSize,
+            ref uint bytesReturned,
+            IntPtr overlapped
+        );
 
         /// <summary>
         /// Establishes a connection to the service control manager on the specified computer and opens the specified

@@ -7,8 +7,8 @@
     <ProjectGuid>{84CECE63-519A-406B-BB8F-2991F6191817}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DellFanManagement.Interop</RootNamespace>
-    <AssemblyName>DellFanLibInterop</AssemblyName>
+    <RootNamespace>DellFanManagement.DellSmbiozBzhLib</RootNamespace>
+    <AssemblyName>DellSmbiosBzhLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DellFanLib.cs" />
+    <Compile Include="DellSmbiosBzh.cs" />
     <Compile Include="FanIndex.cs" />
     <Compile Include="FanLevel.cs" />
     <Compile Include="PInvoke\ErrorCode.cs" />
@@ -57,6 +57,7 @@
     <Compile Include="PInvoke\ServiceAccess.cs" />
     <Compile Include="PInvoke\ServiceType.cs" />
     <Compile Include="SmbiosCommand.cs" />
+    <Compile Include="SmbiosPackage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

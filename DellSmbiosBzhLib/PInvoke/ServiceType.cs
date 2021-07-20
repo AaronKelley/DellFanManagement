@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.Interop.PInvoke
+﻿namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     /// <summary>
     /// Service types.

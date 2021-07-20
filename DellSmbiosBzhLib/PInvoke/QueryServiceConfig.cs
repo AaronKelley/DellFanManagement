@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DellFanManagement.Interop.PInvoke
+namespace DellFanManagement.DellSmbiozBzhLib.PInvoke
 {
     /// <summary>
     /// Contains configuration information for an installed service. It is used by the QueryServiceConfig function.

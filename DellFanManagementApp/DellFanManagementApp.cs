@@ -1,4 +1,4 @@
-using DellFanManagement.Interop;
+using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -22,7 +22,7 @@ namespace DellFanManagement.App
                     {
                         // First thing's first...  Attempt to load the EC control driver.
                         // Shutdown happens immediately after the background thread main loop ends.
-                        if (DellFanLib.Initialize())
+                        if (DellSmbiosBzh.Initialize())
                         {
                             // Looks like we're ready to start up the GUI app.
                             // Set process priority to high.
@@ -60,7 +60,7 @@ namespace DellFanManagement.App
                 // CMD mode.
                 try
                 {
-                    Console.WriteLine("Dell Fan Management, version {0}", DellFanLib.Version);
+                    Console.WriteLine("Dell Fan Management, version {0}", DellSmbiosBzh.Version);
                     Console.WriteLine("By Aaron Kelley");
                     Console.WriteLine("Licensed under GPLv3");
                     Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");

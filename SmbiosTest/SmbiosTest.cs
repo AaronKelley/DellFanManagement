@@ -1,4 +1,4 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Text;
 
@@ -13,12 +13,12 @@ namespace SmbiosTest
         {
             try
             {
-                DellFanLib.Initialize();
+                DellSmbiosBzh.Initialize();
 
                 ulong result;
 
-                //result = DellFanLib.ExecuteCommand(SmbiosCommand.GetFanRpm, 0);
-                //Console.WriteLine(result);
+                result = DellSmbiosBzh.ExecuteCommand(SmbiosCommand.GetFanRpm, 0);
+                Console.WriteLine(result);
             }
             catch (Exception exception)
             {
