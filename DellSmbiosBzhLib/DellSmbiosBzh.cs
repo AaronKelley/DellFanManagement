@@ -39,7 +39,7 @@ namespace DellFanManagement.DellSmbiozBzhLib
         private const string DriverFilename = "bzh_dell_smm_io_x64.sys";
 
         /// <summary>
-        /// "Secret key" used to communicate with teh driver.
+        /// "Secret key" used to communicate with the driver.
         /// </summary>
         private const int IoctlCode = (0xB424 << 16) | (0xB42 << 2);
 
