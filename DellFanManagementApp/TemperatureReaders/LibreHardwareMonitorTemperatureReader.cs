@@ -31,7 +31,7 @@ namespace DellFanManagement.App.TemperatureReaders
                 {
                     if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
                     {
-                        if (!sensor.Name.Contains("TjMax") && !sensor.Name.Contains("Average") && !sensor.Name.Contains("Max"))
+                        if (!sensor.Name.Contains("Average") && !sensor.Name.Contains("Max"))
                         {
                             int temperature = sensor.Value != null ? (int)Math.Round(sensor.Value.Value) : 0;
                             temperatures.Add(sensor.Name, temperature);

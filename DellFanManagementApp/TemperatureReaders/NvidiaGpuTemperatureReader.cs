@@ -21,7 +21,7 @@ namespace DellFanManagement.App.TemperatureReaders
 
             foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
             {
-                string name = gpu.FullName;
+                string name = gpu.FullName.Replace(" Laptop GPU", string.Empty);
 
                 try
                 {
