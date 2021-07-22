@@ -3,7 +3,7 @@
 namespace DellFanManagement.App.TemperatureReaders
 {
     /// <summary>
-    /// Handles reading the CPU core temperatures.
+    /// Derived classes handle reading temperatures values from sensors.
     /// </summary>
     /// <seealso cref="https://stackoverflow.com/questions/1195112/how-to-get-cpu-temperature"/>
     abstract class TemperatureReader

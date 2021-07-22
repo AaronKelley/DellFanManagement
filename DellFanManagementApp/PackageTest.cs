@@ -1,4 +1,4 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using LibreHardwareMonitor.Hardware;
 using NvAPIWrapper.GPU;
@@ -19,7 +19,7 @@ namespace DellFanManagement.App
         /// <returns>True if all tests were successful, false otherwise</returns>
         public static bool RunPackageTests()
         {
-            return OpenHardwareMonitorTest() && NvapiTest() && DellFanLibTest() && DellSmmIoLibTest() && IrrKlangTest();
+            return OpenHardwareMonitorTest() && NvapiTest() && DellSmbiosBzhTest() && DellSmmIoLibTest() && IrrKlangTest();
         }
 
         /// <summary>
@@ -115,25 +115,25 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Run a quick test of the DellFanLib package.
+        /// Run a quick test of the BZH driver/library.
         /// </summary>
         /// <returns>True if the test was successful, false otherwise</returns>
-        private static bool DellFanLibTest()
+        private static bool DellSmbiosBzhTest()
         {
             try
             {
                 Console.WriteLine("Running DellFanLib test.");
 
-                if (!DellFanLib.Initialize())
+                if (!DellSmbiosBzh.Initialize())
                 {
                     Console.WriteLine("  Failed to load driver.");
                     return false;
                 }
 
-                ulong result = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                uint? result = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1);
                 Console.WriteLine("  Fan 1 RPM: {0}", result);
 
-                DellFanLib.Shutdown();
+                DellSmbiosBzh.Shutdown();
             }
             catch (Exception exception)
             {

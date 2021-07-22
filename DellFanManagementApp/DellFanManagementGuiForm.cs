@@ -1,5 +1,5 @@
 ﻿using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.Interop;
+using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using System;
 using System.Collections.Generic;
@@ -77,7 +77,7 @@ namespace DellFanManagement.App
             }
             
             // Version number in the about box.
-            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
+            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellSmbiosBzh.Version);
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);
@@ -325,11 +325,11 @@ namespace DellFanManagement.App
             AudioDevice bringBackAudioDevice = null;
 
             // Fan RPM.
-            fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm);
+            fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm != null ? _state.Fan1Rpm : "(Error)");
 
             if (_state.Fan2Present)
             {
-                fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm);
+                fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm != null ? _state.Fan2Rpm : "(Error)");
                 fan2RpmLabel.Enabled = true;
                 manualFan2GroupBox.Enabled = true;
             }
@@ -996,7 +996,7 @@ namespace DellFanManagement.App
                     if (trayIconCheckBox.Checked && animatedCheckBox.Checked)
                     {
                         // Grab state information that we need.
-                        ulong averageRpm;
+                        uint? averageRpm;
                         if (_state.Fan2Present)
                         {
                             averageRpm = (_state.Fan1Rpm + _state.Fan2Rpm) / 2;
