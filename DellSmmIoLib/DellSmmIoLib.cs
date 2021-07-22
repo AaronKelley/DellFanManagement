@@ -80,17 +80,33 @@ namespace DellFanManagement.SmmIo
             }
         }
 
-        public static bool SetToken(Token token)
+        public static uint GetToken(Token token)
+        {
+            DellSmmBiosMessage message = new DellSmmBiosMessage
+            {
+                Class = ClassToken.TokenRead,
+                Selector = SelectToken.Standard,
+                Input1 = (uint)token
+            };
+
+            ExecuteCommand(ref message);
+            Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
+            return message.Output2;
+        }
+
+        public static bool SetToken(Token token, uint value, SelectToken selector = SelectToken.Standard)
         {
             DellSmmBiosMessage message = new DellSmmBiosMessage
             {
                 Class = ClassToken.TokenWrite,
-                Selector = SelectToken.Standard
-                // Input1 = Token location ???
-                // Input2 = Token value
+                Selector = selector,
+                Input1 = (uint)token,
+                Input2 = value
             };
 
-            return ExecuteCommand(ref message);
+            bool result = ExecuteCommand(ref message);
+            Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
+            return result;
         }
 
         /// <summary>

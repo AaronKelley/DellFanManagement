@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DellSmmIoLibTest
@@ -17,7 +18,9 @@ namespace DellSmmIoLibTest
                 //RfInfo();
                 //KeyboardBacklightInfo();
 
-                Enumerate();
+                //Enumerate();
+                ReadTokens();
+                SetTokens();
             }
             catch (Exception exception)
             {
@@ -25,6 +28,36 @@ namespace DellSmmIoLibTest
             }
 
             return;
+        }
+
+        private static void ReadTokens()
+        {
+            Token[] tokens = new Token[] { Token.DiskControllerModeAhci, Token.DiskControllerModeRaid, Token.KeyboardIlluminationOn,
+                Token.KeyboardIlluminationOff, Token.KeyboardIlluminationAuto, Token.KeyboardIlluminationAuto25, Token.KeyboardIlluminationAuto50,
+                Token.KeyboardIlluminationAuto75, Token.KeyboardIlluminationAuto100, Token.FanControlOverrideEnable, Token.FanControlOverrideDisable,
+                Token.FanSpeedLow, Token.FanSpeedMediumLow, Token.FanSpeedMedium, Token.FanSpeedMediumHigh, Token.FanSpeedHigh};
+
+            foreach (Token token in tokens)
+            {
+                Console.WriteLine(token);
+                DellSmmIoLib.GetToken(token);
+                Console.WriteLine();
+            }
+        }
+
+        private static void SetTokens()
+        {
+            for (int index = 0; index < 10; index++)
+            {
+                Token token = index % 2 == 0 ? Token.KeyboardIlluminationAuto50 : Token.KeyboardIlluminationAuto100;
+                uint value = (uint)(index % 2 == 0 ? 6 : 8);
+
+                DellSmmIoLib.GetToken(token);
+                DellSmmIoLib.SetToken(token, 1);
+                //DellSmmIoLib.SetToken(token, value, SelectToken.AC);
+                DellSmmIoLib.GetToken(token);
+                Thread.Sleep(1000);
+            }
         }
 
         private static void ThermalSetting()
