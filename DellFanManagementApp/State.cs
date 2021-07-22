@@ -1,4 +1,5 @@
-﻿using DellFanManagement.App.TemperatureReaders;
+﻿using DellFanManagement.App.FanSpeedReaders;
+using DellFanManagement.App.TemperatureReaders;
 using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.SmmIo;
 using System.Collections.Generic;
@@ -16,6 +17,11 @@ namespace DellFanManagement.App
         /// Object for reading CPU and GPU temperatures from the system.
         /// </summary>
         private readonly Dictionary<TemperatureComponent, TemperatureReader> _temperatureReaders;
+
+        /// <summary>
+        /// Object for reading the fan speeds from the system.
+        /// </summary>
+        private readonly IFanSpeedReader _fanSpeedReader;
 
         /// <summary>
         /// Semaphore for protecting access to state changes.
@@ -45,7 +51,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Whether or not the "audio keep alive" thread is running.
         /// </summary>
-        private bool _audioThreadRunning { get; set; }
+        private bool _audioThreadRunning;
 
         /// <summary>
         /// Whether or not the form hosting the main application has been closed.
@@ -55,7 +61,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates whether or not EC fan control is enabled.
         /// </summary>
-        private bool _ecFanControlEnabled { get; set; }
+        private bool _ecFanControlEnabled;
 
         /// <summary>
         /// Current level manually set for fan 1.
@@ -126,6 +132,9 @@ namespace DellFanManagement.App
                 _temperatureReaders.Add(TemperatureComponent.GPU, new GenericGpuTemperatureReader());
             }
 
+            // Initialize fan speed reader.
+            _fanSpeedReader = FanSpeedReaderFactory.GetFanSpeedReader();
+
             Temperatures = new();
             MinimumTemperatures = new();
             MaximumTemperatures = new();
@@ -157,14 +166,15 @@ namespace DellFanManagement.App
         private void UpdateFanRpms()
         {
             // Update state: RPM.
-            Fan1Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1);
-            Fan2Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan2);
+            FanSpeeds fanSpeeds = _fanSpeedReader.GetFanSpeeds();
+            Fan1Rpm = fanSpeeds.Fan1Rpm;
+            Fan2Rpm = fanSpeeds.Fan2Rpm;
 
-            if (Fan1Rpm != uint.MaxValue && Fan2Rpm == uint.MaxValue)
+            if (Fan1Rpm != null && Fan2Rpm == null)
             {
                 Fan2Present = false;
             }
-            else if (Fan2Rpm != uint.MaxValue)
+            else if (Fan2Rpm != null)
             {
                 Fan2Present = true;
             }
@@ -383,12 +393,12 @@ namespace DellFanManagement.App
         /// <summary>
         /// RPM value for fan 1.
         /// </summary>
-        public ulong Fan1Rpm { get; private set; }
+        public uint? Fan1Rpm { get; private set; }
 
         /// <summary>
         /// RPM value for fan 2.
         /// </summary>
-        public ulong Fan2Rpm { get; private set; }
+        public uint? Fan2Rpm { get; private set; }
 
         /// <summary>
         /// Indicates whether or not a second fan is present in the system.

@@ -57,20 +57,20 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// Disable EC fan control.
         /// </summary>
         /// <param name="alternate">If true, attempt alternate method to disable EC fan control.</param>
-        /// <returns>ulong-max means failure.</returns>
-        public static ulong DisableEcFanControl(bool alternate = false)
+        /// <returns>True on success, false on failure.</returns>
+        public static bool DisableEcFanControl(bool alternate = false)
         {
-            return ExecuteCommand(alternate ? SmbiosCommand.DisableEcFanControlAlternate : SmbiosCommand.DisableEcFanControl);
+            return ExecuteCommand(alternate ? SmbiosCommand.DisableEcFanControlAlternate : SmbiosCommand.DisableEcFanControl) != null;
         }
 
         /// <summary>
         /// Enable EC fan control.
         /// </summary>
         /// <param name="alternate">If ture, attempt alternate method to enable EC fan control.</param>
-        /// <returns>ulong-max means failure.</returns>
-        public static ulong EnableEcFanControl(bool alternate = false)
+        /// <returns>True on success, false on failure.</returns>
+        public static bool EnableEcFanControl(bool alternate = false)
         {
-            return ExecuteCommand(alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl);
+            return ExecuteCommand(alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl) != null;
         }
 
         /// <summary>
@@ -79,20 +79,22 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// <param name="fanIndex">Which fan to set the level of.</param>
         /// <param name="fanLevel">Which fan level to set.</param>
         /// <returns>ulong-max means failure.</returns>
-        public static ulong SetFanLevel(FanIndex fanIndex, FanLevel fanLevel)
+        public static bool SetFanLevel(FanIndex fanIndex, FanLevel fanLevel)
         {
             uint parameter = ((uint)fanLevel << 8) | (uint)fanIndex;
-            return ExecuteCommand(SmbiosCommand.SetFanLevel, parameter);
+            return ExecuteCommand(SmbiosCommand.SetFanLevel, parameter) != null;
         }
 
         /// <summary>
         /// Get the speed of a specific fan.
         /// </summary>
         /// <param name="fanIndex">Which fan to get the speed of.</param>
-        /// <returns>Speed in RPM; uint-max means failure.</returns>
-        public static ulong GetFanRpm(FanIndex fanIndex)
+        /// <returns>Speed in RPM; null means failure.</returns>
+        public static uint? GetFanRpm(FanIndex fanIndex)
         {
-            return ExecuteCommand(SmbiosCommand.GetFanRpm, (uint)fanIndex);
+            uint? result = ExecuteCommand(SmbiosCommand.GetFanRpm, (uint)fanIndex);
+
+            return result;
         }
 
         /// <summary>
@@ -322,12 +324,12 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// <param name="driverHandle">Handle to the SMM I/O driver/service.</param>
         /// <param name="command">Command identifier.</param>
         /// <param name="argument">Command argument/parameter.</param>
-        /// <returns>Command result *uint-max means failure).</returns>
-        public static uint ExecuteCommand(SmbiosCommand command, uint argument = NoParameter)
+        /// <returns>Command result (null means failure).</returns>
+        public static uint? ExecuteCommand(SmbiosCommand command, uint argument = NoParameter)
         {
             if (!IsInitialized)
             {
-                return uint.MaxValue;
+                return null;
             }
 
             SmbiosPackage package = new SmbiosPackage
@@ -344,11 +346,18 @@ namespace DellFanManagement.DellSmbiozBzhLib
 
             if (status == false)
             {
-                return uint.MaxValue;
+                return null;
             }
             else
             {
-                return package.Command;
+                if (package.Command != uint.MaxValue)
+                {
+                    return package.Command;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
     }

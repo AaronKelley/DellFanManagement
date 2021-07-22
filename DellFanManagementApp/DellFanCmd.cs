@@ -253,9 +253,9 @@ namespace DellFanManagement.App
                             // Disable EC fan control.
                             Console.WriteLine("Attempting to disable EC control of the fan...");
 
-                            ulong result = DellSmbiosBzh.DisableEcFanControl(useAlternateCommand);
+                            bool success = DellSmbiosBzh.DisableEcFanControl(useAlternateCommand);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -268,15 +268,15 @@ namespace DellFanManagement.App
                             {
                                 // Crank the fans up, for safety.
                                 Console.WriteLine("Setting fan 1 speed to maximum...");
-                                result = DellSmbiosBzh.SetFanLevel(FanIndex.Fan1, FanLevel.Level2);
-                                if (result == ulong.MaxValue)
+                                success = DellSmbiosBzh.SetFanLevel(FanIndex.Fan1, FanLevel.Level2);
+                                if (!success)
                                 {
                                     Console.Error.WriteLine("Failed.");
                                 }
 
                                 Console.WriteLine("Setting fan 2 speed to maximum...");
-                                result = DellSmbiosBzh.SetFanLevel(FanIndex.Fan2, FanLevel.Level2);
-                                if (result == ulong.MaxValue)
+                                success = DellSmbiosBzh.SetFanLevel(FanIndex.Fan2, FanLevel.Level2);
+                                if (!success)
                                 {
                                     Console.Error.WriteLine("Failed.  (Maybe your system just has one fan?)");
                                 }
@@ -292,9 +292,9 @@ namespace DellFanManagement.App
                             // Enable EC fan control.
                             Console.WriteLine("Attempting to enable EC control of the fan...");
 
-                            ulong result = DellSmbiosBzh.EnableEcFanControl(useAlternateCommand);
+                            bool success = DellSmbiosBzh.EnableEcFanControl(useAlternateCommand);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -307,9 +307,9 @@ namespace DellFanManagement.App
                         {
                             // Set the fan to a specific level.
                             Console.WriteLine("Attempting to set the fan level...");
-                            ulong result = DellSmbiosBzh.SetFanLevel(fanSelection, fanLevel);
+                            bool success = DellSmbiosBzh.SetFanLevel(fanSelection, fanLevel);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -322,9 +322,9 @@ namespace DellFanManagement.App
                         {
                             // Query the fan RPM.
                             Console.WriteLine("Attempting to query the fan RPM...");
-                            ulong result = DellSmbiosBzh.GetFanRpm(fanSelection);
+                            uint? result = DellSmbiosBzh.GetFanRpm(fanSelection);
 
-                            if (result == ulong.MaxValue)
+                            if (result == null)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -346,15 +346,15 @@ namespace DellFanManagement.App
                         {
                             // Test all of the fan levels and report RPMs.
 
-                            ulong rpmIdleFan1;
-                            ulong rpmLevel0Fan1;
-                            ulong rpmLevel1Fan1;
-                            ulong rpmLevel2Fan1;
+                            uint? rpmIdleFan1;
+                            uint? rpmLevel0Fan1;
+                            uint? rpmLevel1Fan1;
+                            uint? rpmLevel2Fan1;
 
-                            ulong? rpmIdleFan2 = null;
-                            ulong? rpmLevel0Fan2 = null;
-                            ulong? rpmLevel1Fan2 = null;
-                            ulong? rpmLevel2Fan2 = null;
+                            uint? rpmIdleFan2 = null;
+                            uint? rpmLevel0Fan2 = null;
+                            uint? rpmLevel1Fan2 = null;
+                            uint? rpmLevel2Fan2 = null;
 
                             int sleepInterval = 7500;
                             bool fan2Present = true;
@@ -368,9 +368,9 @@ namespace DellFanManagement.App
                             DellSmbiosBzh.SetFanLevel(FanIndex.Fan1, FanLevel.Level0);
 
                             rpmIdleFan2 = DellSmbiosBzh.GetFanRpm(FanIndex.Fan2);
-                            ulong result = DellSmbiosBzh.SetFanLevel(FanIndex.Fan2, FanLevel.Level0);
+                            bool success = DellSmbiosBzh.SetFanLevel(FanIndex.Fan2, FanLevel.Level0);
 
-                            if (result == uint.MaxValue)
+                            if (!success)
                             {
                                 // No fan 2?
                                 fan2Present = false;
