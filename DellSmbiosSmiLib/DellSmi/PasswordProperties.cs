@@ -8,7 +8,7 @@
         /// <summary>
         /// 0 = password is set; 1 = password is not set.
         /// </summary>
-        public byte Installed;
+        public SmiPasswordInstalled Installed;
 
         /// <summary>
         /// Maximum password length, in characters.

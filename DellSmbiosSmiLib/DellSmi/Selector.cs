@@ -15,6 +15,12 @@
         Battery = 1,
 
         /// <summary>
+        /// Used to verify password, "old" method.
+        /// </summary>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
+        VerifyPasswordOld = 1,
+
+        /// <summary>
         /// "AC" token applies when the system is on AC power.
         /// </summary>
         /// <seealso cref="https://github.com/torvalds/linux/blob/master/include/uapi/linux/wmi.h"/>
@@ -25,6 +31,12 @@
         /// </summary>
         /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
         PasswordProperties = 3,
+
+        /// <summary>
+        /// Used to verify a password, "new" method.
+        /// </summary>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
+        VerifyPasswordNew = 4,
 
         /// <summary>
         /// Used to enable or disable wireless connectivity.

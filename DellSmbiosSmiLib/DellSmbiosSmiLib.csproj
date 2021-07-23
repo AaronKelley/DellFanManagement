@@ -47,9 +47,11 @@
     <Compile Include="DellSmi\Class.cs" />
     <Compile Include="DellSmi\PasswordProperties.cs" />
     <Compile Include="DellSmi\SmiPassword.cs" />
+    <Compile Include="DellSmi\SmiPasswordCheckResult.cs" />
     <Compile Include="DellSmi\SmiPasswordFormat.cs" />
     <Compile Include="DellSmi\SmiObject.cs" />
     <Compile Include="DellSmbiosSmi.cs" />
+    <Compile Include="DellSmi\SmiPasswordInstalled.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DellSmi\Selector.cs" />
     <Compile Include="ThermalSetting.cs" />

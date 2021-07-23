@@ -20,10 +20,16 @@ namespace DellSmmIoLibTest
                 //KeyboardBacklightInfo();
 
                 //Enumerate();
-                //ReadTokens();
-                //SetTokens();
+                ReadTokens();
+                SetTokens();
 
+                /*
                 Console.WriteLine(DellSmbiosSmi.GetPasswordFormat(SmiPassword.Admin));
+
+                Console.Write("Password> ");
+                string password = Console.ReadLine();
+                Console.WriteLine(DellSmbiosSmi.GetSecurityKey(SmiPassword.Admin, password));
+                */
             }
             catch (Exception exception)
             {
@@ -55,12 +61,40 @@ namespace DellSmmIoLibTest
                 Token token = index % 2 == 0 ? Token.KeyboardIlluminationAuto50 : Token.KeyboardIlluminationAuto100;
                 uint value = (uint)(index % 2 == 0 ? 6 : 8);
 
+                Console.WriteLine("Keyboard illumination {0}%", index % 2 == 0 ? 50 : 100);
                 DellSmbiosSmi.GetToken(token);
-                DellSmbiosSmi.SetToken(token, 1);
+                DellSmbiosSmi.SetToken(token, value);
                 //DellSmmIoLib.SetToken(token, value, SelectToken.AC);
                 DellSmbiosSmi.GetToken(token);
+                Console.WriteLine();
                 Thread.Sleep(1000);
             }
+
+            Console.WriteLine("Automatic fan control disabled");
+            DellSmbiosSmi.SetToken(Token.FanControlOverrideEnable, 1);
+
+            Console.WriteLine("Fan speed 'low'");
+            DellSmbiosSmi.SetToken(Token.FanSpeedLow, 2);
+            Thread.Sleep(8000);
+
+            Console.WriteLine("Fan speed 'medium'");
+            DellSmbiosSmi.SetToken(Token.FanSpeedMedium, 1);
+            Thread.Sleep(8000);
+
+            Console.WriteLine("Fan speed 'high'");
+            DellSmbiosSmi.SetToken(Token.FanSpeedHigh, 3);
+            Thread.Sleep(8000);
+
+            Console.WriteLine("Fan speed 'medium low'");
+            DellSmbiosSmi.SetToken(Token.FanSpeedMediumLow, 4);
+            Thread.Sleep(8000);
+
+            Console.WriteLine("Fan speed 'medium high'");
+            DellSmbiosSmi.SetToken(Token.FanSpeedMediumHigh, 5);
+            Thread.Sleep(8000);
+
+            Console.WriteLine("Automatic fan control enabled");
+            DellSmbiosSmi.SetToken(Token.FanControlOverrideDisable, 0);
         }
 
         private static void ThermalSetting()

@@ -2,6 +2,7 @@
 using System;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace DellFanManagement.DellSmbiosSmiLib
 {
@@ -115,11 +116,16 @@ namespace DellFanManagement.DellSmbiosSmiLib
         /// Fetch the password encoding format from the BIOS.
         /// </summary>
         /// <param name="which">Which type of password to request the encoding format for.</param>
+        /// <param name="properties">Optional password properties object; it will be fetched if not provided.</param>
         /// <returns>Password encoding format, or null on error.</returns>
         /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
-        public static SmiPasswordFormat? GetPasswordFormat(SmiPassword which)
+        public static SmiPasswordFormat? GetPasswordFormat(SmiPassword which, PasswordProperties? properties = null)
         {
-            PasswordProperties? properties = GetPasswordProperties(which);
+            if (properties == null)
+            {
+                properties = GetPasswordProperties(which);
+            }
+
             if (properties != null)
             {
                 if ((properties?.Characteristics & 1) != 0)
@@ -155,7 +161,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
             {
                 return new PasswordProperties
                 {
-                    Installed = Utility.GetByte(0, message.Output2),
+                    Installed = (SmiPasswordInstalled)Utility.GetByte(0, message.Output2),
                     MaximumLength = Utility.GetByte(1, message.Output2),
                     MinimumLength = Utility.GetByte(2, message.Output2),
                     Characteristics = Utility.GetByte(3, message.Output2),
@@ -164,6 +170,79 @@ namespace DellFanManagement.DellSmbiosSmiLib
                     MinimumSpecialCharacters = Utility.GetByte(2, message.Output3),
                     MaximumRepeatingCharacters = Utility.GetByte(3, message.Output3)
                 };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static uint? GetSecurityKey(SmiPassword which, string password)
+        {
+            PasswordProperties? properties = GetPasswordProperties(which);
+            if (properties != null)
+            {
+                if (properties?.Installed == SmiPasswordInstalled.Installed)
+                {
+                    uint? key = GetSecurityKeyNew(which, password, (PasswordProperties)properties);
+                    if (key != null)
+                    {
+                        return key;
+                    }
+                    else
+                    {
+                        // TODO: Try "old" method.
+                        return null;
+                    }
+                }
+                else
+                {
+                    // No password has been set.
+                    return 0;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static uint? GetSecurityKeyNew(SmiPassword which, string password, PasswordProperties properties)
+        {
+            if (GetPasswordFormat(which, properties) == SmiPasswordFormat.Scancode)
+            {
+                throw new NotImplementedException("BIOS wants scancode-encoded passwords, but only ASCII-encoded passwords are supported at this time.");
+            }
+
+            SmiObject message = new SmiObject
+            {
+                Class = (Class)which,
+                Selector = Selector.VerifyPasswordNew
+            };
+
+            // Allocate a buffer for the password.
+            int bufferSize = properties.MaximumLength * 2;
+            IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
+
+            // Zero out the buffer.
+            for (byte index = 0; index < bufferSize; index++)
+            {
+                Marshal.WriteByte(buffer, index, 0);
+            }
+
+            // Copy password into the buffer (ASCII-encoded).
+            byte[] passwordBytes = ASCIIEncoding.ASCII.GetBytes(password);
+            Marshal.Copy(passwordBytes, 0, buffer, Math.Min(password.Length, bufferSize));
+
+            message.Input1 = (uint)buffer.ToInt32();
+
+            ExecuteCommand(ref message);
+
+            Marshal.FreeHGlobal(buffer);
+
+            if (message.Input1 == (uint)SmiPasswordCheckResult.Correct)
+            {
+                return message.Input2;
             }
             else
             {
