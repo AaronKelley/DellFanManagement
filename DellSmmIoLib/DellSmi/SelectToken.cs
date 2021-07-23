@@ -20,7 +20,7 @@
         /// <summary>
         /// Used to get BIOS password information.
         /// </summary>
-        PasswordProperties,
+        PasswordProperties = 3,
 
         /// <summary>
         /// Used to enable or disable wireless connectivity.
