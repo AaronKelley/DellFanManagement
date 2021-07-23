@@ -92,7 +92,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
             };
 
             ExecuteCommand(ref message);
-            Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
+            Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", (uint)token, message.Output1, message.Output2, message.Output3, message.Output4);
             return message.Output2;
         }
 
@@ -108,7 +108,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
             };
 
             bool result = ExecuteCommand(ref message);
-            Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
+            Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", (uint)token, message.Output1, message.Output2, message.Output3, message.Output4);
             return result;
         }
 
