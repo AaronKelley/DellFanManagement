@@ -1,12 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DellFanManagement.SmmIo
+namespace DellFanManagement.SmmIo.DellSmi
 {
     /// <summary>
     /// Structure used to interact with the BIOS.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct DellSmmBiosMessage
+    public struct SmiObject
     {
         public ClassToken Class;
 

@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.SmmIo
+﻿namespace DellFanManagement.SmmIo.DellSmi
 {
     public enum SelectToken : ushort
     {
@@ -16,6 +16,11 @@
         /// "AC" token applies when the system is on AC power.
         /// </summary>
         AC = 2,
+
+        /// <summary>
+        /// Used to get BIOS password information.
+        /// </summary>
+        PasswordProperties,
 
         /// <summary>
         /// Used to enable or disable wireless connectivity.

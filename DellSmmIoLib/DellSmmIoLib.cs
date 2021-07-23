@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DellFanManagement.SmmIo.DellSmi;
+using System;
 using System.Management;
 using System.Runtime.InteropServices;
 
@@ -26,7 +27,7 @@ namespace DellFanManagement.SmmIo
         {
             try
             {
-                DellSmmBiosMessage message = new DellSmmBiosMessage
+                SmiObject message = new SmiObject
                 {
                     Class = ClassToken.Info,
                     Selector = SelectToken.ThermalMode
@@ -59,7 +60,7 @@ namespace DellFanManagement.SmmIo
             {
                 try
                 {
-                    DellSmmBiosMessage message = new DellSmmBiosMessage
+                    SmiObject message = new SmiObject
                     {
                         Class = ClassToken.Info,
                         Selector = SelectToken.ThermalMode,
@@ -82,7 +83,7 @@ namespace DellFanManagement.SmmIo
 
         public static uint GetToken(Token token)
         {
-            DellSmmBiosMessage message = new DellSmmBiosMessage
+            SmiObject message = new SmiObject
             {
                 Class = ClassToken.TokenRead,
                 Selector = SelectToken.Standard,
@@ -96,12 +97,13 @@ namespace DellFanManagement.SmmIo
 
         public static bool SetToken(Token token, uint value, SelectToken selector = SelectToken.Standard)
         {
-            DellSmmBiosMessage message = new DellSmmBiosMessage
+            SmiObject message = new SmiObject
             {
                 Class = ClassToken.TokenWrite,
                 Selector = selector,
                 Input1 = (uint)token,
-                Input2 = value
+                Input2 = value,
+                //Input3 = securityKey
             };
 
             bool result = ExecuteCommand(ref message);
@@ -110,11 +112,69 @@ namespace DellFanManagement.SmmIo
         }
 
         /// <summary>
+        /// Fetch the password encoding format from the BIOS.
+        /// </summary>
+        /// <param name="which">Which type of password to request the encoding format for.</param>
+        /// <returns>Password encoding format, or null on error.</returns>
+        public static SmiPasswordFormat? GetPasswordFormat(SmiPassword which)
+        {
+            PasswordProperties? properties = GetPasswordProperties(which);
+            if (properties != null)
+            {
+                if ((properties?.Characteristics & 1) != 0)
+                {
+                    return SmiPasswordFormat.Ascii;
+                }
+                else
+                {
+                    return SmiPasswordFormat.Scancode;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetch password properties from the BIOS.
+        /// </summary>
+        /// <param name="which">Which type of password to request properties for.</param>
+        /// <returns>Password properties structure, or null on error.</returns>
+        public static PasswordProperties? GetPasswordProperties(SmiPassword which)
+        {
+            SmiObject message = new SmiObject
+            {
+                Class = (ClassToken)which,
+                Selector = SelectToken.PasswordProperties
+            };
+
+            if (ExecuteCommand(ref message) && message.Output1 == 0)
+            {
+                return new PasswordProperties
+                {
+                    Installed = Utility.GetByte(0, message.Output2),
+                    MaximumLength = Utility.GetByte(1, message.Output2),
+                    MinimumLength = Utility.GetByte(2, message.Output2),
+                    Characteristics = Utility.GetByte(3, message.Output2),
+                    MinimumAlphabeticCharacters = Utility.GetByte(0, message.Output3),
+                    MinimumNumericCharacters = Utility.GetByte(1, message.Output3),
+                    MinimumSpecialCharacters = Utility.GetByte(2, message.Output3),
+                    MaximumRepeatingCharacters = Utility.GetByte(3, message.Output3)
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Execute a command against the SMM BIOS via the ACPI/WMI interface.
         /// </summary>
         /// <param name="message">SMM BIOS message (a packaged-up command to be executed)</param>
         /// <returns>True if successful, false if not; note that exceptions on error conditions can come back from this method as well</returns>
-        public static bool ExecuteCommand(ref DellSmmBiosMessage message)
+        public static bool ExecuteCommand(ref SmiObject message)
         {
             byte[] bytes = StructToByteArray(message);
             byte[] buffer = new byte[BufferLength];
@@ -172,7 +232,7 @@ namespace DellFanManagement.SmmIo
         /// <param name="message">SMM BIOS message struct</param>
         /// <returns>Byte array</returns>
         /// <seealso cref="https://stackoverflow.com/questions/3278827/how-to-convert-a-structure-to-a-byte-array-in-c"/>
-        private static byte[] StructToByteArray(DellSmmBiosMessage message)
+        private static byte[] StructToByteArray(SmiObject message)
         {
             int size = Marshal.SizeOf(message);
             byte[] array = new byte[size];
@@ -190,16 +250,16 @@ namespace DellFanManagement.SmmIo
         /// <param name="array">Byte array</param>
         /// <returns>SMM BIOS message struct</returns>
         /// <seealso cref="https://stackoverflow.com/questions/3278827/how-to-convert-a-structure-to-a-byte-array-in-c"/>
-        private static DellSmmBiosMessage ByteArrayToStruct(byte[] array)
+        private static SmiObject ByteArrayToStruct(byte[] array)
         {
-            DellSmmBiosMessage message = new DellSmmBiosMessage();
+            SmiObject message = new SmiObject();
 
             int size = Marshal.SizeOf(message);
             IntPtr pointer = Marshal.AllocHGlobal(size);
 
             Marshal.Copy(array, 0, pointer, size);
 
-            message = (DellSmmBiosMessage)Marshal.PtrToStructure(pointer, message.GetType());
+            message = (SmiObject)Marshal.PtrToStructure(pointer, message.GetType());
             Marshal.FreeHGlobal(pointer);
 
             return message;

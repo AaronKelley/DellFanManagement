@@ -1,4 +1,5 @@
 ﻿using DellFanManagement.SmmIo;
+using DellFanManagement.SmmIo.DellSmi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,10 @@ namespace DellSmmIoLibTest
                 //KeyboardBacklightInfo();
 
                 //Enumerate();
-                ReadTokens();
-                SetTokens();
+                //ReadTokens();
+                //SetTokens();
+
+                Console.WriteLine(DellSmmIoLib.GetPasswordFormat(SmiPassword.Admin));
             }
             catch (Exception exception)
             {
@@ -68,7 +71,7 @@ namespace DellSmmIoLibTest
 
         private static void RfInfo()
         {
-            DellSmmBiosMessage message = new DellSmmBiosMessage
+            SmiObject message = new SmiObject
             {
                 Class = ClassToken.Info,
                 Selector = SelectToken.RfKill
@@ -79,7 +82,7 @@ namespace DellSmmIoLibTest
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
 
-            message = new DellSmmBiosMessage
+            message = new SmiObject
             {
                 Class = ClassToken.Info,
                 Selector = SelectToken.RfKill,
@@ -98,7 +101,7 @@ namespace DellSmmIoLibTest
         /// </summary>
         private static void KeyboardBacklightInfo()
         {
-            DellSmmBiosMessage message = new DellSmmBiosMessage
+            SmiObject message = new SmiObject
             {
                 Class = ClassToken.KeyboardBacklight,
                 Selector = SelectToken.KeyboardBacklight
@@ -127,7 +130,7 @@ namespace DellSmmIoLibTest
             {
                 for (int selectValue = 0; selectValue < 256; selectValue++)
                 {
-                    DellSmmBiosMessage message = new DellSmmBiosMessage
+                    SmiObject message = new SmiObject
                     {
                         Class = (ClassToken)classValue,
                         Selector = (SelectToken)selectValue

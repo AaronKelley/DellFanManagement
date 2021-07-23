@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.SmmIo
+﻿namespace DellFanManagement.SmmIo.DellSmi
 {
     /// <summary>
     /// Each "token" represents an aspect of the system behavior that can be configured.
