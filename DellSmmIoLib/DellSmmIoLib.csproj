@@ -44,14 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DellSmi\ClassToken.cs" />
+    <Compile Include="DellSmi\Class.cs" />
     <Compile Include="DellSmi\PasswordProperties.cs" />
     <Compile Include="DellSmi\SmiPassword.cs" />
     <Compile Include="DellSmi\SmiPasswordFormat.cs" />
     <Compile Include="DellSmi\SmiObject.cs" />
     <Compile Include="DellSmmIoLib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DellSmi\SelectToken.cs" />
+    <Compile Include="DellSmi\Selector.cs" />
     <Compile Include="ThermalSetting.cs" />
     <Compile Include="DellSmi\Token.cs" />
     <Compile Include="Utility.cs" />

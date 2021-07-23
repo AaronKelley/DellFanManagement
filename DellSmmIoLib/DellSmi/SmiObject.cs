@@ -8,9 +8,9 @@ namespace DellFanManagement.SmmIo.DellSmi
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct SmiObject
     {
-        public ClassToken Class;
+        public Class Class;
 
-        public SelectToken Selector;
+        public Selector Selector;
 
         /// <summary>
         /// First input parameter.

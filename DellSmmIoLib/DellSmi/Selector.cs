@@ -1,6 +1,6 @@
 ﻿namespace DellFanManagement.SmmIo.DellSmi
 {
-    public enum SelectToken : ushort
+    public enum Selector : ushort
     {
         /// <summary>
         /// "Standard" tokens apply regardless of battery setting (?).

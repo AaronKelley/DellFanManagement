@@ -1,6 +1,6 @@
 ﻿namespace DellFanManagement.SmmIo.DellSmi
 {
-    public enum ClassToken : ushort
+    public enum Class : ushort
     {
         /// <summary>
         /// Read a token.

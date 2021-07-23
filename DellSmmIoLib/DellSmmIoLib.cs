@@ -29,8 +29,8 @@ namespace DellFanManagement.SmmIo
             {
                 SmiObject message = new SmiObject
                 {
-                    Class = ClassToken.Info,
-                    Selector = SelectToken.ThermalMode
+                    Class = Class.Info,
+                    Selector = Selector.ThermalMode
                 };
 
                 bool result = ExecuteCommand(ref message);
@@ -62,8 +62,8 @@ namespace DellFanManagement.SmmIo
                 {
                     SmiObject message = new SmiObject
                     {
-                        Class = ClassToken.Info,
-                        Selector = SelectToken.ThermalMode,
+                        Class = Class.Info,
+                        Selector = Selector.ThermalMode,
                         Input1 = 1,
                         Input2 = (uint)thermalSetting
                     };
@@ -85,8 +85,8 @@ namespace DellFanManagement.SmmIo
         {
             SmiObject message = new SmiObject
             {
-                Class = ClassToken.TokenRead,
-                Selector = SelectToken.Standard,
+                Class = Class.TokenRead,
+                Selector = Selector.Standard,
                 Input1 = (uint)token
             };
 
@@ -95,11 +95,11 @@ namespace DellFanManagement.SmmIo
             return message.Output2;
         }
 
-        public static bool SetToken(Token token, uint value, SelectToken selector = SelectToken.Standard)
+        public static bool SetToken(Token token, uint value, Selector selector = Selector.Standard)
         {
             SmiObject message = new SmiObject
             {
-                Class = ClassToken.TokenWrite,
+                Class = Class.TokenWrite,
                 Selector = selector,
                 Input1 = (uint)token,
                 Input2 = value,
@@ -145,8 +145,8 @@ namespace DellFanManagement.SmmIo
         {
             SmiObject message = new SmiObject
             {
-                Class = (ClassToken)which,
-                Selector = SelectToken.PasswordProperties
+                Class = (Class)which,
+                Selector = Selector.PasswordProperties
             };
 
             if (ExecuteCommand(ref message) && message.Output1 == 0)

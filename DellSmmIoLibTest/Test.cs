@@ -73,8 +73,8 @@ namespace DellSmmIoLibTest
         {
             SmiObject message = new SmiObject
             {
-                Class = ClassToken.Info,
-                Selector = SelectToken.RfKill
+                Class = Class.Info,
+                Selector = Selector.RfKill
             };
 
             // RF information.
@@ -84,8 +84,8 @@ namespace DellSmmIoLibTest
 
             message = new SmiObject
             {
-                Class = ClassToken.Info,
-                Selector = SelectToken.RfKill,
+                Class = Class.Info,
+                Selector = Selector.RfKill,
                 Input1 = 2
             };
 
@@ -103,8 +103,8 @@ namespace DellSmmIoLibTest
         {
             SmiObject message = new SmiObject
             {
-                Class = ClassToken.KeyboardBacklight,
-                Selector = SelectToken.KeyboardBacklight
+                Class = Class.KeyboardBacklight,
+                Selector = Selector.KeyboardBacklight
             };
 
             DellSmmIoLib.ExecuteCommand(ref message);
@@ -132,8 +132,8 @@ namespace DellSmmIoLibTest
                 {
                     SmiObject message = new SmiObject
                     {
-                        Class = (ClassToken)classValue,
-                        Selector = (SelectToken)selectValue
+                        Class = (Class)classValue,
+                        Selector = (Selector)selectValue
                     };
                     Console.Write("{0}\t{1}\t", classValue, selectValue);
 
