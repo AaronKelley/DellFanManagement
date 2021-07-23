@@ -1,4 +1,4 @@
-﻿using DellFanManagement.SmmIo;
+﻿using DellFanManagement.DellSmbiosSmiLib;
 using System;
 
 namespace DellFanManagement.App
@@ -44,18 +44,18 @@ namespace DellFanManagement.App
             }
 
             // Check the current setting.
-            currentSetting = DellSmmIoLib.GetThermalSetting();
+            currentSetting = DellSmbiosSmi.GetThermalSetting();
             Console.WriteLine("Thermal setting, before change: {0}", currentSetting);
 
             // Apply the new setting.
-            if (!DellSmmIoLib.SetThermalSetting(newSetting))
+            if (!DellSmbiosSmi.SetThermalSetting(newSetting))
             {
                 Console.Error.WriteLine("Failed to apply the new thermal setting.");
                 return -1;
             }
 
             // Check the new setting.
-            currentSetting = DellSmmIoLib.GetThermalSetting();
+            currentSetting = DellSmbiosSmi.GetThermalSetting();
             Console.WriteLine("Thermal setting, after change:  {0}", currentSetting);
 
             if (currentSetting == ThermalSetting.Error)

@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DellSmmIoLib\DellSmmIoLib.csproj">
+    <ProjectReference Include="..\DellSmbiosSmiLib\DellSmbiosSmiLib.csproj">
       <Project>{c7b8c793-52d8-493b-84fd-5670c4a6585d}</Project>
-      <Name>DellSmmIoLib</Name>
+      <Name>DellSmbiosSmiLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

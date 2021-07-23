@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DellFanManagement.SmmIo.DellSmi
+namespace DellFanManagement.DellSmbiosSmiLib.DellSmi
 {
     /// <summary>
     /// Structure used to interact with the BIOS.

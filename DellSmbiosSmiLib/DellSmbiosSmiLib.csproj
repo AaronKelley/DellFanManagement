@@ -7,8 +7,8 @@
     <ProjectGuid>{C7B8C793-52D8-493B-84FD-5670C4A6585D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DellFanManagement.SmmIo</RootNamespace>
-    <AssemblyName>DellSmmIoLib</AssemblyName>
+    <RootNamespace>DellFanManagement.DellSmbiosSmiLib</RootNamespace>
+    <AssemblyName>DellSmbiosSmiLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,7 +49,7 @@
     <Compile Include="DellSmi\SmiPassword.cs" />
     <Compile Include="DellSmi\SmiPasswordFormat.cs" />
     <Compile Include="DellSmi\SmiObject.cs" />
-    <Compile Include="DellSmmIoLib.cs" />
+    <Compile Include="DellSmbiosSmi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DellSmi\Selector.cs" />
     <Compile Include="ThermalSetting.cs" />

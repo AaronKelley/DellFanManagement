@@ -1,5 +1,5 @@
-﻿using DellFanManagement.SmmIo;
-using DellFanManagement.SmmIo.DellSmi;
+﻿using DellFanManagement.DellSmbiosSmiLib;
+using DellFanManagement.DellSmbiosSmiLib.DellSmi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace DellSmmIoLibTest
                 //ReadTokens();
                 //SetTokens();
 
-                Console.WriteLine(DellSmmIoLib.GetPasswordFormat(SmiPassword.Admin));
+                Console.WriteLine(DellSmbiosSmi.GetPasswordFormat(SmiPassword.Admin));
             }
             catch (Exception exception)
             {
@@ -43,7 +43,7 @@ namespace DellSmmIoLibTest
             foreach (Token token in tokens)
             {
                 Console.WriteLine(token);
-                DellSmmIoLib.GetToken(token);
+                DellSmbiosSmi.GetToken(token);
                 Console.WriteLine();
             }
         }
@@ -55,17 +55,17 @@ namespace DellSmmIoLibTest
                 Token token = index % 2 == 0 ? Token.KeyboardIlluminationAuto50 : Token.KeyboardIlluminationAuto100;
                 uint value = (uint)(index % 2 == 0 ? 6 : 8);
 
-                DellSmmIoLib.GetToken(token);
-                DellSmmIoLib.SetToken(token, 1);
+                DellSmbiosSmi.GetToken(token);
+                DellSmbiosSmi.SetToken(token, 1);
                 //DellSmmIoLib.SetToken(token, value, SelectToken.AC);
-                DellSmmIoLib.GetToken(token);
+                DellSmbiosSmi.GetToken(token);
                 Thread.Sleep(1000);
             }
         }
 
         private static void ThermalSetting()
         {
-            Console.WriteLine(DellSmmIoLib.GetThermalSetting());
+            Console.WriteLine(DellSmbiosSmi.GetThermalSetting());
             Console.WriteLine();
         }
 
@@ -78,7 +78,7 @@ namespace DellSmmIoLibTest
             };
 
             // RF information.
-            DellSmmIoLib.ExecuteCommand(ref message);
+            DellSmbiosSmi.ExecuteCommand(ref message);
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
 
@@ -89,7 +89,7 @@ namespace DellSmmIoLibTest
                 Input1 = 2
             };
 
-            DellSmmIoLib.ExecuteCommand(ref message);
+            DellSmbiosSmi.ExecuteCommand(ref message);
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);
 
@@ -107,7 +107,7 @@ namespace DellSmmIoLibTest
                 Selector = Selector.KeyboardBacklight
             };
 
-            DellSmmIoLib.ExecuteCommand(ref message);
+            DellSmbiosSmi.ExecuteCommand(ref message);
 
             Console.WriteLine("Modes: {0}", message.Output2 & 0xFFFF);
             Console.WriteLine("Type: {0}", (message.Output2 >> 24) & 0xFF);
@@ -139,7 +139,7 @@ namespace DellSmmIoLibTest
 
                     try
                     {
-                        bool result = DellSmmIoLib.ExecuteCommand(ref message);
+                        bool result = DellSmbiosSmi.ExecuteCommand(ref message);
                         if (result)
                         {
                             Console.WriteLine("{0}\t{1}\t{2}\t{3}", message.Output1, message.Output2, message.Output3, message.Output4);

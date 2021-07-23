@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.SmmIo
+﻿namespace DellFanManagement.DellSmbiosSmiLib
 {
     /// <summary>
     /// Representation of a "thermal setting".

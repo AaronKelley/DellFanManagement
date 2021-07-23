@@ -1,14 +1,14 @@
-﻿using DellFanManagement.SmmIo.DellSmi;
+﻿using DellFanManagement.DellSmbiosSmiLib.DellSmi;
 using System;
 using System.Management;
 using System.Runtime.InteropServices;
 
-namespace DellFanManagement.SmmIo
+namespace DellFanManagement.DellSmbiosSmiLib
 {
     /// <summary>
     /// Handles issuing commands to the SMM BIOS via the ACPI/WMI interface.
     /// </summary>
-    public static class DellSmmIoLib
+    public static class DellSmbiosSmi
     {
         private static readonly string WmiScopeRoot = "root/wmi";
         private static readonly string WmiClassNameBdat = "BDat";

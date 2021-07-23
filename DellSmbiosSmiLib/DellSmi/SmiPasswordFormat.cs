@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.SmmIo.DellSmi
+﻿namespace DellFanManagement.DellSmbiosSmiLib.DellSmi
 {
     /// <summary>
     /// Identifiers for the Dell BIOS password format, which is needed to derivate the security key.

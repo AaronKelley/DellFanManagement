@@ -1,6 +1,6 @@
 ﻿using DellFanManagement.App.TemperatureReaders;
 using DellFanManagement.DellSmbiozBzhLib;
-using DellFanManagement.SmmIo;
+using DellFanManagement.DellSmbiosSmiLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

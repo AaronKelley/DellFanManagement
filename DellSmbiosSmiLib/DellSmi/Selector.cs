@@ -1,4 +1,4 @@
-﻿namespace DellFanManagement.SmmIo.DellSmi
+﻿namespace DellFanManagement.DellSmbiosSmiLib.DellSmi
 {
     public enum Selector : ushort
     {

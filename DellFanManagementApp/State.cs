@@ -1,7 +1,7 @@
 ﻿using DellFanManagement.App.FanSpeedReaders;
 using DellFanManagement.App.TemperatureReaders;
 using DellFanManagement.DellSmbiozBzhLib;
-using DellFanManagement.SmmIo;
+using DellFanManagement.DellSmbiosSmiLib;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -192,7 +192,7 @@ namespace DellFanManagement.App
             }
             else
             {
-                ThermalSetting = DellSmmIoLib.GetThermalSetting();
+                ThermalSetting = DellSmbiosSmi.GetThermalSetting();
 
                 if (ThermalSetting == ThermalSetting.Error)
                 {
