@@ -6,7 +6,7 @@
     public struct PasswordProperties
     {
         /// <summary>
-        /// Unknown meaning.
+        /// 0 = password is set; 1 = password is not set.
         /// </summary>
         public byte Installed;
 
