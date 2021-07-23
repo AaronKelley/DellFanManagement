@@ -3,6 +3,7 @@
     /// <summary>
     /// Identifier for which password operations are being performed on.
     /// </summary>
+    /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
     public enum SmiPassword : ushort
     {
         /// <summary>

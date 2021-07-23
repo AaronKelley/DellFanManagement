@@ -116,6 +116,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
         /// </summary>
         /// <param name="which">Which type of password to request the encoding format for.</param>
         /// <returns>Password encoding format, or null on error.</returns>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
         public static SmiPasswordFormat? GetPasswordFormat(SmiPassword which)
         {
             PasswordProperties? properties = GetPasswordProperties(which);
@@ -141,6 +142,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
         /// </summary>
         /// <param name="which">Which type of password to request properties for.</param>
         /// <returns>Password properties structure, or null on error.</returns>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
         public static PasswordProperties? GetPasswordProperties(SmiPassword which)
         {
             SmiObject message = new SmiObject
