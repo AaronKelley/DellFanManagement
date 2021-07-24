@@ -83,6 +83,23 @@ namespace DellFanManagement.DellSmbiosSmiLib
         }
 
         /// <summary>
+        /// Determine whether or not fan control override is available through the WMI/SMI interface.
+        /// </summary>
+        /// <returns>True if fan control override is available, false if not.</returns>
+        public static bool IsFanControlOverrideAvailable()
+        {
+            try
+            {
+                SmiObject? message = GetToken(Token.FanControlOverrideEnable);
+                return (message?.Output1 == 0);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Disable automatic fan control.
         /// </summary>
         /// <returns>True on success, false on failure.</returns>
@@ -97,7 +114,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
         /// <returns>True on success, false on failure.</returns>
         public static bool EnableAutomaticFanControl()
         {
-            return SetToken(Token.FanControlOverrideDisable);
+            return SetToken(Token.FanSpeedAuto) && SetToken(Token.FanControlOverrideDisable);
         }
 
         /// <summary>

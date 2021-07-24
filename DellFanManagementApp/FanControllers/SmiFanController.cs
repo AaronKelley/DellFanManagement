@@ -1,18 +1,18 @@
-﻿using DellFanManagement.DellSmbiozBzhLib;
+﻿using DellFanManagement.DellSmbiosSmiLib;
 
 namespace DellFanManagement.App.FanControllers
 {
     /// <summary>
-    /// Allows fan speed control using the BZH SMM I/O driver.
+    /// Allows fan speed control using the WMI/SMI interface.
     /// </summary>
-    class BzhFanController : FanController
+    class SmiFanController : FanController
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public BzhFanController()
+        public SmiFanController()
         {
-            IsIndividualFanControlSupported = true;
+            IsIndividualFanControlSupported = false;
         }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>True on success, false on failure.</returns>
         public override bool DisableAutomaticFanControl()
         {
-            return DellSmbiosBzh.DisableAutomaticFanControl();
+            return DellSmbiosSmi.DisableAutomaticFanControl();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>True on success, false on failure.</returns>
         public override bool EnableAutomaticFanControl()
         {
-            return DellSmbiosBzh.EnableAutomaticFanControl();
+            return DellSmbiosSmi.EnableAutomaticFanControl();
         }
 
         /// <summary>
@@ -41,36 +41,29 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>True on succes, false on failure.</returns>
         public override bool SetFanLevel(FanLevel level, FanIndex fanIndex)
         {
-            bool result1 = true;
-            bool result2 = true;
+            if (fanIndex != FanIndex.AllFans)
+            {
+                // Can't control fans individually via SMI.
+                return false;
+            }
 
-            BzhFanLevel bzhLevel;
+            SmiFanLevel smiLevel;
             switch (level)
             {
                 case FanLevel.Off:
-                    bzhLevel = BzhFanLevel.Level0;
+                    smiLevel = SmiFanLevel.Off;
                     break;
                 case FanLevel.Medium:
-                    bzhLevel = BzhFanLevel.Level1;
+                    smiLevel = SmiFanLevel.Low;
                     break;
                 case FanLevel.High:
-                    bzhLevel = BzhFanLevel.Level2;
+                    smiLevel = SmiFanLevel.High;
                     break;
                 default:
                     return false;
             }
 
-            if (fanIndex == FanIndex.Fan1 || fanIndex == FanIndex.AllFans)
-            {
-                result1 = DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, bzhLevel);
-            }
-
-            if (fanIndex == FanIndex.Fan2 || fanIndex == FanIndex.AllFans)
-            {
-                result2 = DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan2, bzhLevel);
-            }
-
-            return result1 && result2;
+            return DellSmbiosSmi.SetFanLevel(smiLevel);
         }
     }
 }

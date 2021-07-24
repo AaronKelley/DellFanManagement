@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DellFanManagement.DellSmbiosSmiLib;
 
 namespace DellFanManagement.App.FanControllers
 {
@@ -17,8 +13,18 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>Fan speed reader appropriate for the system.</returns>
         public static FanController GetFanFanController()
         {
-            // Right now, we just have one choice.
-            return new BzhFanController();
+            if (DellSmbiosSmi.IsFanControlOverrideAvailable())
+            {
+                // If the WMI/SMI interface is available, use it.
+                Log.Write("Using SMI fan control.");
+                return new SmiFanController();
+            }
+            else
+            {
+                // Fall back to BZH SMM fan control.
+                Log.Write("Using BZH fan control.");
+                return new BzhFanController();
+            }
         }
     }
 }
