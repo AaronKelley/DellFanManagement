@@ -130,7 +130,7 @@ namespace DellFanManagement.App
                     return false;
                 }
 
-                uint? result = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1);
+                uint? result = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1);
                 Console.WriteLine("  Fan 1 RPM: {0}", result);
 
                 DellSmbiosBzh.Shutdown();

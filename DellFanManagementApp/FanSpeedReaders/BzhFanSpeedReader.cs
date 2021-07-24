@@ -16,8 +16,8 @@ namespace DellFanManagement.App.FanSpeedReaders
         {
             return new FanSpeeds()
             {
-                Fan1Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan1),
-                Fan2Rpm = DellSmbiosBzh.GetFanRpm(FanIndex.Fan2)
+                Fan1Rpm = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1),
+                Fan2Rpm = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2)
             };
         }
     }

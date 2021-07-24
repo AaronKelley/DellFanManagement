@@ -3,7 +3,7 @@
     /// <summary>
     /// Used for specifying which fan to query or set the level of.
     /// </summary>
-    public enum FanIndex : uint
+    public enum BzhFanIndex : uint
     {
         Fan1 = 0,
         Fan2 = 1,

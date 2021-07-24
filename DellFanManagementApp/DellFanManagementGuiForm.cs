@@ -268,33 +268,33 @@ namespace DellFanManagement.App
                 {
                     ecFanControlRadioButtonOff.Checked = true;
 
-                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan1Level), out FanLevel fan1Level))
+                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan1Level), out BzhFanLevel fan1Level))
                     {
                         switch (fan1Level)
                         {
-                            case FanLevel.Level0:
+                            case BzhFanLevel.Level0:
                                 manualFan1RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case BzhFanLevel.Level1:
                                 manualFan1RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case BzhFanLevel.Level2:
                                 manualFan1RadioButtonHigh.Checked = true;
                                 break;
                         }
                     }
 
-                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan2Level), out FanLevel fan2Level))
+                    if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.ManualModeFan2Level), out BzhFanLevel fan2Level))
                     {
                         switch (fan2Level)
                         {
-                            case FanLevel.Level0:
+                            case BzhFanLevel.Level0:
                                 manualFan2RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case BzhFanLevel.Level1:
                                 manualFan2RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case BzhFanLevel.Level2:
                                 manualFan2RadioButtonHigh.Checked = true;
                                 break;
                         }
@@ -700,18 +700,18 @@ namespace DellFanManagement.App
         private void FanLevelChangedEventHandler(Object sender, EventArgs e)
         {
             // Fan 1.
-            FanLevel? fan1LevelRequested = null;
+            BzhFanLevel? fan1LevelRequested = null;
             if (manualFan1RadioButtonOff.Checked)
             {
-                fan1LevelRequested = FanLevel.Level0;
+                fan1LevelRequested = BzhFanLevel.Level0;
             }
             else if (manualFan1RadioButtonMedium.Checked)
             {
-                fan1LevelRequested = FanLevel.Level1;
+                fan1LevelRequested = BzhFanLevel.Level1;
             }
             else if (manualFan1RadioButtonHigh.Checked)
             {
-                fan1LevelRequested = FanLevel.Level2;
+                fan1LevelRequested = BzhFanLevel.Level2;
             }
 
             if (fan1LevelRequested != null)
@@ -721,18 +721,18 @@ namespace DellFanManagement.App
             }
 
             // Fan 2.
-            FanLevel? fan2LevelRequested = null;
+            BzhFanLevel? fan2LevelRequested = null;
             if (manualFan2RadioButtonOff.Checked)
             {
-                fan2LevelRequested = FanLevel.Level0;
+                fan2LevelRequested = BzhFanLevel.Level0;
             }
             else if (manualFan2RadioButtonMedium.Checked)
             {
-                fan2LevelRequested = FanLevel.Level1;
+                fan2LevelRequested = BzhFanLevel.Level1;
             }
             else if (manualFan2RadioButtonHigh.Checked)
             {
-                fan2LevelRequested = FanLevel.Level2;
+                fan2LevelRequested = BzhFanLevel.Level2;
             }
 
             if (fan2LevelRequested != null)

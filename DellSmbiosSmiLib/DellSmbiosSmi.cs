@@ -83,6 +83,55 @@ namespace DellFanManagement.DellSmbiosSmiLib
         }
 
         /// <summary>
+        /// Disable automatic fan control.
+        /// </summary>
+        /// <returns>True on success, false on failure.</returns>
+        public static bool DisableAutomaticFanControl()
+        {
+            return SetToken(Token.FanControlOverrideEnable);
+        }
+
+        /// <summary>
+        /// Enable automatic fan control.
+        /// </summary>
+        /// <returns>True on success, false on failure.</returns>
+        public static bool EnableAutomaticFanControl()
+        {
+            return SetToken(Token.FanControlOverrideDisable);
+        }
+
+        /// <summary>
+        /// Sets the system fan level.
+        /// </summary>
+        /// <param name="level">Which fan level to set.</param>
+        /// <returns>True on success, false on failure.</returns>
+        public static bool SetFanLevel(SmiFanLevel level)
+        {
+            Token token;
+
+            /// ...The actual system behavior doesn't match up with the token names in the libsmbios documentation.
+            switch (level)
+            {
+                case SmiFanLevel.Off:
+                    token = Token.FanSpeedMediumHigh;
+                    break;
+                case SmiFanLevel.Low:
+                    token = Token.FanSpeedMedium;
+                    break;
+                case SmiFanLevel.Medium:
+                    token = Token.FanSpeedHigh;
+                    break;
+                case SmiFanLevel.High:
+                    token = Token.FanSpeedLow;
+                    break;
+                default:
+                    return false;
+            }
+
+            return SetToken(token);
+        }
+
+        /// <summary>
         /// Get the current value of a token.
         /// </summary>
         /// <param name="token">Token to get value of.</param>
@@ -107,7 +156,7 @@ namespace DellFanManagement.DellSmbiosSmiLib
         /// </summary>
         /// <param name="token">Token to get.</param>
         /// <returns>SmiObject result of the token call; null if failure.</returns>
-        private static SmiObject? GetToken(Token token)
+        public static SmiObject? GetToken(Token token)
         {
             SmiObject message = new SmiObject
             {

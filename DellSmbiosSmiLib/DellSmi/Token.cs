@@ -66,11 +66,34 @@
         /// </summary>
         KeyboardIlluminationAuto100 = 0x02F6,
 
+        /// <summary>
+        /// Fans run at speed based on environment.
+        /// </summary>
         FanSpeedAuto = 0x0332,
+
+        /// <summary>
+        /// Fans run at a "high" level.
+        /// </summary>
         FanSpeedHigh = 0x0333,
+
+        /// <summary>
+        /// Fans run at a "medium" level.
+        /// </summary>
         FanSpeedMedium = 0x0334,
+
+        /// <summary>
+        /// Fans run at a "low" level.
+        /// </summary>
         FanSpeedLow = 0x0335,
+
+        /// <summary>
+        /// Fans run at a "medium high" level.
+        /// </summary>
         FanSpeedMediumHigh = 0x0405,
+
+        /// <summary>
+        /// Fans run at a "medium low" level.
+        /// </summary>
         FanSpeedMediumLow = 0x0406
     }
 }
