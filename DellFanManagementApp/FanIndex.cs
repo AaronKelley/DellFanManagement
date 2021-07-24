@@ -6,6 +6,11 @@
     enum FanIndex
     {
         /// <summary>
+        /// All fans.
+        /// </summary>
+        AllFans,
+
+        /// <summary>
         /// First fan.
         /// </summary>
         Fan1,
@@ -13,11 +18,6 @@
         /// <summary>
         /// Second fan.
         /// </summary>
-        Fan2,
-
-        /// <summary>
-        /// All fans.
-        /// </summary>
-        AllFans
+        Fan2
     }
 }

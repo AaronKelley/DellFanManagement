@@ -82,6 +82,11 @@ namespace DellFanManagement.App
         public ulong? RpmThreshold { get; private set; }
 
         /// <summary>
+        /// Indicates whether or not the fans can be controlled individually.
+        /// </summary>
+        public bool IsIndividualFanControlSupported { get; private set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="state">Shared state object</param>
@@ -91,6 +96,7 @@ namespace DellFanManagement.App
             _state = state;
             _form = form;
             _fanController = FanControllerFactory.GetFanFanController();
+            IsIndividualFanControlSupported = _fanController.IsIndividualFanControlSupported;
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
@@ -291,11 +297,11 @@ namespace DellFanManagement.App
                                 _state.Fan1Level = _fan1LevelRequested;
                                 if (_fan1LevelRequested != null)
                                 {
-                                    _fanController.SetFanLevel((FanLevel)_fan1LevelRequested, FanIndex.Fan1);
+                                    _fanController.SetFanLevel((FanLevel)_fan1LevelRequested, IsIndividualFanControlSupported ? FanIndex.Fan1 : FanIndex.AllFans);
                                 }
                             }
 
-                            if (_state.Fan2Present && _state.Fan2Level != _fan2LevelRequested)
+                            if (_state.Fan2Present && IsIndividualFanControlSupported && _state.Fan2Level != _fan2LevelRequested)
                             {
                                 _state.Fan2Level = _fan2LevelRequested;
                                 if (_fan2LevelRequested != null)
