@@ -70,12 +70,6 @@ namespace DellFanManagement.App
                     Console.WriteLine("Licensed under GPLv3");
                     Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");
                     Console.WriteLine();
-                    Console.WriteLine("Dell SMM I/O driver by 424778940z");
-                    Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
-                    Console.WriteLine();
-                    Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
-                    Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
-                    Console.WriteLine();
 
                     if (UacHelper.IsProcessElevated())
                     {
@@ -89,6 +83,13 @@ namespace DellFanManagement.App
                         }
                         else
                         {
+                            Console.WriteLine("Dell SMM I/O driver by 424778940z");
+                            Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
+                            Console.WriteLine();
+                            Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
+                            Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
+                            Console.WriteLine();
+
                             return DellFanCmd.ProcessCommand(args);
                         }
                     }
