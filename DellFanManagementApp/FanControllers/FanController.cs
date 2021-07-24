@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DellFanManagement.App.FanControllers
+﻿namespace DellFanManagement.App.FanControllers
 {
     /// <summary>
     /// Interface for fan speed controller implementations.
