@@ -82,7 +82,32 @@ namespace DellFanManagement.DellSmbiosSmiLib
             }
         }
 
-        public static uint GetToken(Token token)
+        /// <summary>
+        /// Get the current value of a token.
+        /// </summary>
+        /// <param name="token">Token to get value of.</param>
+        /// <returns>Current setting for the token; null if failure.</returns>
+        public static uint? GetTokenCurrentValue(Token token)
+        {
+            return GetToken(token)?.Output2;
+        }
+
+        /// <summary>
+        /// Get the value that should be used to set this token.
+        /// </summary>
+        /// <param name="token">Token to get the "set" value for.</param>
+        /// <returns>"Set" value for the token; null if failure.</returns>
+        public static uint? GetTokenSetValue(Token token)
+        {
+            return GetToken(token)?.Output3;
+        }
+
+        /// <summary>
+        /// Execute a "get token" call and return the entire result.
+        /// </summary>
+        /// <param name="token">Token to get.</param>
+        /// <returns>SmiObject result of the token call; null if failure.</returns>
+        private static SmiObject? GetToken(Token token)
         {
             SmiObject message = new SmiObject
             {
@@ -92,24 +117,54 @@ namespace DellFanManagement.DellSmbiosSmiLib
             };
 
             ExecuteCommand(ref message);
-            Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", (uint)token, message.Output1, message.Output2, message.Output3, message.Output4);
-            return message.Output2;
+
+            if (message.Output1 == 0)
+            {
+                return message;
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public static bool SetToken(Token token, uint value, Selector selector = Selector.Standard)
+        /// <summary>
+        /// Set a token.
+        /// </summary>
+        /// <param name="token">Token to set.</param>
+        /// <param name="value">Optional value; for "bit" tokens it can be pulled automatically.</param>
+        /// <param name="selector">Optional selector.</param>
+        /// <returns>True on success, false on failure.</returns>
+        public static bool SetToken(Token token, uint? value = null, Selector selector = Selector.Standard)
         {
+            // If a value wasn't provided, query the SMBIOS for what it should be.
+            if (value == null)
+            {
+                value = GetTokenSetValue(token);
+                if (value == null)
+                {
+                    return false;
+                }
+            }
+
             SmiObject message = new SmiObject
             {
                 Class = Class.TokenWrite,
                 Selector = selector,
                 Input1 = (uint)token,
-                Input2 = value,
+                Input2 = (uint)value,
                 //Input3 = securityKey
+                // TODO: Implement security key.
             };
 
-            bool result = ExecuteCommand(ref message);
-            Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", (uint)token, message.Output1, message.Output2, message.Output3, message.Output4);
-            return result;
+            if (ExecuteCommand(ref message))
+            {
+                return message.Output1 == 0;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -177,8 +232,17 @@ namespace DellFanManagement.DellSmbiosSmiLib
             }
         }
 
+        /// <summary>
+        /// Get the security key.
+        /// </summary>
+        /// <param name="which">Which type of BIOS password is being provided.</param>
+        /// <param name="password">BIOS password.</param>
+        /// <returns>Security key, null on failure.</returns>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
         public static uint? GetSecurityKey(SmiPassword which, string password)
         {
+            // NOTE – This is work in progress, currently not functional.
+
             PasswordProperties? properties = GetPasswordProperties(which);
             if (properties != null)
             {
@@ -207,8 +271,18 @@ namespace DellFanManagement.DellSmbiosSmiLib
             }
         }
 
+        /// <summary>
+        /// Get the security key using the "new" method.
+        /// </summary>
+        /// <param name="which">Which type of BIOS password is being provided.</param>
+        /// <param name="password">BIOS password.</param>
+        /// <param name="properties">Pre-filled password properties object.</param>
+        /// <returns>Security key, null on failure.</returns>
+        /// <seealso cref="https://github.com/dell/libsmbios/blob/master/src/libsmbios_c/smi/smi_password.c"/>
         private static uint? GetSecurityKeyNew(SmiPassword which, string password, PasswordProperties properties)
         {
+            // NOTE – Non-functional, need to figure out the string pointer before it will work.
+
             if (GetPasswordFormat(which, properties) == SmiPasswordFormat.Scancode)
             {
                 throw new NotImplementedException("BIOS wants scancode-encoded passwords, but only ASCII-encoded passwords are supported at this time.");

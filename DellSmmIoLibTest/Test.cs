@@ -59,7 +59,7 @@ namespace DellSmmIoLibTest
             foreach (Token token in tokens)
             {
                 Console.WriteLine(token);
-                DellSmbiosSmi.GetToken(token);
+                DellSmbiosSmi.GetTokenCurrentValue(token);
                 Console.WriteLine();
             }
         }
@@ -72,10 +72,10 @@ namespace DellSmmIoLibTest
                 uint value = (uint)(index % 2 == 0 ? 6 : 8);
 
                 Console.WriteLine("Keyboard illumination {0}%", index % 2 == 0 ? 50 : 100);
-                DellSmbiosSmi.GetToken(token);
+                DellSmbiosSmi.GetTokenCurrentValue(token);
                 DellSmbiosSmi.SetToken(token, value);
                 //DellSmmIoLib.SetToken(token, value, SelectToken.AC);
-                DellSmbiosSmi.GetToken(token);
+                DellSmbiosSmi.GetTokenCurrentValue(token);
                 Console.WriteLine();
                 Thread.Sleep(1000);
             }
@@ -205,7 +205,7 @@ namespace DellSmmIoLibTest
 
             for (uint token = 0; token <= ushort.MaxValue; token++)
             {
-                DellSmbiosSmi.GetToken((Token)token);
+                DellSmbiosSmi.GetTokenCurrentValue((Token)token);
             }
         }
     }
