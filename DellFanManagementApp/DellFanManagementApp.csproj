@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DellSmbiosBzhLib\DellSmbiosBzhLib.csproj" />
-    <ProjectReference Include="..\DellSmmIoLib\DellSmmIoLib.csproj" />
+    <ProjectReference Include="..\DellSmbiosSmiLib\DellSmbiosSmiLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

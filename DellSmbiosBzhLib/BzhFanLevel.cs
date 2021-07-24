@@ -3,7 +3,7 @@
     /// <summary>
     /// Used to specify which fan level to set.
     /// </summary>
-    public enum FanLevel : uint
+    public enum BzhFanLevel : uint
     {
         /// <summary>
         /// Fan off.

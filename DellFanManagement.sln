@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSmbiosBzhLib", "DellSmbiosBzhLib\DellSmbiosBzhLib.csproj", "{84CECE63-519A-406B-BB8F-2991F6191817}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSmmIoLib", "DellSmmIoLib\DellSmmIoLib.csproj", "{C7B8C793-52D8-493B-84FD-5670C4A6585D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellSmbiosSmiLib", "DellSmbiosSmiLib\DellSmbiosSmiLib.csproj", "{C7B8C793-52D8-493B-84FD-5670C4A6585D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DellFanManagementApp", "DellFanManagementApp\DellFanManagementApp.csproj", "{7C7964C3-620E-456B-A2C1-D9F9A851ED96}"
 EndProject

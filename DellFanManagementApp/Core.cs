@@ -1,6 +1,7 @@
-﻿using DellFanManagement.App.TemperatureReaders;
+﻿using DellFanManagement.App.FanControllers;
+using DellFanManagement.App.TemperatureReaders;
 using DellFanManagement.DellSmbiozBzhLib;
-using DellFanManagement.SmmIo;
+using DellFanManagement.DellSmbiosSmiLib;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,6 +30,11 @@ namespace DellFanManagement.App
         /// Form object running the application.
         /// </summary>
         private readonly DellFanManagementGuiForm _form;
+
+        /// <summary>
+        /// Fan controller for making fan speed adjustments.
+        /// </summary>
+        private readonly FanController _fanController;
 
         /// <summary>
         /// Used to play back sounds in the application.
@@ -76,6 +82,11 @@ namespace DellFanManagement.App
         public ulong? RpmThreshold { get; private set; }
 
         /// <summary>
+        /// Indicates whether or not the fans can be controlled individually.
+        /// </summary>
+        public bool IsIndividualFanControlSupported { get; private set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="state">Shared state object</param>
@@ -84,6 +95,8 @@ namespace DellFanManagement.App
         {
             _state = state;
             _form = form;
+            _fanController = FanControllerFactory.GetFanFanController();
+            IsIndividualFanControlSupported = _fanController.IsIndividualFanControlSupported;
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
@@ -232,7 +245,7 @@ namespace DellFanManagement.App
             {
                 if (_state.EcFanControlEnabled)
                 {
-                    DellSmbiosBzh.EnableEcFanControl();
+                    _fanController.EnableAutomaticFanControl();
                     Log.Write("Enabled EC fan control – startup");
                 }
 
@@ -251,7 +264,7 @@ namespace DellFanManagement.App
                         if (!_state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = true;
-                            DellSmbiosBzh.EnableEcFanControl();
+                            _fanController.EnableAutomaticFanControl();
                             Log.Write("Enabled EC fan control – automatic mode");
                         }
                     }
@@ -261,7 +274,7 @@ namespace DellFanManagement.App
                         if (_ecFanControlRequested && !_state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = true;
-                            DellSmbiosBzh.EnableEcFanControl();
+                            _fanController.EnableAutomaticFanControl();
                             Log.Write("Enabled EC fan control – manual mode");
 
                             _state.Fan1Level = null;
@@ -272,7 +285,7 @@ namespace DellFanManagement.App
                         else if (!_ecFanControlRequested && _state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = false;
-                            DellSmbiosBzh.DisableEcFanControl();
+                            _fanController.DisableAutomaticFanControl();
                             Log.Write("Disabled EC fan control – manual mode");
                         }
 
@@ -284,22 +297,22 @@ namespace DellFanManagement.App
                                 _state.Fan1Level = _fan1LevelRequested;
                                 if (_fan1LevelRequested != null)
                                 {
-                                    DellSmbiosBzh.SetFanLevel(FanIndex.Fan1, (FanLevel)_fan1LevelRequested);
+                                    _fanController.SetFanLevel((FanLevel)_fan1LevelRequested, IsIndividualFanControlSupported ? FanIndex.Fan1 : FanIndex.AllFans);
                                 }
                             }
 
-                            if (_state.Fan2Present && _state.Fan2Level != _fan2LevelRequested)
+                            if (_state.Fan2Present && IsIndividualFanControlSupported && _state.Fan2Level != _fan2LevelRequested)
                             {
                                 _state.Fan2Level = _fan2LevelRequested;
                                 if (_fan2LevelRequested != null)
                                 {
-                                    DellSmbiosBzh.SetFanLevel(FanIndex.Fan2, (FanLevel)_fan2LevelRequested);
+                                    _fanController.SetFanLevel((FanLevel)_fan2LevelRequested, FanIndex.Fan2);
                                 }
                             }
                         }
 
                         // Warn if a fan is set to completely off.
-                        if (!_state.EcFanControlEnabled && (_state.Fan1Level == FanLevel.Level0 || (_state.Fan2Present && _state.Fan2Level == FanLevel.Level0)))
+                        if (!_state.EcFanControlEnabled && (_state.Fan1Level == FanLevel.Off || (_state.Fan2Present && _state.Fan2Level == FanLevel.Off)))
                         {
                             _state.ConsistencyModeStatus = "Warning: Fans set to \"off\" will not turn on regardless of temperature or load on the system";
                         }
@@ -318,7 +331,7 @@ namespace DellFanManagement.App
                     {
                         if (_requestedThermalSetting != _state.ThermalSetting)
                         {
-                            DellSmmIoLib.SetThermalSetting((ThermalSetting)_requestedThermalSetting);
+                            DellSmbiosSmi.SetThermalSetting((ThermalSetting)_requestedThermalSetting);
                             _state.UpdateThermalSetting();
                         }
 
@@ -345,8 +358,10 @@ namespace DellFanManagement.App
                 }
 
                 // If we got out of the loop without error, the program is terminating.
-                DellSmbiosBzh.EnableEcFanControl();
+                _fanController.EnableAutomaticFanControl();
                 Log.Write("Enabled EC fan control – shutdown");
+
+                // We need to unload the BZH driver.  If it is not loaded, this will just do nothing.
                 DellSmbiosBzh.Shutdown();
             }
             catch (Exception exception)
@@ -446,7 +461,7 @@ namespace DellFanManagement.App
                     if (_state.EcFanControlEnabled)
                     {
                         _state.EcFanControlEnabled = false;
-                        DellSmbiosBzh.DisableEcFanControl();
+                        _fanController.DisableAutomaticFanControl();
                         Log.Write("Disabled EC fan control – consistency mode – thresholds met");
                     }
 
@@ -458,7 +473,7 @@ namespace DellFanManagement.App
                 else if (!_state.EcFanControlEnabled && !thresholdsMet)
                 {
                     _state.EcFanControlEnabled = true;
-                    DellSmbiosBzh.EnableEcFanControl();
+                    _fanController.EnableAutomaticFanControl();
                     Log.Write(string.Format("Enabled EC fan control – consistency mode – {0}", _state.ConsistencyModeStatus));
                 }
             }

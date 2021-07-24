@@ -1,6 +1,5 @@
 ﻿using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.DellSmbiozBzhLib;
-using DellFanManagement.SmmIo;
+using DellFanManagement.DellSmbiosSmiLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -77,7 +76,7 @@ namespace DellFanManagement.App
             }
             
             // Version number in the about box.
-            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellSmbiosBzh.Version);
+            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanManagementApp.Version);
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);
@@ -272,13 +271,13 @@ namespace DellFanManagement.App
                     {
                         switch (fan1Level)
                         {
-                            case FanLevel.Level0:
+                            case FanLevel.Off:
                                 manualFan1RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case FanLevel.Medium:
                                 manualFan1RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case FanLevel.High:
                                 manualFan1RadioButtonHigh.Checked = true;
                                 break;
                         }
@@ -288,13 +287,13 @@ namespace DellFanManagement.App
                     {
                         switch (fan2Level)
                         {
-                            case FanLevel.Level0:
+                            case FanLevel.Off:
                                 manualFan2RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case FanLevel.Medium:
                                 manualFan2RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case FanLevel.High:
                                 manualFan2RadioButtonHigh.Checked = true;
                                 break;
                         }
@@ -331,20 +330,16 @@ namespace DellFanManagement.App
             {
                 fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm != null ? _state.Fan2Rpm : "(Error)");
                 fan2RpmLabel.Enabled = true;
-                manualFan2GroupBox.Enabled = true;
+
+                if (_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2GroupBox.Enabled = true;
+                }
             }
             else
             {
                 fan2RpmLabel.Text = string.Format("Fan 2 not present");
                 fan2RpmLabel.Enabled = false;
-
-                if (manualFan2GroupBox.Enabled)
-                {
-                    manualFan2GroupBox.Enabled = false;
-                    manualFan2RadioButtonOff.Checked = false;
-                    manualFan2RadioButtonMedium.Checked = false;
-                    manualFan2RadioButtonHigh.Checked = false;
-                }
             }
 
             // Temperatures.
@@ -576,6 +571,21 @@ namespace DellFanManagement.App
                 manualFan2RadioButtonMedium.Checked = false;
                 manualFan2RadioButtonHigh.Checked = false;
             }
+            else
+            {
+                // Disable manual fan control fields if needed.
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2GroupBox.Enabled = false;
+                }
+                if (!_state.Fan2Present)
+                {
+                    manualFan2GroupBox.Enabled = false;
+                    manualFan2RadioButtonOff.Checked = false;
+                    manualFan2RadioButtonMedium.Checked = false;
+                    manualFan2RadioButtonHigh.Checked = false;
+                }
+            }
         }
 
         /// <summary>
@@ -703,15 +713,27 @@ namespace DellFanManagement.App
             FanLevel? fan1LevelRequested = null;
             if (manualFan1RadioButtonOff.Checked)
             {
-                fan1LevelRequested = FanLevel.Level0;
+                fan1LevelRequested = FanLevel.Off;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonOff.Checked = true;
+                }
             }
             else if (manualFan1RadioButtonMedium.Checked)
             {
-                fan1LevelRequested = FanLevel.Level1;
+                fan1LevelRequested = FanLevel.Medium;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonMedium.Checked = true;
+                }
             }
             else if (manualFan1RadioButtonHigh.Checked)
             {
-                fan1LevelRequested = FanLevel.Level2;
+                fan1LevelRequested = FanLevel.High;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonHigh.Checked = true;
+                }
             }
 
             if (fan1LevelRequested != null)
@@ -724,18 +746,18 @@ namespace DellFanManagement.App
             FanLevel? fan2LevelRequested = null;
             if (manualFan2RadioButtonOff.Checked)
             {
-                fan2LevelRequested = FanLevel.Level0;
+                fan2LevelRequested = FanLevel.Off;
             }
             else if (manualFan2RadioButtonMedium.Checked)
             {
-                fan2LevelRequested = FanLevel.Level1;
+                fan2LevelRequested = FanLevel.Medium;
             }
             else if (manualFan2RadioButtonHigh.Checked)
             {
-                fan2LevelRequested = FanLevel.Level2;
+                fan2LevelRequested = FanLevel.High;
             }
 
-            if (fan2LevelRequested != null)
+            if (fan2LevelRequested != null && _core.IsIndividualFanControlSupported)
             {
                 _core.RequestFan2Level(fan2LevelRequested);
                 _configurationStore.SetOption(ConfigurationOption.ManualModeFan2Level, fan2LevelRequested);

@@ -44,8 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DellSmbiosBzh.cs" />
-    <Compile Include="FanIndex.cs" />
-    <Compile Include="FanLevel.cs" />
+    <Compile Include="BzhFanIndex.cs" />
+    <Compile Include="BzhFanLevel.cs" />
     <Compile Include="PInvoke\ErrorCode.cs" />
     <Compile Include="PInvoke\QueryServiceConfig.cs" />
     <Compile Include="PInvoke\ServiceControl.cs" />

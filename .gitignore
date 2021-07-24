@@ -3,7 +3,9 @@
 /DellSmbiosBzhLib/bin
 /DellSmbiosBzhLib/obj
 /packages
-/DellSmmIoLib/bin
-/DellSmmIoLib/obj
+/DellSmbiosSmiLib/bin
+/DellSmbiosSmiLib/obj
 /DellFanManagementApp/bin
 /DellFanManagementApp/obj
+/DellSmmIoLibTest/bin
+/DellSmmIoLibTest/obj

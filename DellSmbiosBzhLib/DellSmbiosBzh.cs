@@ -14,11 +14,6 @@ namespace DellFanManagement.DellSmbiozBzhLib
     public static class DellSmbiosBzh
     {
         /// <summary>
-        /// Version number for the entire package.
-        /// </summary>
-        public const string Version = "DEV";
-
-        /// <summary>
         /// Value to pass to ExecuteCommand when no parameter is needed.
         /// </summary>
         private const uint NoParameter = 0;
@@ -54,21 +49,21 @@ namespace DellFanManagement.DellSmbiozBzhLib
         private static bool IsInitialized = false;
 
         /// <summary>
-        /// Disable EC fan control.
+        /// Disable automatic fan control.
         /// </summary>
         /// <param name="alternate">If true, attempt alternate method to disable EC fan control.</param>
         /// <returns>True on success, false on failure.</returns>
-        public static bool DisableEcFanControl(bool alternate = false)
+        public static bool DisableAutomaticFanControl(bool alternate = false)
         {
             return ExecuteCommand(alternate ? SmbiosCommand.DisableEcFanControlAlternate : SmbiosCommand.DisableEcFanControl) != null;
         }
 
         /// <summary>
-        /// Enable EC fan control.
+        /// Enable automatic fan control.
         /// </summary>
         /// <param name="alternate">If ture, attempt alternate method to enable EC fan control.</param>
         /// <returns>True on success, false on failure.</returns>
-        public static bool EnableEcFanControl(bool alternate = false)
+        public static bool EnableAutomaticFanControl(bool alternate = false)
         {
             return ExecuteCommand(alternate ? SmbiosCommand.EnableEcFanControlAlternate : SmbiosCommand.EnableEcFanControl) != null;
         }
@@ -79,7 +74,7 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// <param name="fanIndex">Which fan to set the level of.</param>
         /// <param name="fanLevel">Which fan level to set.</param>
         /// <returns>ulong-max means failure.</returns>
-        public static bool SetFanLevel(FanIndex fanIndex, FanLevel fanLevel)
+        public static bool SetFanLevel(BzhFanIndex fanIndex, BzhFanLevel fanLevel)
         {
             uint parameter = ((uint)fanLevel << 8) | (uint)fanIndex;
             return ExecuteCommand(SmbiosCommand.SetFanLevel, parameter) != null;
@@ -90,7 +85,7 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// </summary>
         /// <param name="fanIndex">Which fan to get the speed of.</param>
         /// <returns>Speed in RPM; null means failure.</returns>
-        public static uint? GetFanRpm(FanIndex fanIndex)
+        public static uint? GetFanRpm(BzhFanIndex fanIndex)
         {
             uint? result = ExecuteCommand(SmbiosCommand.GetFanRpm, (uint)fanIndex);
 
