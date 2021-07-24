@@ -14,11 +14,6 @@ namespace DellFanManagement.DellSmbiozBzhLib
     public static class DellSmbiosBzh
     {
         /// <summary>
-        /// Version number for the entire package.
-        /// </summary>
-        public const string Version = "DEV";
-
-        /// <summary>
         /// Value to pass to ExecuteCommand when no parameter is needed.
         /// </summary>
         private const uint NoParameter = 0;

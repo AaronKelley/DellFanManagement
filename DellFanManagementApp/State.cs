@@ -1,6 +1,5 @@
 ﻿using DellFanManagement.App.FanSpeedReaders;
 using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.DellSmbiozBzhLib;
 using DellFanManagement.DellSmbiosSmiLib;
 using System.Collections.Generic;
 using System.Threading;
@@ -66,12 +65,12 @@ namespace DellFanManagement.App
         /// <summary>
         /// Current level manually set for fan 1.
         /// </summary>
-        private BzhFanLevel? _fan1Level;
+        private FanLevel? _fan1Level;
 
         /// <summary>
         /// Current level manually set for fan 2.
         /// </summary>
-        private BzhFanLevel? _fanLevel2;
+        private FanLevel? _fanLevel2;
 
         /// <summary>
         /// Status of the consistency mode system.
@@ -348,7 +347,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Current level manually set for fan 1.
         /// </summary>
-        public BzhFanLevel? Fan1Level
+        public FanLevel? Fan1Level
         {
             get { return _fan1Level; }
             set { AccessCheck(); _fan1Level = value; }
@@ -357,7 +356,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Current level manually set for fan 2.
         /// </summary>
-        public BzhFanLevel? Fan2Level
+        public FanLevel? Fan2Level
         {
             get { return _fanLevel2; }
             set { AccessCheck(); _fanLevel2 = value; }

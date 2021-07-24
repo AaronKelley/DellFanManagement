@@ -8,6 +8,11 @@ namespace DellFanManagement.App
     static class DellFanManagementApp
     {
         /// <summary>
+        /// Version number for the entire package.
+        /// </summary>
+        public const string Version = "DEV";
+
+        /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
@@ -60,7 +65,7 @@ namespace DellFanManagement.App
                 // CMD mode.
                 try
                 {
-                    Console.WriteLine("Dell Fan Management, version {0}", DellSmbiosBzh.Version);
+                    Console.WriteLine("Dell Fan Management, version {0}", Version);
                     Console.WriteLine("By Aaron Kelley");
                     Console.WriteLine("Licensed under GPLv3");
                     Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");
