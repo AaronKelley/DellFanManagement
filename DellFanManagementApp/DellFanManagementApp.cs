@@ -1,3 +1,5 @@
+using DellFanManagement.DellSmbiosSmiLib;
+using DellFanManagement.DellSmbiosSmiLib.DellSmi;
 using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Diagnostics;
@@ -81,6 +83,10 @@ namespace DellFanManagement.App
                         {
                             return SetThermalSetting.ExecuteSetThermalSetting(args);
                         }
+                        else if (args[0].ToLower() == "smi-token-dump")
+                        {
+                            return SmiTokenDump();
+                        }
                         else
                         {
                             Console.WriteLine("Dell SMM I/O driver by 424778940z");
@@ -106,6 +112,29 @@ namespace DellFanManagement.App
                     return 1;
                 }
             }
+        }
+
+        private static int SmiTokenDump()
+        {
+            for (uint tokenId = 0; tokenId <= 0xFFFF; tokenId++)
+            {
+                int retryCount = 5;
+                bool success = false;
+                while (!success && retryCount > 0)
+                {
+                    try
+                    {
+                        SmiObject? token = DellSmbiosSmi.GetToken((Token)tokenId);
+                        success = true;
+                        Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", tokenId, token?.Output1, token?.Output2, token?.Output3, token?.Output4);
+                    }
+                    catch (Exception)
+                    {
+                        retryCount--;
+                    }
+                }
+            }
+            return 0;
         }
     }
 }

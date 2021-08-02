@@ -13,6 +13,8 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>Fan speed reader appropriate for the system.</returns>
         public static FanController GetFanFanController()
         {
+            return new BzhFanController();
+            /*
             if (DellSmbiosSmi.IsFanControlOverrideAvailable())
             {
                 // If the WMI/SMI interface is available, use it.
@@ -25,6 +27,7 @@ namespace DellFanManagement.App.FanControllers
                 Log.Write("Using BZH fan control.");
                 return new BzhFanController();
             }
+            */
         }
     }
 }
