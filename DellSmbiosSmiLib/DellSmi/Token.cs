@@ -94,6 +94,16 @@
         /// <summary>
         /// Fans run at a "medium low" level.
         /// </summary>
-        FanSpeedMediumLow = 0x0406
+        FanSpeedMediumLow = 0x0406,
+
+        /// <summary>
+        /// Fetch the value of the first fan sensor.
+        /// </summary>
+        Fan1Rpm = 0xF600,
+
+        /// <summary>
+        /// Fetch the value of the second fan sensor.
+        /// </summary>
+        Fan2Rpm = 0xF610
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Management;
+﻿using System;
+using System.Management;
 
 namespace DellFanManagement.App.FanSpeedReaders
 {
@@ -21,23 +22,30 @@ namespace DellFanManagement.App.FanSpeedReaders
                 }
             };
 
-            foreach (ManagementObject managementObject in searcher.Get())
+            try
             {
-                if (managementObject.GetPropertyValue("ElementName").ToString().ToLower().StartsWith("fan"))
+                foreach (ManagementObject managementObject in searcher.Get())
                 {
-                    // Found a fan sensor.
-                    if (FanSensor1Searcher == null)
+                    if (managementObject.GetPropertyValue("ElementName").ToString().ToLower().StartsWith("fan"))
                     {
-                        Log.Write("Found WMI fan sensor 1");
-                        FanSensor1Searcher = new(Scope, new SelectQuery(string.Format("Select * FROM DCIM_NumericSensor WHERE DeviceID = '{0}'", managementObject.GetPropertyValue("DeviceID"))));
-                    }
-                    else
-                    {
-                        Log.Write("Found WMI fan sensor 2");
-                        FanSensor2Searcher = new(Scope, new SelectQuery(string.Format("Select * FROM DCIM_NumericSensor WHERE DeviceID = '{0}'", managementObject.GetPropertyValue("DeviceID"))));
-                        break;
+                        // Found a fan sensor.
+                        if (FanSensor1Searcher == null)
+                        {
+                            Log.Write("Found WMI fan sensor 1");
+                            FanSensor1Searcher = new(Scope, new SelectQuery(string.Format("Select * FROM DCIM_NumericSensor WHERE DeviceID = '{0}'", managementObject.GetPropertyValue("DeviceID"))));
+                        }
+                        else
+                        {
+                            Log.Write("Found WMI fan sensor 2");
+                            FanSensor2Searcher = new(Scope, new SelectQuery(string.Format("Select * FROM DCIM_NumericSensor WHERE DeviceID = '{0}'", managementObject.GetPropertyValue("DeviceID"))));
+                            break;
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                // Take no action.
             }
         }
 

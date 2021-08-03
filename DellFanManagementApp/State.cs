@@ -236,12 +236,12 @@ namespace DellFanManagement.App
                 {
                     int temperature = Temperatures[component][key];
 
-                    if (!MinimumTemperatures[component].ContainsKey(key) || temperature < MinimumTemperatures[component][key])
+                    if (!MinimumTemperatures[component].ContainsKey(key) || (temperature < MinimumTemperatures[component][key] && temperature > 0))
                     {
                         MinimumTemperatures[component][key] = temperature;
                     }
 
-                    if (!MaximumTemperatures[component].ContainsKey(key) || temperature > MaximumTemperatures[component][key])
+                    if (!MaximumTemperatures[component].ContainsKey(key) || (temperature > MaximumTemperatures[component][key] && temperature > 0))
                     {
                         MaximumTemperatures[component][key] = temperature;
                     }
