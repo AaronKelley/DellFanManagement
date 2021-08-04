@@ -1,6 +1,6 @@
-﻿using DellFanManagement.Interop;
-using DellFanManagement.SmmIo;
-using System;
+﻿using DellFanManagement.App.FanSpeedReaders;
+using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.DellSmbiosSmiLib;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -15,7 +15,12 @@ namespace DellFanManagement.App
         /// <summary>
         /// Object for reading CPU and GPU temperatures from the system.
         /// </summary>
-        private readonly TemperatureReader _temperatureReader;
+        private readonly Dictionary<TemperatureComponent, TemperatureReader> _temperatureReaders;
+
+        /// <summary>
+        /// Object for reading the fan speeds from the system.
+        /// </summary>
+        private readonly IFanSpeedReader _fanSpeedReader;
 
         /// <summary>
         /// Semaphore for protecting access to state changes.
@@ -45,7 +50,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Whether or not the "audio keep alive" thread is running.
         /// </summary>
-        private bool _audioThreadRunning { get; set; }
+        private bool _audioThreadRunning;
 
         /// <summary>
         /// Whether or not the form hosting the main application has been closed.
@@ -55,7 +60,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates whether or not EC fan control is enabled.
         /// </summary>
-        private bool _ecFanControlEnabled { get; set; }
+        private bool _ecFanControlEnabled;
 
         /// <summary>
         /// Current level manually set for fan 1.
@@ -76,6 +81,11 @@ namespace DellFanManagement.App
         /// The currently selected audio device.
         /// </summary>
         private AudioDevice _selectedAudioDevice;
+
+        /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        private AudioDevice _bringBackAudioDevice;
 
         /// <summary>
         /// Number of times in a row that the thermal setting has failed to update.
@@ -100,7 +110,6 @@ namespace DellFanManagement.App
             _selectedAudioDevice = null;
             _error = null;
 
-            _temperatureReader = new();
             _semaphore = new(1, 1);
             _changesAllowed = false;
 
@@ -108,6 +117,26 @@ namespace DellFanManagement.App
 
             _consecutiveThermalSettingFailures = 0;
             _thermalSettingReadBackoff = 0;
+
+            // Initialize temperature readers.
+            _temperatureReaders = new();
+            _temperatureReaders.Add(TemperatureComponent.CPU, new CpuTemperatureReader());
+            if (NvidiaGpuTemperatureReader.IsNvapiSupported())
+            {
+                // Use NVAPI if it is available.
+                _temperatureReaders.Add(TemperatureComponent.GPU, new NvidiaGpuTemperatureReader());
+            }
+            else
+            {
+                _temperatureReaders.Add(TemperatureComponent.GPU, new GenericGpuTemperatureReader());
+            }
+
+            // Initialize fan speed reader.
+            _fanSpeedReader = FanSpeedReaderFactory.GetFanSpeedReader();
+
+            Temperatures = new();
+            MinimumTemperatures = new();
+            MaximumTemperatures = new();
 
             Fan2Present = true;
 
@@ -136,14 +165,15 @@ namespace DellFanManagement.App
         private void UpdateFanRpms()
         {
             // Update state: RPM.
-            Fan1Rpm = DellFanLib.GetFanRpm(FanIndex.Fan1);
-            Fan2Rpm = DellFanLib.GetFanRpm(FanIndex.Fan2);
+            FanSpeeds fanSpeeds = _fanSpeedReader.GetFanSpeeds();
+            Fan1Rpm = fanSpeeds.Fan1Rpm;
+            Fan2Rpm = fanSpeeds.Fan2Rpm;
 
-            if (Fan1Rpm != uint.MaxValue && Fan2Rpm == uint.MaxValue)
+            if (Fan1Rpm != null && Fan2Rpm == null)
             {
                 Fan2Present = false;
             }
-            else if (Fan2Rpm != uint.MaxValue)
+            else if (Fan2Rpm != null)
             {
                 Fan2Present = true;
             }
@@ -161,7 +191,7 @@ namespace DellFanManagement.App
             }
             else
             {
-                ThermalSetting = DellSmmIoLib.GetThermalSetting();
+                ThermalSetting = DellSmbiosSmi.GetThermalSetting();
 
                 if (ThermalSetting == ThermalSetting.Error)
                 {
@@ -187,7 +217,36 @@ namespace DellFanManagement.App
         /// <param name="reader">A temperature reader</param>
         private void UpdateTemperatures()
         {
-            Temperatures = _temperatureReader.ReadTemperatures();
+            foreach (TemperatureComponent component in _temperatureReaders.Keys)
+            {
+                Temperatures[component] = _temperatureReaders[component].ReadTemperatures();
+
+                // Check minimum and maximum temperatures.
+                if (!MinimumTemperatures.ContainsKey(component))
+                {
+                    MinimumTemperatures[component] = new();
+                }
+
+                if (!MaximumTemperatures.ContainsKey(component))
+                {
+                    MaximumTemperatures[component] = new();
+                }
+
+                foreach (string key in Temperatures[component].Keys)
+                {
+                    int temperature = Temperatures[component][key];
+
+                    if (!MinimumTemperatures[component].ContainsKey(key) || (temperature < MinimumTemperatures[component][key] && temperature > 0))
+                    {
+                        MinimumTemperatures[component][key] = temperature;
+                    }
+
+                    if (!MaximumTemperatures[component].ContainsKey(key) || (temperature > MaximumTemperatures[component][key] && temperature > 0))
+                    {
+                        MaximumTemperatures[component][key] = temperature;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -321,16 +380,24 @@ namespace DellFanManagement.App
             set { AccessCheck(); _selectedAudioDevice = value; }
         }
 
+        /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        public AudioDevice BringBackAudioDevice
+        {
+            get { return _bringBackAudioDevice; }
+            set { AccessCheck(); _bringBackAudioDevice = value; }
+        }
 
         /// <summary>
         /// RPM value for fan 1.
         /// </summary>
-        public ulong Fan1Rpm { get; private set; }
+        public uint? Fan1Rpm { get; private set; }
 
         /// <summary>
         /// RPM value for fan 2.
         /// </summary>
-        public ulong Fan2Rpm { get; private set; }
+        public uint? Fan2Rpm { get; private set; }
 
         /// <summary>
         /// Indicates whether or not a second fan is present in the system.
@@ -340,7 +407,17 @@ namespace DellFanManagement.App
         /// <summary>
         /// Current temperatures.
         /// </summary>
-        public IReadOnlyDictionary<string, int> Temperatures { get; private set; }
+        public Dictionary<TemperatureComponent, IReadOnlyDictionary<string, int>> Temperatures { get; private set; }
+
+        /// <summary>
+        /// Minimum temperatures.
+        /// </summary>
+        public Dictionary<TemperatureComponent, Dictionary<string, int>> MinimumTemperatures { get; private set; }
+
+        /// <summary>
+        /// Maximum temperatures.
+        /// </summary>
+        public Dictionary<TemperatureComponent, Dictionary<string, int>> MaximumTemperatures { get; private set; }
 
         /// <summary>
         /// Current "thermal setting".

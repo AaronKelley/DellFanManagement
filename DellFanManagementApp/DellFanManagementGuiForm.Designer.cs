@@ -115,7 +115,7 @@ namespace DellFanManagement.App
             this.fansGroupBox.Controls.Add(this.fan1RpmLabel);
             this.fansGroupBox.Location = new System.Drawing.Point(12, 12);
             this.fansGroupBox.Name = "fansGroupBox";
-            this.fansGroupBox.Size = new System.Drawing.Size(161, 65);
+            this.fansGroupBox.Size = new System.Drawing.Size(223, 65);
             this.fansGroupBox.TabIndex = 1;
             this.fansGroupBox.TabStop = false;
             this.fansGroupBox.Text = "Fans:";
@@ -144,7 +144,7 @@ namespace DellFanManagement.App
             this.thermalSettingGroupBox.Controls.Add(this.thermalSettingRadioButtonQuiet);
             this.thermalSettingGroupBox.Controls.Add(this.thermalSettingRadioButtonCool);
             this.thermalSettingGroupBox.Controls.Add(this.thermalSettingRadioButtonOptimized);
-            this.thermalSettingGroupBox.Location = new System.Drawing.Point(288, 117);
+            this.thermalSettingGroupBox.Location = new System.Drawing.Point(350, 117);
             this.thermalSettingGroupBox.Name = "thermalSettingGroupBox";
             this.thermalSettingGroupBox.Size = new System.Drawing.Size(111, 124);
             this.thermalSettingGroupBox.TabIndex = 6;
@@ -217,7 +217,7 @@ namespace DellFanManagement.App
             this.temperatureGroupBox.Controls.Add(this.temperatureLabel1);
             this.temperatureGroupBox.Location = new System.Drawing.Point(12, 83);
             this.temperatureGroupBox.Name = "temperatureGroupBox";
-            this.temperatureGroupBox.Size = new System.Drawing.Size(270, 199);
+            this.temperatureGroupBox.Size = new System.Drawing.Size(332, 199);
             this.temperatureGroupBox.TabIndex = 4;
             this.temperatureGroupBox.TabStop = false;
             this.temperatureGroupBox.Text = "Temperatures:";
@@ -225,171 +225,171 @@ namespace DellFanManagement.App
             // temperatureLabel18
             // 
             this.temperatureLabel18.AutoSize = true;
-            this.temperatureLabel18.Location = new System.Drawing.Point(138, 175);
+            this.temperatureLabel18.Location = new System.Drawing.Point(167, 175);
             this.temperatureLabel18.Name = "temperatureLabel18";
-            this.temperatureLabel18.Size = new System.Drawing.Size(114, 15);
+            this.temperatureLabel18.Size = new System.Drawing.Size(160, 15);
             this.temperatureLabel18.TabIndex = 3;
-            this.temperatureLabel18.Text = "Quadro RTX 5000: 50";
+            this.temperatureLabel18.Text = "Quadro RTX 5000: 50 (50-100)";
             // 
             // temperatureLabel17
             // 
             this.temperatureLabel17.AutoSize = true;
-            this.temperatureLabel17.Location = new System.Drawing.Point(138, 156);
+            this.temperatureLabel17.Location = new System.Drawing.Point(167, 156);
             this.temperatureLabel17.Name = "temperatureLabel17";
-            this.temperatureLabel17.Size = new System.Drawing.Size(95, 15);
+            this.temperatureLabel17.Size = new System.Drawing.Size(141, 15);
             this.temperatureLabel17.TabIndex = 3;
-            this.temperatureLabel17.Text = "CPU Package: 50";
+            this.temperatureLabel17.Text = "CPU Package: 50 (50-100)";
             // 
             // temperatureLabel16
             // 
             this.temperatureLabel16.AutoSize = true;
-            this.temperatureLabel16.Location = new System.Drawing.Point(138, 137);
+            this.temperatureLabel16.Location = new System.Drawing.Point(167, 137);
             this.temperatureLabel16.Name = "temperatureLabel16";
-            this.temperatureLabel16.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel16.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel16.TabIndex = 15;
-            this.temperatureLabel16.Text = "CPU Core #16: 50";
+            this.temperatureLabel16.Text = "CPU Core #16: 50 (50-100)";
             // 
             // temperatureLabel15
             // 
             this.temperatureLabel15.AutoSize = true;
-            this.temperatureLabel15.Location = new System.Drawing.Point(138, 118);
+            this.temperatureLabel15.Location = new System.Drawing.Point(167, 118);
             this.temperatureLabel15.Name = "temperatureLabel15";
-            this.temperatureLabel15.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel15.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel15.TabIndex = 14;
-            this.temperatureLabel15.Text = "CPU Core #15: 50";
+            this.temperatureLabel15.Text = "CPU Core #15: 50 (50-100)";
             // 
             // temperatureLabel14
             // 
             this.temperatureLabel14.AutoSize = true;
-            this.temperatureLabel14.Location = new System.Drawing.Point(138, 99);
+            this.temperatureLabel14.Location = new System.Drawing.Point(167, 99);
             this.temperatureLabel14.Name = "temperatureLabel14";
-            this.temperatureLabel14.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel14.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel14.TabIndex = 13;
-            this.temperatureLabel14.Text = "CPU Core #14: 50";
+            this.temperatureLabel14.Text = "CPU Core #14: 50 (50-100)";
             // 
             // temperatureLabel13
             // 
             this.temperatureLabel13.AutoSize = true;
-            this.temperatureLabel13.Location = new System.Drawing.Point(138, 80);
+            this.temperatureLabel13.Location = new System.Drawing.Point(167, 80);
             this.temperatureLabel13.Name = "temperatureLabel13";
-            this.temperatureLabel13.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel13.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel13.TabIndex = 12;
-            this.temperatureLabel13.Text = "CPU Core #13: 50";
+            this.temperatureLabel13.Text = "CPU Core #13: 50 (50-100)";
             // 
             // temperatureLabel12
             // 
             this.temperatureLabel12.AutoSize = true;
-            this.temperatureLabel12.Location = new System.Drawing.Point(138, 61);
+            this.temperatureLabel12.Location = new System.Drawing.Point(167, 61);
             this.temperatureLabel12.Name = "temperatureLabel12";
-            this.temperatureLabel12.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel12.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel12.TabIndex = 11;
-            this.temperatureLabel12.Text = "CPU Core #12: 50";
+            this.temperatureLabel12.Text = "CPU Core #12: 50 (50-100)";
             // 
             // temperatureLabel11
             // 
             this.temperatureLabel11.AutoSize = true;
-            this.temperatureLabel11.Location = new System.Drawing.Point(138, 42);
+            this.temperatureLabel11.Location = new System.Drawing.Point(167, 42);
             this.temperatureLabel11.Name = "temperatureLabel11";
-            this.temperatureLabel11.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel11.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel11.TabIndex = 10;
-            this.temperatureLabel11.Text = "CPU Core #11: 50";
+            this.temperatureLabel11.Text = "CPU Core #11: 50 (50-100)";
             // 
             // temperatureLabel10
             // 
             this.temperatureLabel10.AutoSize = true;
-            this.temperatureLabel10.Location = new System.Drawing.Point(138, 23);
+            this.temperatureLabel10.Location = new System.Drawing.Point(167, 23);
             this.temperatureLabel10.Name = "temperatureLabel10";
-            this.temperatureLabel10.Size = new System.Drawing.Size(98, 15);
+            this.temperatureLabel10.Size = new System.Drawing.Size(144, 15);
             this.temperatureLabel10.TabIndex = 9;
-            this.temperatureLabel10.Text = "CPU Core #10: 50";
+            this.temperatureLabel10.Text = "CPU Core #10: 50 (50-100)";
             // 
             // temperatureLabel9
             // 
             this.temperatureLabel9.AutoSize = true;
             this.temperatureLabel9.Location = new System.Drawing.Point(6, 175);
             this.temperatureLabel9.Name = "temperatureLabel9";
-            this.temperatureLabel9.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel9.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel9.TabIndex = 8;
-            this.temperatureLabel9.Text = "CPU Core #9: 50";
+            this.temperatureLabel9.Text = "CPU Core #9: 50 (50-100)";
             // 
             // temperatureLabel8
             // 
             this.temperatureLabel8.AutoSize = true;
             this.temperatureLabel8.Location = new System.Drawing.Point(6, 156);
             this.temperatureLabel8.Name = "temperatureLabel8";
-            this.temperatureLabel8.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel8.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel8.TabIndex = 7;
-            this.temperatureLabel8.Text = "CPU Core #8: 50";
+            this.temperatureLabel8.Text = "CPU Core #8: 50 (50-100)";
             // 
             // temperatureLabel7
             // 
             this.temperatureLabel7.AutoSize = true;
             this.temperatureLabel7.Location = new System.Drawing.Point(6, 137);
             this.temperatureLabel7.Name = "temperatureLabel7";
-            this.temperatureLabel7.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel7.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel7.TabIndex = 6;
-            this.temperatureLabel7.Text = "CPU Core #7: 50";
+            this.temperatureLabel7.Text = "CPU Core #7: 50 (50-100)";
             // 
             // temperatureLabel6
             // 
             this.temperatureLabel6.AutoSize = true;
             this.temperatureLabel6.Location = new System.Drawing.Point(6, 118);
             this.temperatureLabel6.Name = "temperatureLabel6";
-            this.temperatureLabel6.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel6.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel6.TabIndex = 5;
-            this.temperatureLabel6.Text = "CPU Core #6: 50";
+            this.temperatureLabel6.Text = "CPU Core #6: 50 (50-100)";
             // 
             // temperatureLabel5
             // 
             this.temperatureLabel5.AutoSize = true;
             this.temperatureLabel5.Location = new System.Drawing.Point(6, 99);
             this.temperatureLabel5.Name = "temperatureLabel5";
-            this.temperatureLabel5.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel5.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel5.TabIndex = 4;
-            this.temperatureLabel5.Text = "CPU Core #5: 50";
+            this.temperatureLabel5.Text = "CPU Core #5: 50 (50-100)";
             // 
             // temperatureLabel4
             // 
             this.temperatureLabel4.AutoSize = true;
             this.temperatureLabel4.Location = new System.Drawing.Point(6, 80);
             this.temperatureLabel4.Name = "temperatureLabel4";
-            this.temperatureLabel4.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel4.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel4.TabIndex = 3;
-            this.temperatureLabel4.Text = "CPU Core #4: 50";
+            this.temperatureLabel4.Text = "CPU Core #4: 50 (50-100)";
             // 
             // temperatureLabel3
             // 
             this.temperatureLabel3.AutoSize = true;
             this.temperatureLabel3.Location = new System.Drawing.Point(6, 61);
             this.temperatureLabel3.Name = "temperatureLabel3";
-            this.temperatureLabel3.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel3.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel3.TabIndex = 2;
-            this.temperatureLabel3.Text = "CPU Core #3: 50";
+            this.temperatureLabel3.Text = "CPU Core #3: 50 (50-100)";
             // 
             // temperatureLabel2
             // 
             this.temperatureLabel2.AutoSize = true;
             this.temperatureLabel2.Location = new System.Drawing.Point(6, 42);
             this.temperatureLabel2.Name = "temperatureLabel2";
-            this.temperatureLabel2.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel2.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel2.TabIndex = 1;
-            this.temperatureLabel2.Text = "CPU Core #2: 50";
+            this.temperatureLabel2.Text = "CPU Core #2: 50 (50-100)";
             // 
             // temperatureLabel1
             // 
             this.temperatureLabel1.AutoSize = true;
             this.temperatureLabel1.Location = new System.Drawing.Point(6, 23);
             this.temperatureLabel1.Name = "temperatureLabel1";
-            this.temperatureLabel1.Size = new System.Drawing.Size(92, 15);
+            this.temperatureLabel1.Size = new System.Drawing.Size(138, 15);
             this.temperatureLabel1.TabIndex = 0;
-            this.temperatureLabel1.Text = "CPU Core #1: 50";
+            this.temperatureLabel1.Text = "CPU Core #1: 50 (50-100)";
             // 
             // operationModeGroupBox
             // 
             this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonConsistency);
             this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonManual);
             this.operationModeGroupBox.Controls.Add(this.operationModeRadioButtonAutomatic);
-            this.operationModeGroupBox.Location = new System.Drawing.Point(288, 12);
+            this.operationModeGroupBox.Location = new System.Drawing.Point(350, 12);
             this.operationModeGroupBox.Name = "operationModeGroupBox";
             this.operationModeGroupBox.Size = new System.Drawing.Size(111, 99);
             this.operationModeGroupBox.TabIndex = 5;
@@ -433,7 +433,7 @@ namespace DellFanManagement.App
             // 
             this.manualGroupBox.Controls.Add(this.manualFan2GroupBox);
             this.manualGroupBox.Controls.Add(this.manualFan1GroupBox);
-            this.manualGroupBox.Location = new System.Drawing.Point(405, 12);
+            this.manualGroupBox.Location = new System.Drawing.Point(467, 12);
             this.manualGroupBox.Name = "manualGroupBox";
             this.manualGroupBox.Size = new System.Drawing.Size(194, 126);
             this.manualGroupBox.TabIndex = 9;
@@ -540,7 +540,7 @@ namespace DellFanManagement.App
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeUpperTemperatureThresholdLabel);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdTextBox);
             this.consistencyModeGroupBox.Controls.Add(this.consistencyModeLowerTemperatureThresholdLabel);
-            this.consistencyModeGroupBox.Location = new System.Drawing.Point(405, 144);
+            this.consistencyModeGroupBox.Location = new System.Drawing.Point(467, 144);
             this.consistencyModeGroupBox.Name = "consistencyModeGroupBox";
             this.consistencyModeGroupBox.Size = new System.Drawing.Size(194, 138);
             this.consistencyModeGroupBox.TabIndex = 10;
@@ -647,7 +647,7 @@ namespace DellFanManagement.App
             // 
             this.ecFanControlGroupBox.Controls.Add(this.ecFanControlRadioButtonOn);
             this.ecFanControlGroupBox.Controls.Add(this.ecFanControlRadioButtonOff);
-            this.ecFanControlGroupBox.Location = new System.Drawing.Point(179, 12);
+            this.ecFanControlGroupBox.Location = new System.Drawing.Point(241, 12);
             this.ecFanControlGroupBox.Name = "ecFanControlGroupBox";
             this.ecFanControlGroupBox.Size = new System.Drawing.Size(103, 48);
             this.ecFanControlGroupBox.TabIndex = 2;
@@ -657,7 +657,7 @@ namespace DellFanManagement.App
             // restartBackgroundThreadButton
             // 
             this.restartBackgroundThreadButton.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.restartBackgroundThreadButton.Location = new System.Drawing.Point(178, 65);
+            this.restartBackgroundThreadButton.Location = new System.Drawing.Point(240, 66);
             this.restartBackgroundThreadButton.Name = "restartBackgroundThreadButton";
             this.restartBackgroundThreadButton.Size = new System.Drawing.Size(105, 21);
             this.restartBackgroundThreadButton.TabIndex = 3;
@@ -668,7 +668,7 @@ namespace DellFanManagement.App
             // 
             this.aboutGroupBox.Controls.Add(this.richTextBox1);
             this.aboutGroupBox.Controls.Add(this.aboutProductLabel);
-            this.aboutGroupBox.Location = new System.Drawing.Point(605, 12);
+            this.aboutGroupBox.Location = new System.Drawing.Point(667, 12);
             this.aboutGroupBox.Name = "aboutGroupBox";
             this.aboutGroupBox.Size = new System.Drawing.Size(334, 185);
             this.aboutGroupBox.TabIndex = 11;
@@ -697,7 +697,7 @@ namespace DellFanManagement.App
             // 
             this.audioKeepAliveGroupBox.Controls.Add(this.audioKeepAliveComboBox);
             this.audioKeepAliveGroupBox.Controls.Add(this.audioKeepAliveCheckbox);
-            this.audioKeepAliveGroupBox.Location = new System.Drawing.Point(605, 203);
+            this.audioKeepAliveGroupBox.Location = new System.Drawing.Point(667, 203);
             this.audioKeepAliveGroupBox.Name = "audioKeepAliveGroupBox";
             this.audioKeepAliveGroupBox.Size = new System.Drawing.Size(334, 79);
             this.audioKeepAliveGroupBox.TabIndex = 12;
@@ -729,7 +729,7 @@ namespace DellFanManagement.App
             this.consistencyModeStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 293);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(951, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1013, 22);
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 13;
             // 
@@ -748,7 +748,7 @@ namespace DellFanManagement.App
             this.trayIconCheckBox.AutoSize = true;
             this.trayIconCheckBox.Checked = true;
             this.trayIconCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.trayIconCheckBox.Location = new System.Drawing.Point(294, 246);
+            this.trayIconCheckBox.Location = new System.Drawing.Point(356, 246);
             this.trayIconCheckBox.Name = "trayIconCheckBox";
             this.trayIconCheckBox.Size = new System.Drawing.Size(73, 19);
             this.trayIconCheckBox.TabIndex = 7;
@@ -760,7 +760,7 @@ namespace DellFanManagement.App
             this.animatedCheckBox.AutoSize = true;
             this.animatedCheckBox.Checked = true;
             this.animatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.animatedCheckBox.Location = new System.Drawing.Point(294, 266);
+            this.animatedCheckBox.Location = new System.Drawing.Point(356, 266);
             this.animatedCheckBox.Name = "animatedCheckBox";
             this.animatedCheckBox.Size = new System.Drawing.Size(78, 19);
             this.animatedCheckBox.TabIndex = 8;
@@ -771,7 +771,7 @@ namespace DellFanManagement.App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(951, 315);
+            this.ClientSize = new System.Drawing.Size(1013, 315);
             this.Controls.Add(this.animatedCheckBox);
             this.Controls.Add(this.trayIconCheckBox);
             this.Controls.Add(this.statusStrip);

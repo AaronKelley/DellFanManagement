@@ -11,7 +11,7 @@ namespace DellFanManagement.App
         public static void Write(string message)
         {
             // TODO: Support Windows event log.
-            Console.WriteLine(message);
+            Console.WriteLine(string.Format("{0}: {1}", DateTime.Now, message));
         }
 
         /// <summary>

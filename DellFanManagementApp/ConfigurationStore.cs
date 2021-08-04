@@ -10,10 +10,20 @@ namespace DellFanManagement.App
     /// </summary>
     class ConfigurationStore
     {
+        /// <summary>
+        /// A reflection of configuration option values that were present in the registry when the application started,
+        /// or that have been set to the registry by the application since then.
+        /// </summary>
         private readonly Dictionary<string, object> _options;
 
+        /// <summary>
+        /// A handle for the registry key that contains the configuration option values.
+        /// </summary>
         private readonly RegistryKey _registryKey;
 
+        /// <summary>
+        /// Constructor.  Reads current configuration option values from the registry.
+        /// </summary>
         public ConfigurationStore()
         {
             _options = new();
@@ -27,6 +37,11 @@ namespace DellFanManagement.App
             }
         }
 
+        /// <summary>
+        /// Stores a configuration option value to the registry.
+        /// </summary>
+        /// <param name="option">Which specific configuration option to store.</param>
+        /// <param name="optionValue">Value of the configuration option to store.</param>
         public void SetOption(ConfigurationOption option, object optionValue)
         {
             _options[option.Key] = optionValue;
@@ -62,13 +77,17 @@ namespace DellFanManagement.App
             {
                 return null;
             }
-            else if (_options[option.Key] is string)
+            else if (_options[option.Key] is string @string)
             {
-                return (string)_options[option.Key];
+                return @string;
+            }
+            else if (_options[option.Key] != null)
+            {
+                throw new ConfigurationStoreException(string.Format("Requested string option \"{0}\" is not a string", option.Key));
             }
             else
             {
-                throw new ConfigurationStoreException(string.Format("Requested string option \"{0}\" is not a string", option.Key));
+                return null;
             }
         }
 
@@ -83,13 +102,17 @@ namespace DellFanManagement.App
             {
                 return null;
             }
-            else if (_options[option.Key] is int)
+            else if (_options[option.Key] is int @int)
             {
-                return (int)_options[option.Key];
+                return @int;
+            }
+            else if (_options[option.Key] != null)
+            {
+                throw new ConfigurationStoreException(string.Format("Requested int option \"{0}\" is not an int", option.Key));
             }
             else
             {
-                throw new ConfigurationStoreException(string.Format("Requested int option \"{0}\" is not an int", option.Key));
+                return null;
             }
         }
     }

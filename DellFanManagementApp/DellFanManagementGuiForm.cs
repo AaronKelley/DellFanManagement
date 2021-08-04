@@ -1,5 +1,5 @@
-﻿using DellFanManagement.Interop;
-using DellFanManagement.SmmIo;
+﻿using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.DellSmbiosSmiLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,7 +47,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Indicates whether the initial setup code has finished or not.
         /// </summary>
-        private bool _initializationComplete;
+        private readonly bool _initializationComplete;
 
         /// <summary>
         /// Constructor.  Get everything set up before the window is displayed.
@@ -68,11 +68,20 @@ namespace DellFanManagement.App
             _trayIconIndex = 0;
             LoadTrayIcons();
 
+            // Disclaimer.
+            if (_configurationStore.GetIntOption(ConfigurationOption.DisclaimerShown) != 1)
+            {
+                ShowDisclaimer();
+                _configurationStore.SetOption(ConfigurationOption.DisclaimerShown, 1);
+            }
+
             // Version number in the about box.
-            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanLib.Version);
+            aboutProductLabel.Text = string.Format("Dell Fan Management, version {0}", DellFanManagementApp.Version);
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);
+            Resize += new EventHandler(OnResizeEventHandler);
+            trayIcon.Click += new EventHandler(TrayIconOnClickEventHandler);
 
             // ...Thermal setting radio buttons...
             thermalSettingRadioButtonOptimized.CheckedChanged += new EventHandler(ThermalSettingChangedEventHandler);
@@ -94,7 +103,7 @@ namespace DellFanManagement.App
 
             // ...Restart background thread button...
             restartBackgroundThreadButton.Click += new EventHandler(ThermalSettingChangedEventHandler);
-            
+
             // ...Operation mode radio buttons...
             operationModeRadioButtonAutomatic.CheckedChanged += new EventHandler(ConfigurationRadioButtonAutomaticEventHandler);
             operationModeRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
@@ -179,14 +188,13 @@ namespace DellFanManagement.App
 
             // Consistency mode settings.
             int? lowerTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeLowerTemperatureThreshold);
-            if (lowerTemperatureThreshold != null && lowerTemperatureThreshold > 0 && lowerTemperatureThreshold < 100)
+            int? upperTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold);
+
+            if (lowerTemperatureThreshold != null && lowerTemperatureThreshold >= 0 && lowerTemperatureThreshold < 100 &&
+                upperTemperatureThreshold != null && upperTemperatureThreshold >= 0 && upperTemperatureThreshold < 100 &&
+                lowerTemperatureThreshold <= upperTemperatureThreshold)
             {
                 consistencyModeLowerTemperatureThresholdTextBox.Text = lowerTemperatureThreshold.ToString();
-            }
-
-            int? upperTemperatureThreshold = _configurationStore.GetIntOption(ConfigurationOption.ConsistencyModeUpperTemperatureThreshold);
-            if (upperTemperatureThreshold != null && upperTemperatureThreshold > 0 && upperTemperatureThreshold < 100)
-            {
                 consistencyModeUpperTemperatureThresholdTextBox.Text = upperTemperatureThreshold.ToString();
             }
 
@@ -265,13 +273,13 @@ namespace DellFanManagement.App
                     {
                         switch (fan1Level)
                         {
-                            case FanLevel.Level0:
+                            case FanLevel.Off:
                                 manualFan1RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case FanLevel.Medium:
                                 manualFan1RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case FanLevel.High:
                                 manualFan1RadioButtonHigh.Checked = true;
                                 break;
                         }
@@ -281,13 +289,13 @@ namespace DellFanManagement.App
                     {
                         switch (fan2Level)
                         {
-                            case FanLevel.Level0:
+                            case FanLevel.Off:
                                 manualFan2RadioButtonOff.Checked = true;
                                 break;
-                            case FanLevel.Level1:
+                            case FanLevel.Medium:
                                 manualFan2RadioButtonMedium.Checked = true;
                                 break;
-                            case FanLevel.Level2:
+                            case FanLevel.High:
                                 manualFan2RadioButtonHigh.Checked = true;
                                 break;
                         }
@@ -315,59 +323,69 @@ namespace DellFanManagement.App
             // during the update.
             _state.WaitOne();
 
+            AudioDevice bringBackAudioDevice = null;
+
             // Fan RPM.
-            fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm);
+            fan1RpmLabel.Text = string.Format("Fan 1 RPM: {0}", _state.Fan1Rpm != null ? _state.Fan1Rpm : "(Error)");
 
             if (_state.Fan2Present)
             {
-                fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm);
+                fan2RpmLabel.Text = string.Format("Fan 2 RPM: {0}", _state.Fan2Rpm != null ? _state.Fan2Rpm : "(Error)");
                 fan2RpmLabel.Enabled = true;
-                manualFan2GroupBox.Enabled = true;
+
+                if (_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2GroupBox.Enabled = true;
+                }
             }
             else
             {
                 fan2RpmLabel.Text = string.Format("Fan 2 not present");
                 fan2RpmLabel.Enabled = false;
-
-                if (manualFan2GroupBox.Enabled)
-                {
-                    manualFan2GroupBox.Enabled = false;
-                    manualFan2RadioButtonOff.Checked = false;
-                    manualFan2RadioButtonMedium.Checked = false;
-                    manualFan2RadioButtonHigh.Checked = false;
-                }
             }
 
             // Temperatures.
             int labelIndex = 0;
-            foreach (string key in _state.Temperatures.Keys)
+            foreach (TemperatureComponent component in _state.Temperatures.Keys)
             {
-                string temperature = _state.Temperatures[key] != 0 ? _state.Temperatures[key].ToString() : "--";
-                string labelValue = string.Format("{0}: {1}", key, temperature);
-
-                switch (labelIndex)
+                foreach (string key in _state.Temperatures[component].Keys)
                 {
-                    case 0: temperatureLabel1.Text = labelValue; break;
-                    case 1: temperatureLabel2.Text = labelValue; break;
-                    case 2: temperatureLabel3.Text = labelValue; break;
-                    case 3: temperatureLabel4.Text = labelValue; break;
-                    case 4: temperatureLabel5.Text = labelValue; break;
-                    case 5: temperatureLabel6.Text = labelValue; break;
-                    case 6: temperatureLabel7.Text = labelValue; break;
-                    case 7: temperatureLabel8.Text = labelValue; break;
-                    case 8: temperatureLabel9.Text = labelValue; break;
-                    case 9: temperatureLabel10.Text = labelValue; break;
-                    case 10: temperatureLabel11.Text = labelValue; break;
-                    case 11: temperatureLabel12.Text = labelValue; break;
-                    case 12: temperatureLabel13.Text = labelValue; break;
-                    case 13: temperatureLabel14.Text = labelValue; break;
-                    case 14: temperatureLabel15.Text = labelValue; break;
-                    case 15: temperatureLabel16.Text = labelValue; break;
-                    case 16: temperatureLabel17.Text = labelValue; break;
-                    case 17: temperatureLabel18.Text = labelValue; break;
-                }
+                    string temperature = _state.Temperatures[component][key] != 0 ? _state.Temperatures[component][key].ToString() : "--";
 
-                labelIndex++;
+                    string labelValue;
+                    if (_state.MinimumTemperatures[component].ContainsKey(key) && _state.MaximumTemperatures[component].ContainsKey(key))
+                    {
+                        labelValue = string.Format("{0}: {1} ({2}-{3})", key, temperature, _state.MinimumTemperatures[component][key], _state.MaximumTemperatures[component][key]);
+                    }
+                    else
+                    {
+                        labelValue = string.Format("{0}: {1}", key, temperature);
+                    }
+
+                    switch (labelIndex)
+                    {
+                        case 0: temperatureLabel1.Text = labelValue; break;
+                        case 1: temperatureLabel2.Text = labelValue; break;
+                        case 2: temperatureLabel3.Text = labelValue; break;
+                        case 3: temperatureLabel4.Text = labelValue; break;
+                        case 4: temperatureLabel5.Text = labelValue; break;
+                        case 5: temperatureLabel6.Text = labelValue; break;
+                        case 6: temperatureLabel7.Text = labelValue; break;
+                        case 7: temperatureLabel8.Text = labelValue; break;
+                        case 8: temperatureLabel9.Text = labelValue; break;
+                        case 9: temperatureLabel10.Text = labelValue; break;
+                        case 10: temperatureLabel11.Text = labelValue; break;
+                        case 11: temperatureLabel12.Text = labelValue; break;
+                        case 12: temperatureLabel13.Text = labelValue; break;
+                        case 13: temperatureLabel14.Text = labelValue; break;
+                        case 14: temperatureLabel15.Text = labelValue; break;
+                        case 15: temperatureLabel16.Text = labelValue; break;
+                        case 16: temperatureLabel17.Text = labelValue; break;
+                        case 17: temperatureLabel18.Text = labelValue; break;
+                    }
+
+                    labelIndex++;
+                }
             }
 
             // EC fan control enabled?
@@ -416,7 +434,7 @@ namespace DellFanManagement.App
             // Sync up audio devices list.
             List<AudioDevice> devicesToAdd = new();
             List<AudioDevice> devicesToRemove = new();
-            
+
             // Items to add.
             foreach (AudioDevice audioDevice in _state.AudioDevices)
             {
@@ -439,6 +457,13 @@ namespace DellFanManagement.App
             foreach (AudioDevice audioDevice in devicesToAdd)
             {
                 audioKeepAliveComboBox.Items.Add(audioDevice);
+
+                // ...If this happens to be the previously selected audio device that disappeared, set it back and start
+                // the thread.
+                if (audioDevice == _state.BringBackAudioDevice || audioDevice.DeviceId == _configurationStore.GetStringOption(ConfigurationOption.AudioKeepAliveBringBackDevice))
+                {
+                    bringBackAudioDevice = audioDevice;
+                }
             }
             foreach (AudioDevice audioDevice in devicesToRemove)
             {
@@ -465,6 +490,8 @@ namespace DellFanManagement.App
                 trayIcon.Text = string.Format("Dell Fan Management\n{0}", fan1RpmLabel.Text);
             }
 
+            UpdateTrayIcon(false);
+
             // Error message.
             if (_state.Error != null)
             {
@@ -473,6 +500,12 @@ namespace DellFanManagement.App
             }
 
             _state.Release();
+
+            if (bringBackAudioDevice != null)
+            {
+                audioKeepAliveComboBox.SelectedItem = bringBackAudioDevice;
+                audioKeepAliveCheckbox.Checked = true;
+            }
         }
 
         /// <summary>
@@ -539,6 +572,21 @@ namespace DellFanManagement.App
                 manualFan2RadioButtonOff.Checked = false;
                 manualFan2RadioButtonMedium.Checked = false;
                 manualFan2RadioButtonHigh.Checked = false;
+            }
+            else
+            {
+                // Disable manual fan control fields if needed.
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2GroupBox.Enabled = false;
+                }
+                if (!_state.Fan2Present)
+                {
+                    manualFan2GroupBox.Enabled = false;
+                    manualFan2RadioButtonOff.Checked = false;
+                    manualFan2RadioButtonMedium.Checked = false;
+                    manualFan2RadioButtonHigh.Checked = false;
+                }
             }
         }
 
@@ -667,15 +715,27 @@ namespace DellFanManagement.App
             FanLevel? fan1LevelRequested = null;
             if (manualFan1RadioButtonOff.Checked)
             {
-                fan1LevelRequested = FanLevel.Level0;
+                fan1LevelRequested = FanLevel.Off;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonOff.Checked = true;
+                }
             }
             else if (manualFan1RadioButtonMedium.Checked)
             {
-                fan1LevelRequested = FanLevel.Level1;
+                fan1LevelRequested = FanLevel.Medium;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonMedium.Checked = true;
+                }
             }
             else if (manualFan1RadioButtonHigh.Checked)
             {
-                fan1LevelRequested = FanLevel.Level2;
+                fan1LevelRequested = FanLevel.High;
+                if (!_core.IsIndividualFanControlSupported)
+                {
+                    manualFan2RadioButtonHigh.Checked = true;
+                }
             }
 
             if (fan1LevelRequested != null)
@@ -688,18 +748,18 @@ namespace DellFanManagement.App
             FanLevel? fan2LevelRequested = null;
             if (manualFan2RadioButtonOff.Checked)
             {
-                fan2LevelRequested = FanLevel.Level0;
+                fan2LevelRequested = FanLevel.Off;
             }
             else if (manualFan2RadioButtonMedium.Checked)
             {
-                fan2LevelRequested = FanLevel.Level1;
+                fan2LevelRequested = FanLevel.Medium;
             }
             else if (manualFan2RadioButtonHigh.Checked)
             {
-                fan2LevelRequested = FanLevel.Level2;
+                fan2LevelRequested = FanLevel.High;
             }
 
-            if (fan2LevelRequested != null)
+            if (fan2LevelRequested != null && _core.IsIndividualFanControlSupported)
             {
                 _core.RequestFan2Level(fan2LevelRequested);
                 _configurationStore.SetOption(ConfigurationOption.ManualModeFan2Level, fan2LevelRequested);
@@ -716,6 +776,7 @@ namespace DellFanManagement.App
             if (audioKeepAliveComboBox.SelectedItem != null)
             {
                 audioKeepAliveCheckbox.Enabled = true;
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, null);
             }
             else
             {
@@ -733,6 +794,7 @@ namespace DellFanManagement.App
                 _core.StartAudioThread();
                 _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 1);
                 _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, ((AudioDevice)audioKeepAliveComboBox.SelectedItem).DeviceId);
+                _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, null);
             }
             else
             {
@@ -742,6 +804,11 @@ namespace DellFanManagement.App
                 {
                     _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveEnabled, 0);
                     _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveSelectedDevice, null);
+
+                    if (_state.BringBackAudioDevice != null)
+                    {
+                        _configurationStore.SetOption(ConfigurationOption.AudioKeepAliveBringBackDevice, _state.BringBackAudioDevice.DeviceId);
+                    }
                 }
             }
         }
@@ -800,23 +867,54 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
+        /// Called when the tray icon is clicked. Restores the window and makes it visible in the task bar.
+        /// </summary>
+        private void TrayIconOnClickEventHandler(object sender, EventArgs e)
+        {
+            ShowInTaskbar = true;
+            WindowState = FormWindowState.Normal;
+        }
+
+        /// <summary>
+        /// Called when the window is resized. If the window is minimized and the "tray icon" is visible, then the window is hidden in the taskbar.
+        /// </summary>
+        private void OnResizeEventHandler(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized && trayIcon.Visible)
+            {
+                ShowInTaskbar = false;
+            }
+        }
+
+        /// <summary>
         /// Check to see if the GUI consistency mode options text boxes match the currently stored configuration, and
         /// enable or disable the "apply changes" button accordingly.
         /// </summary>
         private void CheckConsistencyModeOptionsConsistency()
         {
-            if (consistencyModeLowerTemperatureThresholdTextBox.Text == _core.LowerTemperatureThreshold.ToString() &&
-                consistencyModeUpperTemperatureThresholdTextBox.Text == _core.UpperTemperatureThreshold.ToString() &&
-                consistencyModeRpmThresholdTextBox.Text == _core.RpmThreshold.ToString())
+            bool result = false;
+
+            if (consistencyModeLowerTemperatureThresholdTextBox.Text != _core.LowerTemperatureThreshold.ToString() ||
+                consistencyModeUpperTemperatureThresholdTextBox.Text != _core.UpperTemperatureThreshold.ToString() ||
+                consistencyModeRpmThresholdTextBox.Text != _core.RpmThreshold.ToString())
             {
-                // Configuration matches.
-                consistencyModeApplyChangesButton.Enabled = false;
+                // Configuration doesn't match.  Check for flip-flop.
+                bool success = int.TryParse(consistencyModeLowerTemperatureThresholdTextBox.Text, out int lowerTemperatureThreshold);
+                if (success)
+                {
+                    success = int.TryParse(consistencyModeUpperTemperatureThresholdTextBox.Text, out int upperTemperatureThreshold);
+                    if (success)
+                    {
+                        if (upperTemperatureThreshold >= lowerTemperatureThreshold)
+                        {
+                            // Looks good, we can enable the button.
+                            result = true;
+                        }
+                    }
+                }
             }
-            else
-            {
-                // Configuration has changed.
-                consistencyModeApplyChangesButton.Enabled = true;
-            }
+
+            consistencyModeApplyChangesButton.Enabled = result;
         }
 
         /// <summary>
@@ -902,7 +1000,11 @@ namespace DellFanManagement.App
                     _trayIconIndex = 0;
                 }
 
-                trayIcon.Icon = _trayIcons[_trayIconIndex + offset];
+                Icon newIcon = _trayIcons[_trayIconIndex + offset];
+                if (trayIcon.Icon != newIcon)
+                {
+                    trayIcon.Icon = newIcon;
+                }
             }
         }
 
@@ -938,7 +1040,7 @@ namespace DellFanManagement.App
                     if (trayIconCheckBox.Checked && animatedCheckBox.Checked)
                     {
                         // Grab state information that we need.
-                        ulong averageRpm;
+                        uint? averageRpm;
                         if (_state.Fan2Present)
                         {
                             averageRpm = (_state.Fan1Rpm + _state.Fan2Rpm) / 2;
@@ -961,17 +1063,25 @@ namespace DellFanManagement.App
                             }
 
                             // Higher RPM = lower wait time = faster animation.
-                            waitTime = Math.Min(250000 / (int)averageRpm, waitTime);
+                            waitTime = 250000 / (int)averageRpm;
                         }
                     }
 
-                    Thread.Sleep(waitTime);
+                    Thread.Sleep(Math.Min(waitTime, 1000));
                 }
             }
             catch (Exception exception)
             {
                 Log.Write(exception);
             }
+        }
+
+        /// <summary>
+        /// Shows a disclaimer message to the user.
+        /// </summary>
+        private void ShowDisclaimer()
+        {
+            MessageBox.Show("Note: While every has been made to make this program safe to use, it does interact with the embedded controller and system BIOS using undocumented methods and may have adverse effects on your system.  Use at your own risk.  If you experience odd behavior, a full system shutdown should restore everything back to the original state.  This program is not created by or affiliated with Dell Inc. or Dell Technologies Inc.", "Dell Fan Management – Disclaimer");
         }
     }
 }
