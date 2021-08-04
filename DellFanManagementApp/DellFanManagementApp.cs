@@ -12,7 +12,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Version number for the entire package.
         /// </summary>
-        public const string Version = "DEV";
+        public const string Version = "3.0 beta 2";
 
         /// <summary>
         /// The main entry point for the application.
