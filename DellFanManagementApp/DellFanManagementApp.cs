@@ -1,4 +1,6 @@
-using DellFanManagement.Interop;
+using DellFanManagement.DellSmbiosSmiLib;
+using DellFanManagement.DellSmbiosSmiLib.DellSmi;
+using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -7,6 +9,11 @@ namespace DellFanManagement.App
 {
     static class DellFanManagementApp
     {
+        /// <summary>
+        /// Version number for the entire package.
+        /// </summary>
+        public const string Version = "DEV";
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -22,7 +29,7 @@ namespace DellFanManagement.App
                     {
                         // First thing's first...  Attempt to load the EC control driver.
                         // Shutdown happens immediately after the background thread main loop ends.
-                        if (DellFanLib.Initialize())
+                        if (DellSmbiosBzh.Initialize())
                         {
                             // Looks like we're ready to start up the GUI app.
                             // Set process priority to high.
@@ -60,16 +67,10 @@ namespace DellFanManagement.App
                 // CMD mode.
                 try
                 {
-                    Console.WriteLine("Dell Fan Management, version {0}", DellFanLib.Version);
+                    Console.WriteLine("Dell Fan Management, version {0}", Version);
                     Console.WriteLine("By Aaron Kelley");
                     Console.WriteLine("Licensed under GPLv3");
                     Console.WriteLine("Source code available at https://github.com/AaronKelley/DellFanManagement");
-                    Console.WriteLine();
-                    Console.WriteLine("Dell SMM I/O driver by 424778940z");
-                    Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
-                    Console.WriteLine();
-                    Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
-                    Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
                     Console.WriteLine();
 
                     if (UacHelper.IsProcessElevated())
@@ -82,8 +83,19 @@ namespace DellFanManagement.App
                         {
                             return SetThermalSetting.ExecuteSetThermalSetting(args);
                         }
+                        else if (args[0].ToLower() == "smi-token-dump")
+                        {
+                            return SmiTokenDump();
+                        }
                         else
                         {
+                            Console.WriteLine("Dell SMM I/O driver by 424778940z");
+                            Console.WriteLine("https://github.com/424778940z/bzh-windrv-dell-smm-io");
+                            Console.WriteLine();
+                            Console.WriteLine("Derived from \"Dell fan utility\" by 424778940z");
+                            Console.WriteLine("https://github.com/424778940z/dell-fan-utility");
+                            Console.WriteLine();
+
                             return DellFanCmd.ProcessCommand(args);
                         }
                     }
@@ -100,6 +112,29 @@ namespace DellFanManagement.App
                     return 1;
                 }
             }
+        }
+
+        private static int SmiTokenDump()
+        {
+            for (uint tokenId = 0; tokenId <= 0xFFFF; tokenId++)
+            {
+                int retryCount = 5;
+                bool success = false;
+                while (!success && retryCount > 0)
+                {
+                    try
+                    {
+                        SmiObject? token = DellSmbiosSmi.GetToken((Token)tokenId);
+                        success = true;
+                        Console.WriteLine("{0:X4}\t{1}\t{2}\t{3}\t{4}", tokenId, token?.Output1, token?.Output2, token?.Output3, token?.Output4);
+                    }
+                    catch (Exception)
+                    {
+                        retryCount--;
+                    }
+                }
+            }
+            return 0;
         }
     }
 }

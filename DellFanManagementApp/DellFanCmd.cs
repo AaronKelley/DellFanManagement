@@ -1,4 +1,4 @@
-﻿using DellFanManagement.Interop;
+﻿using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Threading;
 
@@ -34,8 +34,8 @@ namespace DellFanManagement.App
                     bool setFanLevel = false;
                     bool getFanRpm = false;
                     bool runTest = false;
-                    FanIndex fanSelection = FanIndex.Fan1;
-                    FanLevel fanLevel = FanLevel.Level0;
+                    BzhFanIndex fanSelection = BzhFanIndex.Fan1;
+                    BzhFanLevel fanLevel = BzhFanLevel.Level0;
 
                     // Figure out what was requested.
                     if (args[0] == "ec-disable")
@@ -70,163 +70,163 @@ namespace DellFanManagement.App
                     else if (args[0] == "fan1-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan1;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan1;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan1-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan1;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan1;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan1-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan1;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan1;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan2-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan2;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan2;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan2-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan2;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan2;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan2-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan2;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan2;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan3-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan3;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan3;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan3-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan3;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan3;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan3-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan3;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan3;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan4-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan4;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan4;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan4-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan4;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan4;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan4-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan4;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan4;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan5-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan5;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan5;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan5-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan5;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan5;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan5-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan5;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan5;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan6-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan6;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan6;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan6-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan6;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan6;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan6-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan6;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan6;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "fan7-level0")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan7;
-                        fanLevel = FanLevel.Level0;
+                        fanSelection = BzhFanIndex.Fan7;
+                        fanLevel = BzhFanLevel.Level0;
                     }
                     else if (args[0] == "fan7-level1")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan7;
-                        fanLevel = FanLevel.Level1;
+                        fanSelection = BzhFanIndex.Fan7;
+                        fanLevel = BzhFanLevel.Level1;
                     }
                     else if (args[0] == "fan7-level2")
                     {
                         setFanLevel = true;
-                        fanSelection = FanIndex.Fan7;
-                        fanLevel = FanLevel.Level2;
+                        fanSelection = BzhFanIndex.Fan7;
+                        fanLevel = BzhFanLevel.Level2;
                     }
                     else if (args[0] == "rpm-fan1")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan1;
+                        fanSelection = BzhFanIndex.Fan1;
                     }
                     else if (args[0] == "rpm-fan2")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan2;
+                        fanSelection = BzhFanIndex.Fan2;
                     }
                     else if (args[0] == "rpm-fan3")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan3;
+                        fanSelection = BzhFanIndex.Fan3;
                     }
                     else if (args[0] == "rpm-fan4")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan4;
+                        fanSelection = BzhFanIndex.Fan4;
                     }
                     else if (args[0] == "rpm-fan5")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan5;
+                        fanSelection = BzhFanIndex.Fan5;
                     }
                     else if (args[0] == "rpm-fan6")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan6;
+                        fanSelection = BzhFanIndex.Fan6;
                     }
                     else if (args[0] == "rpm-fan7")
                     {
                         getFanRpm = true;
-                        fanSelection = FanIndex.Fan7;
+                        fanSelection = BzhFanIndex.Fan7;
                     }
                     else if (args[0] == "test")
                     {
@@ -253,9 +253,9 @@ namespace DellFanManagement.App
                             // Disable EC fan control.
                             Console.WriteLine("Attempting to disable EC control of the fan...");
 
-                            ulong result = DellFanLib.DisableEcFanControl(useAlternateCommand);
+                            bool success = DellSmbiosBzh.DisableAutomaticFanControl(useAlternateCommand);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -268,15 +268,15 @@ namespace DellFanManagement.App
                             {
                                 // Crank the fans up, for safety.
                                 Console.WriteLine("Setting fan 1 speed to maximum...");
-                                result = DellFanLib.SetFanLevel(FanIndex.Fan1, FanLevel.Level2);
-                                if (result == ulong.MaxValue)
+                                success = DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, BzhFanLevel.Level2);
+                                if (!success)
                                 {
                                     Console.Error.WriteLine("Failed.");
                                 }
 
                                 Console.WriteLine("Setting fan 2 speed to maximum...");
-                                result = DellFanLib.SetFanLevel(FanIndex.Fan2, FanLevel.Level2);
-                                if (result == ulong.MaxValue)
+                                success = DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan2, BzhFanLevel.Level2);
+                                if (!success)
                                 {
                                     Console.Error.WriteLine("Failed.  (Maybe your system just has one fan?)");
                                 }
@@ -292,9 +292,9 @@ namespace DellFanManagement.App
                             // Enable EC fan control.
                             Console.WriteLine("Attempting to enable EC control of the fan...");
 
-                            ulong result = DellFanLib.EnableEcFanControl(useAlternateCommand);
+                            bool success = DellSmbiosBzh.EnableAutomaticFanControl(useAlternateCommand);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -307,9 +307,9 @@ namespace DellFanManagement.App
                         {
                             // Set the fan to a specific level.
                             Console.WriteLine("Attempting to set the fan level...");
-                            ulong result = DellFanLib.SetFanLevel(fanSelection, fanLevel);
+                            bool success = DellSmbiosBzh.SetFanLevel(fanSelection, fanLevel);
 
-                            if (result == ulong.MaxValue)
+                            if (!success)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -322,9 +322,9 @@ namespace DellFanManagement.App
                         {
                             // Query the fan RPM.
                             Console.WriteLine("Attempting to query the fan RPM...");
-                            ulong result = DellFanLib.GetFanRpm(fanSelection);
+                            uint? result = DellSmbiosBzh.GetFanRpm(fanSelection);
 
-                            if (result == ulong.MaxValue)
+                            if (result == null)
                             {
                                 Console.Error.WriteLine("Failed.");
                                 UnloadDriver();
@@ -346,31 +346,31 @@ namespace DellFanManagement.App
                         {
                             // Test all of the fan levels and report RPMs.
 
-                            ulong rpmIdleFan1;
-                            ulong rpmLevel0Fan1;
-                            ulong rpmLevel1Fan1;
-                            ulong rpmLevel2Fan1;
+                            uint? rpmIdleFan1;
+                            uint? rpmLevel0Fan1;
+                            uint? rpmLevel1Fan1;
+                            uint? rpmLevel2Fan1;
 
-                            ulong? rpmIdleFan2 = null;
-                            ulong? rpmLevel0Fan2 = null;
-                            ulong? rpmLevel1Fan2 = null;
-                            ulong? rpmLevel2Fan2 = null;
+                            uint? rpmIdleFan2 = null;
+                            uint? rpmLevel0Fan2 = null;
+                            uint? rpmLevel1Fan2 = null;
+                            uint? rpmLevel2Fan2 = null;
 
                             int sleepInterval = 7500;
                             bool fan2Present = true;
 
                             // Disable EC fan control.
                             Console.WriteLine("Disabling EC fan control...");
-                            DellFanLib.DisableEcFanControl(useAlternateCommand);
+                            DellSmbiosBzh.DisableAutomaticFanControl(useAlternateCommand);
 
                             // Query current idle fan levels.
-                            rpmIdleFan1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
-                            DellFanLib.SetFanLevel(FanIndex.Fan1, FanLevel.Level0);
+                            rpmIdleFan1 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1);
+                            DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, BzhFanLevel.Level0);
 
-                            rpmIdleFan2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
-                            ulong result = DellFanLib.SetFanLevel(FanIndex.Fan2, FanLevel.Level0);
+                            rpmIdleFan2 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2);
+                            bool success = DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan2, BzhFanLevel.Level0);
 
-                            if (result == uint.MaxValue)
+                            if (!success)
                             {
                                 // No fan 2?
                                 fan2Present = false;
@@ -380,40 +380,40 @@ namespace DellFanManagement.App
                             // Measure fan 1.
                             Console.WriteLine("Measuring: Fan 1, level 0...");
                             Thread.Sleep(sleepInterval);
-                            rpmLevel0Fan1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                            rpmLevel0Fan1 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1);
 
                             Console.WriteLine("Measuring: Fan 1, level 1..."); 
-                            DellFanLib.SetFanLevel(FanIndex.Fan1, FanLevel.Level1);
+                            DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, BzhFanLevel.Level1);
                             Thread.Sleep(sleepInterval);
-                            rpmLevel1Fan1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                            rpmLevel1Fan1 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1);
 
                             Console.WriteLine("Measuring: Fan 1, level 2..."); 
-                            DellFanLib.SetFanLevel(FanIndex.Fan1, FanLevel.Level2);
+                            DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, BzhFanLevel.Level2);
                             Thread.Sleep(sleepInterval);
-                            rpmLevel2Fan1 = DellFanLib.GetFanRpm(FanIndex.Fan1);
+                            rpmLevel2Fan1 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1);
 
-                            DellFanLib.SetFanLevel(FanIndex.Fan1, FanLevel.Level0);
+                            DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan1, BzhFanLevel.Level0);
 
                             if (fan2Present)
                             {
                                 // Measure fan 2.
                                 Console.WriteLine("Measuring: Fan 2, level 0...");
-                                rpmLevel0Fan2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
+                                rpmLevel0Fan2 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2);
 
                                 Console.WriteLine("Measuring: Fan 2, level 1..."); 
-                                DellFanLib.SetFanLevel(FanIndex.Fan2, FanLevel.Level1);
+                                DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan2, BzhFanLevel.Level1);
                                 Thread.Sleep(sleepInterval);
-                                rpmLevel1Fan2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
+                                rpmLevel1Fan2 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2);
 
                                 Console.WriteLine("Measuring: Fan 2, level 2..."); 
-                                DellFanLib.SetFanLevel(FanIndex.Fan2, FanLevel.Level2);
+                                DellSmbiosBzh.SetFanLevel(BzhFanIndex.Fan2, BzhFanLevel.Level2);
                                 Thread.Sleep(sleepInterval);
-                                rpmLevel2Fan2 = DellFanLib.GetFanRpm(FanIndex.Fan2);
+                                rpmLevel2Fan2 = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2);
                             }
 
                             // Enable EC fan control.
                             Console.WriteLine("Enabling EC fan control...");
-                            DellFanLib.EnableEcFanControl(useAlternateCommand);
+                            DellSmbiosBzh.EnableAutomaticFanControl(useAlternateCommand);
 
                             Console.WriteLine("Test procedure is finished.");
                             Console.WriteLine();
@@ -448,7 +448,7 @@ namespace DellFanManagement.App
             }
             catch (DllNotFoundException)
             {
-                Console.Error.WriteLine("Unable to load DellFanLib.dll");
+                Console.Error.WriteLine("Unable to load DellSmbiosBzh.dll");
                 Console.Error.WriteLine("Make sure that the file is present.  If it is, install the required Visual C++ redistributable:");
                 Console.Error.WriteLine("https://aka.ms/vs/16/release/vc_redist.x64.exe");
                 returnCode = -1;
@@ -500,7 +500,7 @@ namespace DellFanManagement.App
         public static bool LoadDriver()
         {
             Console.WriteLine("Loading SMM I/O driver...");
-            bool result = DellFanLib.Initialize();
+            bool result = DellSmbiosBzh.Initialize();
             if (!result)
             {
                 Console.Error.WriteLine("Failed.");
@@ -526,7 +526,7 @@ namespace DellFanManagement.App
         public static void UnloadDriver()
         {
             Console.WriteLine("Unloading SMM I/O driver...");
-            DellFanLib.Shutdown();
+            DellSmbiosBzh.Shutdown();
             Console.WriteLine(" ...Done.");
         }
     }

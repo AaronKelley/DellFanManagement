@@ -6,6 +6,11 @@
     class ConfigurationOption
     {
         /// <summary>
+        /// Record whether or not the disclaimer message has been shown.
+        /// </summary>
+        public static readonly ConfigurationOption DisclaimerShown = new(ConfigurationOptionType.Integer, "DisclaimerShown");
+
+        /// <summary>
         /// Store the "operation mode".
         /// </summary>
         public static readonly ConfigurationOption OperationMode = new(ConfigurationOptionType.String, "OperationMode");
@@ -59,6 +64,11 @@
         /// Which device is selected from the drop-down for audio keep alive.
         /// </summary>
         public static readonly ConfigurationOption AudioKeepAliveSelectedDevice = new(ConfigurationOptionType.String, "AudioKeepAliveSelectedDevice");
+
+        /// <summary>
+        /// If the selected audio device disappears and returns, we want to automatically select it again.
+        /// </summary>
+        public static readonly ConfigurationOption AudioKeepAliveBringBackDevice = new(ConfigurationOptionType.String, "AudioKeepAliveBringBackDevice");
 
         /// <summary>
         /// Indicates whether this configuration option is for a "number" or a "string".

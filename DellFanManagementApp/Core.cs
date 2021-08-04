@@ -1,5 +1,7 @@
-﻿using DellFanManagement.Interop;
-using DellFanManagement.SmmIo;
+﻿using DellFanManagement.App.FanControllers;
+using DellFanManagement.App.TemperatureReaders;
+using DellFanManagement.DellSmbiozBzhLib;
+using DellFanManagement.DellSmbiosSmiLib;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,6 +17,11 @@ namespace DellFanManagement.App
         private static readonly int RefreshInterval = 1000;
 
         /// <summary>
+        /// RPM values above this are most likely bogus.
+        /// </summary>
+        private static readonly ulong RpmSanityCheck = 6500;
+
+        /// <summary>
         /// Shared object which contains the state of the application.
         /// </summary>
         private readonly State _state;
@@ -23,6 +30,11 @@ namespace DellFanManagement.App
         /// Form object running the application.
         /// </summary>
         private readonly DellFanManagementGuiForm _form;
+
+        /// <summary>
+        /// Fan controller for making fan speed adjustments.
+        /// </summary>
+        private readonly FanController _fanController;
 
         /// <summary>
         /// Used to play back sounds in the application.
@@ -70,6 +82,11 @@ namespace DellFanManagement.App
         public ulong? RpmThreshold { get; private set; }
 
         /// <summary>
+        /// Indicates whether or not the fans can be controlled individually.
+        /// </summary>
+        public bool IsIndividualFanControlSupported { get; private set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="state">Shared state object</param>
@@ -78,6 +95,8 @@ namespace DellFanManagement.App
         {
             _state = state;
             _form = form;
+            _fanController = FanControllerFactory.GetFanFanController();
+            IsIndividualFanControlSupported = _fanController.IsIndividualFanControlSupported;
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
@@ -182,9 +201,14 @@ namespace DellFanManagement.App
 
             _state.WaitOne();
 
-            if (device != null && device != _state.SelectedAudioDevice && _state.AudioThreadRunning)
+            if (device != null)
             {
-                activeAudioDeviceChanged = true;
+                _state.BringBackAudioDevice = null;
+
+                if (device != _state.SelectedAudioDevice && _state.AudioThreadRunning)
+                {
+                    activeAudioDeviceChanged = true;
+                }
             }
 
             _state.SelectedAudioDevice = device;
@@ -219,7 +243,11 @@ namespace DellFanManagement.App
 
             try
             {
-                DellFanLib.EnableEcFanControl();
+                if (_state.EcFanControlEnabled)
+                {
+                    _fanController.EnableAutomaticFanControl();
+                    Log.Write("Enabled EC fan control – startup");
+                }
 
                 while (_state.BackgroundThreadRunning)
                 {
@@ -236,7 +264,8 @@ namespace DellFanManagement.App
                         if (!_state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = true;
-                            DellFanLib.EnableEcFanControl();
+                            _fanController.EnableAutomaticFanControl();
+                            Log.Write("Enabled EC fan control – automatic mode");
                         }
                     }
                     else if (_state.OperationMode == OperationMode.Manual)
@@ -245,7 +274,9 @@ namespace DellFanManagement.App
                         if (_ecFanControlRequested && !_state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = true;
-                            DellFanLib.EnableEcFanControl();
+                            _fanController.EnableAutomaticFanControl();
+                            Log.Write("Enabled EC fan control – manual mode");
+
                             _state.Fan1Level = null;
                             _state.Fan2Level = null;
                             _fan1LevelRequested = null;
@@ -254,7 +285,8 @@ namespace DellFanManagement.App
                         else if (!_ecFanControlRequested && _state.EcFanControlEnabled)
                         {
                             _state.EcFanControlEnabled = false;
-                            DellFanLib.DisableEcFanControl();
+                            _fanController.DisableAutomaticFanControl();
+                            Log.Write("Disabled EC fan control – manual mode");
                         }
 
                         // Check for fan control state changes that need to be applied.
@@ -265,22 +297,22 @@ namespace DellFanManagement.App
                                 _state.Fan1Level = _fan1LevelRequested;
                                 if (_fan1LevelRequested != null)
                                 {
-                                    DellFanLib.SetFanLevel(FanIndex.Fan1, (FanLevel)_fan1LevelRequested);
+                                    _fanController.SetFanLevel((FanLevel)_fan1LevelRequested, IsIndividualFanControlSupported ? FanIndex.Fan1 : FanIndex.AllFans);
                                 }
                             }
 
-                            if (_state.Fan2Present && _state.Fan2Level != _fan2LevelRequested)
+                            if (_state.Fan2Present && IsIndividualFanControlSupported && _state.Fan2Level != _fan2LevelRequested)
                             {
                                 _state.Fan2Level = _fan2LevelRequested;
                                 if (_fan2LevelRequested != null)
                                 {
-                                    DellFanLib.SetFanLevel(FanIndex.Fan2, (FanLevel)_fan2LevelRequested);
+                                    _fanController.SetFanLevel((FanLevel)_fan2LevelRequested, FanIndex.Fan2);
                                 }
                             }
                         }
 
                         // Warn if a fan is set to completely off.
-                        if (!_state.EcFanControlEnabled && (_state.Fan1Level == FanLevel.Level0 || (_state.Fan2Present && _state.Fan2Level == FanLevel.Level0)))
+                        if (!_state.EcFanControlEnabled && (_state.Fan1Level == FanLevel.Off || (_state.Fan2Present && _state.Fan2Level == FanLevel.Off)))
                         {
                             _state.ConsistencyModeStatus = "Warning: Fans set to \"off\" will not turn on regardless of temperature or load on the system";
                         }
@@ -299,7 +331,7 @@ namespace DellFanManagement.App
                     {
                         if (_requestedThermalSetting != _state.ThermalSetting)
                         {
-                            DellSmmIoLib.SetThermalSetting((ThermalSetting)_requestedThermalSetting);
+                            DellSmbiosSmi.SetThermalSetting((ThermalSetting)_requestedThermalSetting);
                             _state.UpdateThermalSetting();
                         }
 
@@ -309,6 +341,9 @@ namespace DellFanManagement.App
                     // Check to see if the active audio device has disappeared.
                     if (_state.AudioThreadRunning && !_state.AudioDevices.Contains(_state.SelectedAudioDevice))
                     {
+                        // Remember the audio device in case it reappears.
+                        _state.BringBackAudioDevice = _state.SelectedAudioDevice;
+
                         // Terminate the audio thread.
                         _soundPlayer?.RequestTermination();
                     }
@@ -323,8 +358,11 @@ namespace DellFanManagement.App
                 }
 
                 // If we got out of the loop without error, the program is terminating.
-                DellFanLib.EnableEcFanControl();
-                DellFanLib.Shutdown();
+                _fanController.EnableAutomaticFanControl();
+                Log.Write("Enabled EC fan control – shutdown");
+
+                // We need to unload the BZH driver.  If it is not loaded, this will just do nothing.
+                DellSmbiosBzh.Shutdown();
             }
             catch (Exception exception)
             {
@@ -357,33 +395,64 @@ namespace DellFanManagement.App
                 bool thresholdsMet = true;
                 ulong? rpmLowerThreshold = RpmThreshold - 400;
 
-                foreach (KeyValuePair<string, int> temperature in _state.Temperatures)
+                // Is the fan speed too low?
+                if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
                 {
-                    if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                    if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
                     {
-                        _state.ConsistencyModeStatus = "Waiting for CPU or GPU temperature to fall";
-                        thresholdsMet = false;
+                        _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
+                    }
+                    else
+                    {
+                        _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
+                    }
+
+                    thresholdsMet = false;
+
+                    if (!_state.EcFanControlEnabled)
+                    {
+                        Log.Write(string.Format("EC fan control disabled, but fan speed is too low: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
                     }
                 }
 
+                // Is the CPU or GPU too hot?
                 if (thresholdsMet)
                 {
-                    if (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold))
+                    foreach (TemperatureComponent component in _state.Temperatures.Keys)
+                    {
+                        foreach (KeyValuePair<string, int> temperature in _state.Temperatures[component])
+                        {
+                            if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
+                            {
+                                _state.ConsistencyModeStatus = string.Format("Waiting for {0} temperature to fall", component);
+                                thresholdsMet = false;
+                                break;
+                            }
+                        }
+
+                        if (!thresholdsMet)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                // Is the fan speed too high?
+                if (thresholdsMet && (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold)))
+                {
+                    if (_state.Fan1Rpm < RpmSanityCheck && (!_state.Fan2Present || _state.Fan2Rpm < RpmSanityCheck))
                     {
                         _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
                         thresholdsMet = false;
+
+                        if (!_state.EcFanControlEnabled)
+                        {
+                            Log.Write(string.Format("EC fan control disabled, but fan speed is too high: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
+                        }
                     }
-                    else if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
+                    else
                     {
-                        if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
-                        {
-                            _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
-                        }
-                        else
-                        {
-                            _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
-                        }
-                        thresholdsMet = false;
+                        Log.Write(string.Format("Recorded fan speed above sanity check level: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
                     }
                 }
 
@@ -392,8 +461,10 @@ namespace DellFanManagement.App
                     if (_state.EcFanControlEnabled)
                     {
                         _state.EcFanControlEnabled = false;
-                        DellFanLib.DisableEcFanControl();
+                        _fanController.DisableAutomaticFanControl();
+                        Log.Write("Disabled EC fan control – consistency mode – thresholds met");
                     }
+
                     if (!_state.ConsistencyModeStatus.StartsWith("Fan speed locked"))
                     {
                         _state.ConsistencyModeStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
@@ -402,7 +473,8 @@ namespace DellFanManagement.App
                 else if (!_state.EcFanControlEnabled && !thresholdsMet)
                 {
                     _state.EcFanControlEnabled = true;
-                    DellFanLib.EnableEcFanControl();
+                    _fanController.EnableAutomaticFanControl();
+                    Log.Write(string.Format("Enabled EC fan control – consistency mode – {0}", _state.ConsistencyModeStatus));
                 }
             }
         }
