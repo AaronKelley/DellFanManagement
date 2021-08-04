@@ -73,6 +73,8 @@ namespace DellFanManagement.App
 
             // Set event handlers.
             FormClosed += new FormClosedEventHandler(FormClosedEventHandler);
+            Resize += new EventHandler(OnResizeEventHandler);
+            trayIcon.Click += new EventHandler(TrayIconOnClickEventHandler);
 
             // ...Thermal setting radio buttons...
             thermalSettingRadioButtonOptimized.CheckedChanged += new EventHandler(ThermalSettingChangedEventHandler);
@@ -94,7 +96,7 @@ namespace DellFanManagement.App
 
             // ...Restart background thread button...
             restartBackgroundThreadButton.Click += new EventHandler(ThermalSettingChangedEventHandler);
-            
+
             // ...Operation mode radio buttons...
             operationModeRadioButtonAutomatic.CheckedChanged += new EventHandler(ConfigurationRadioButtonAutomaticEventHandler);
             operationModeRadioButtonManual.CheckedChanged += new EventHandler(ConfigurationRadioButtonManualEventHandler);
@@ -416,7 +418,7 @@ namespace DellFanManagement.App
             // Sync up audio devices list.
             List<AudioDevice> devicesToAdd = new();
             List<AudioDevice> devicesToRemove = new();
-            
+
             // Items to add.
             foreach (AudioDevice audioDevice in _state.AudioDevices)
             {
@@ -787,6 +789,26 @@ namespace DellFanManagement.App
             animatedCheckBox.Enabled = trayIconCheckBox.Checked;
 
             _configurationStore.SetOption(ConfigurationOption.TrayIconEnabled, trayIconCheckBox.Checked ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Called when the tray icon is clicked. Restores the window and makes it visible in the task bar.
+        /// </summary>
+        private void TrayIconOnClickEventHandler(object sender, EventArgs e)
+        {
+            ShowInTaskbar = true;
+            WindowState = FormWindowState.Normal;
+        }
+
+        /// <summary>
+        /// Called when the window is resized. If the window is minimized and the "tray icon" is visible, then the window is hidden in the taskbar.
+        /// </summary>
+        private void OnResizeEventHandler(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized && trayIcon.Visible)
+            {
+                ShowInTaskbar = false;
+            }
         }
 
         /// <summary>
