@@ -1080,7 +1080,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Shows a disclaimer message to the user.
         /// </summary>
-        private void ShowDisclaimer()
+        private static void ShowDisclaimer()
         {
             MessageBox.Show("Note: While every has been made to make this program safe to use, it does interact with the embedded controller and system BIOS using undocumented methods and may have adverse effects on your system.  Use at your own risk.  If you experience odd behavior, a full system shutdown should restore everything back to the original state.  This program is not created by or affiliated with Dell Inc. or Dell Technologies Inc.", "Dell Fan Management – Disclaimer");
         }
