@@ -3,6 +3,7 @@ using DellFanManagement.DellSmbiosSmiLib.DellSmi;
 using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace DellFanManagement.App
@@ -87,6 +88,14 @@ namespace DellFanManagement.App
                         {
                             return SmiTokenDump();
                         }
+                        else if (args[0].ToLower() == "smi-get-token")
+                        {
+                            return SmiGetToken(args);
+                        }
+                        else if (args[0].ToLower() == "smi-set-token")
+                        {
+                            return SmiSetToken(args);
+                        }
                         else
                         {
                             Console.WriteLine("Dell SMM I/O driver by 424778940z");
@@ -135,6 +144,92 @@ namespace DellFanManagement.App
                 }
             }
             return 0;
+        }
+
+        private static int SmiGetToken(string[] args)
+        {
+            uint token = uint.Parse(args[1], NumberStyles.HexNumber);
+
+            Console.WriteLine("Reading token {0:X4}", token);
+
+            uint? currentValue = DellSmbiosSmi.GetTokenCurrentValue((Token)token);
+
+            if (currentValue != null)
+            {
+                Console.WriteLine("  Current value: {0}", currentValue);
+
+                uint? expectedValue = DellSmbiosSmi.GetTokenSetValue((Token)token);
+
+                if (expectedValue != null)
+                {
+                    Console.WriteLine("  Expected value: {0}", expectedValue);
+                    return 0;
+                }
+                else
+                {
+                    Console.WriteLine("  Failed to read expected value.");
+                    return 1;
+                }
+            }
+            else
+            {
+                Console.WriteLine("  Failed to read current value.");
+                return 1;
+            }
+        }
+
+        private static int SmiSetToken(string[] args)
+        {
+            uint token = uint.Parse(args[1], NumberStyles.HexNumber);
+            uint targetValue = uint.Parse(args[2]);
+
+            Console.WriteLine("Setting token {0:X4} to value {1}", token, targetValue);
+
+            uint? currentValue = DellSmbiosSmi.GetTokenCurrentValue((Token)token);
+
+            if (currentValue != null)
+            {
+                Console.WriteLine("  Current value: {0}", currentValue);
+            }
+            else
+            {
+                Console.WriteLine("  Failed to read current value.  Trying to set anyway.");
+            }
+
+            if (DellSmbiosSmi.SetToken((Token)token, targetValue))
+            {
+                Console.WriteLine("  Set token successfully.");
+
+                currentValue = DellSmbiosSmi.GetTokenCurrentValue((Token)token);
+                if (currentValue != null)
+                {
+                    Console.WriteLine("  Current value: {0}", currentValue);
+
+                    if (currentValue == targetValue)
+                    {
+                        return 0;
+                    }
+                    else if (currentValue != null)
+                    {
+                        Console.WriteLine("  ...It appears that the value was not set as expected.");
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  Failed to read new value.");
+                    return 1;
+                }
+            }
+            else
+            {
+                Console.WriteLine("  Failed to set value.");
+                return 1;
+            }
         }
     }
 }
