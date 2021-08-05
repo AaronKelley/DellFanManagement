@@ -47,11 +47,6 @@ namespace DellFanManagement.App
         private readonly Semaphore _requestSemaphore;
 
         /// <summary>
-        /// Thermal setting that has been requested by the user but not yet applied.
-        /// </summary>
-        private ThermalSetting? _requestedThermalSetting;
-
-        /// <summary>
         /// Indicates whether or not the user has requested that EC fan control be enabled.
         /// </summary>
         private bool _ecFanControlRequested;
@@ -87,6 +82,11 @@ namespace DellFanManagement.App
         public bool IsIndividualFanControlSupported { get; private set; }
 
         /// <summary>
+        /// Thermal setting that has been requested by the user but not yet applied.
+        /// </summary>
+        public ThermalSetting RequestedThermalSetting { get; private set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="state">Shared state object</param>
@@ -100,7 +100,7 @@ namespace DellFanManagement.App
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
-            _requestedThermalSetting = null;
+            RequestedThermalSetting = _state.ThermalSetting;
             _ecFanControlRequested = true;
             _fan1LevelRequested = null;
             _fan2LevelRequested = null;
@@ -187,7 +187,7 @@ namespace DellFanManagement.App
         public void RequestThermalSetting(ThermalSetting requestedThermalSetting)
         {
             _requestSemaphore.WaitOne();
-            _requestedThermalSetting = requestedThermalSetting;
+            RequestedThermalSetting = requestedThermalSetting;
             _requestSemaphore.Release();
         }
 
@@ -327,15 +327,11 @@ namespace DellFanManagement.App
                         ConsistencyModeLogic();
                     }
 
-                    if (_requestedThermalSetting != null)
+                    // See if we need to update the BIOS thermal setting.
+                    if (_state.ThermalSetting != ThermalSetting.Error && RequestedThermalSetting != _state.ThermalSetting)
                     {
-                        if (_requestedThermalSetting != _state.ThermalSetting)
-                        {
-                            DellSmbiosSmi.SetThermalSetting((ThermalSetting)_requestedThermalSetting);
-                            _state.UpdateThermalSetting();
-                        }
-
-                        _requestedThermalSetting = null;
+                        DellSmbiosSmi.SetThermalSetting((ThermalSetting)RequestedThermalSetting);
+                        _state.UpdateThermalSetting();
                     }
 
                     // Check to see if the active audio device has disappeared.

@@ -405,7 +405,7 @@ namespace DellFanManagement.App
             consistencyModeStatusLabel.Text = _state.ConsistencyModeStatus;
 
             // Thermal setting.
-            switch (_state.ThermalSetting)
+            switch (_core.RequestedThermalSetting)
             {
                 case ThermalSetting.Optimized:
                     SetThermalSettingAvaiability(true);
