@@ -876,7 +876,8 @@ namespace DellFanManagement.App
         }
 
         /// <summary>
-        /// Called when the window is resized. If the window is minimized and the "tray icon" is visible, then the window is hidden in the taskbar.
+        /// Called when the window is resized. If the window is minimized and the "tray icon" is visible, then the
+        /// window is hidden in the taskbar.
         /// </summary>
         private void OnResizeEventHandler(object sender, EventArgs e)
         {
