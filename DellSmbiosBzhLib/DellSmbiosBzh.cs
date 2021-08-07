@@ -46,7 +46,7 @@ namespace DellFanManagement.DellSmbiozBzhLib
         /// <summary>
         /// Represents whether or not the driver has been initialized.
         /// </summary>
-        private static bool IsInitialized = false;
+        public static bool IsInitialized { get; private set; } = false;
 
         /// <summary>
         /// Disable automatic fan control.

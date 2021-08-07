@@ -77,11 +77,6 @@ namespace DellFanManagement.App
         public ulong? RpmThreshold { get; private set; }
 
         /// <summary>
-        /// Indicates whether or not the fans can be controlled individually.
-        /// </summary>
-        public bool IsIndividualFanControlSupported { get; private set; }
-
-        /// <summary>
         /// Thermal setting that has been requested by the user but not yet applied.
         /// </summary>
         public ThermalSetting RequestedThermalSetting { get; private set; }
@@ -96,7 +91,6 @@ namespace DellFanManagement.App
             _state = state;
             _form = form;
             _fanController = FanControllerFactory.GetFanFanController();
-            IsIndividualFanControlSupported = _fanController.IsIndividualFanControlSupported;
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
@@ -243,7 +237,7 @@ namespace DellFanManagement.App
 
             try
             {
-                if (_state.EcFanControlEnabled)
+                if (_state.EcFanControlEnabled && IsAutomaticFanControlDisableSupported)
                 {
                     _fanController.EnableAutomaticFanControl();
                     Log.Write("Enabled EC fan control – startup");
@@ -261,14 +255,14 @@ namespace DellFanManagement.App
                     // Take action based on configuration.
                     if (_state.OperationMode == OperationMode.Automatic)
                     {
-                        if (!_state.EcFanControlEnabled)
+                        if (!_state.EcFanControlEnabled && IsAutomaticFanControlDisableSupported)
                         {
                             _state.EcFanControlEnabled = true;
                             _fanController.EnableAutomaticFanControl();
                             Log.Write("Enabled EC fan control – automatic mode");
                         }
                     }
-                    else if (_state.OperationMode == OperationMode.Manual)
+                    else if (_state.OperationMode == OperationMode.Manual && IsAutomaticFanControlDisableSupported && IsSpecificFanControlSupported)
                     {
                         // Check for EC control state changes that need to be applied.
                         if (_ecFanControlRequested && !_state.EcFanControlEnabled)
@@ -321,7 +315,7 @@ namespace DellFanManagement.App
                             _state.ConsistencyModeStatus = " ";
                         }
                     }
-                    else if (_state.OperationMode == OperationMode.Consistency)
+                    else if (_state.OperationMode == OperationMode.Consistency && IsAutomaticFanControlDisableSupported)
                     {
                         // Consistency mode logic.
                         ConsistencyModeLogic();
@@ -354,8 +348,11 @@ namespace DellFanManagement.App
                 }
 
                 // If we got out of the loop without error, the program is terminating.
-                _fanController.EnableAutomaticFanControl();
-                Log.Write("Enabled EC fan control – shutdown");
+                if (IsAutomaticFanControlDisableSupported)
+                {
+                    _fanController.EnableAutomaticFanControl();
+                    Log.Write("Enabled EC fan control – shutdown");
+                }
 
                 // We need to unload the BZH driver.  If it is not loaded, this will just do nothing.
                 DellSmbiosBzh.Shutdown();
@@ -573,6 +570,30 @@ namespace DellFanManagement.App
             LowerTemperatureThreshold = lowerTemperatureThreshold;
             UpperTemperatureThreshold = upperTemperatureThreshold;
             RpmThreshold = ulong.Parse(rpmThreshold.ToString());
+        }
+
+        /// <summary>
+        /// Whether or not the system's automatic fan control can be specifically engaged and disengaged.
+        /// </summary>
+        public bool IsAutomaticFanControlDisableSupported
+        {
+            get { return _fanController.IsAutomaticFanControlDisableSupported; }
+        }
+
+        /// <summary>
+        /// Whether or not the system fans can be set to run at a specific level.
+        /// </summary>
+        public bool IsSpecificFanControlSupported
+        {
+            get { return _fanController.IsSpecificFanControlSupported; }
+        }
+
+        /// <summary>
+        /// Whether or not the system fans may be individually controlled.
+        /// </summary>
+        public bool IsIndividualFanControlSupported
+        {
+            get { return _fanController.IsIndividualFanControlSupported; }
         }
     }
 }

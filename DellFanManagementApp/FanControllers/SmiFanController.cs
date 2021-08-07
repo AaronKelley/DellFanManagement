@@ -12,6 +12,8 @@ namespace DellFanManagement.App.FanControllers
         /// </summary>
         public SmiFanController()
         {
+            IsAutomaticFanControlDisableSupported = true;
+            IsSpecificFanControlSupported = true;
             IsIndividualFanControlSupported = false;
         }
 

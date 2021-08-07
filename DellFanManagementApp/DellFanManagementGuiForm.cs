@@ -144,6 +144,17 @@ namespace DellFanManagement.App
             temperatureLabel17.Text = string.Empty;
             temperatureLabel18.Text = string.Empty;
 
+            // Disable some options depending on fan control capability.
+            if (!_core.IsAutomaticFanControlDisableSupported)
+            {
+                operationModeRadioButtonManual.Enabled = false;
+                operationModeRadioButtonConsistency.Enabled = false;
+            }
+            if (!_core.IsSpecificFanControlSupported)
+            {
+                operationModeRadioButtonManual.Enabled = false;
+            }
+
             // Apply configuration loaded from registry.
             ApplyConfiguration();
 
@@ -205,22 +216,32 @@ namespace DellFanManagement.App
             }
 
             // Read previous operation mode from configuration.
+            bool modeSet = false;
             if (Enum.TryParse(_configurationStore.GetStringOption(ConfigurationOption.OperationMode), out OperationMode operationMode))
             {
                 switch (operationMode)
                 {
                     case OperationMode.Automatic:
                         operationModeRadioButtonAutomatic.Checked = true;
+                        modeSet = true;
                         break;
                     case OperationMode.Manual:
-                        operationModeRadioButtonManual.Checked = true;
+                        if (operationModeRadioButtonManual.Enabled)
+                        {
+                            operationModeRadioButtonManual.Checked = true;
+                            modeSet = true;
+                        }
                         break;
                     case OperationMode.Consistency:
-                        operationModeRadioButtonConsistency.Checked = true;
+                        if (operationModeRadioButtonConsistency.Enabled)
+                        {
+                            operationModeRadioButtonConsistency.Checked = true;
+                            modeSet = true;
+                        }
                         break;
                 }
             }
-            else
+            if (!modeSet)
             {
                 // Default to automatic mode.
                 operationModeRadioButtonAutomatic.Checked = true;

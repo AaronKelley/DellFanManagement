@@ -6,6 +6,16 @@
     abstract class FanController
     {
         /// <summary>
+        /// Whether or not the system's automatic fan control can be specifically engaged and disengaged.
+        /// </summary>
+        public bool IsAutomaticFanControlDisableSupported { get; protected set; }
+
+        /// <summary>
+        /// Whether or not the system fans can be set to run at a specific level.
+        /// </summary>
+        public bool IsSpecificFanControlSupported { get; protected set; }
+
+        /// <summary>
         /// Whether or not the system fans may be individually controlled.
         /// </summary>
         public bool IsIndividualFanControlSupported { get; protected set; }

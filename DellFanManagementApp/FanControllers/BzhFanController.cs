@@ -12,6 +12,8 @@ namespace DellFanManagement.App.FanControllers
         /// </summary>
         public BzhFanController()
         {
+            IsAutomaticFanControlDisableSupported = true;
+            IsSpecificFanControlSupported = true;
             IsIndividualFanControlSupported = true;
         }
 

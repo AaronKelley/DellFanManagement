@@ -1,4 +1,4 @@
-﻿using DellFanManagement.DellSmbiosSmiLib;
+﻿using DellFanManagement.DellSmbiozBzhLib;
 
 namespace DellFanManagement.App.FanControllers
 {
@@ -13,7 +13,15 @@ namespace DellFanManagement.App.FanControllers
         /// <returns>Fan speed reader appropriate for the system.</returns>
         public static FanController GetFanFanController()
         {
-            return new BzhFanController();
+            if (DellSmbiosBzh.IsInitialized && DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1) != null)
+            {
+                return new BzhFanController();
+            }
+            else
+            {
+                return new NullFanController();
+            }
+
             /*
             if (DellSmbiosSmi.IsFanControlOverrideAvailable())
             {
