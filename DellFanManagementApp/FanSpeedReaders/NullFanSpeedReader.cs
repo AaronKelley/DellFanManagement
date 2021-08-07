@@ -1,11 +1,9 @@
-﻿using DellFanManagement.DellSmbiozBzhLib;
-
-namespace DellFanManagement.App.FanSpeedReaders
+﻿namespace DellFanManagement.App.FanSpeedReaders
 {
     /// <summary>
-    /// Read fan speeds using the BZH Dell SMM I/O driver.
+    /// This fan speed reader can't read the fan speed and always returns null.
     /// </summary>
-    public class BzhFanSpeedReader : IFanSpeedReader
+    class NullFanSpeedReader : IFanSpeedReader
     {
         /// <summary>
         /// Get the current system fan speeds.
@@ -14,11 +12,10 @@ namespace DellFanManagement.App.FanSpeedReaders
         /// reading.)</returns>
         public FanSpeeds GetFanSpeeds()
         {
-            DellSmbiosBzh.Initialize();
             return new FanSpeeds()
             {
-                Fan1Rpm = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan1),
-                Fan2Rpm = DellSmbiosBzh.GetFanRpm(BzhFanIndex.Fan2)
+                Fan1Rpm = null,
+                Fan2Rpm = null
             };
         }
     }

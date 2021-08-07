@@ -43,5 +43,13 @@
         {
             return false;
         }
+
+        /// <summary>
+        /// No shutdown method is needed for this fan controller.
+        /// </summary>
+        public override void Shutdown()
+        {
+            // Take no action.
+        }
     }
 }

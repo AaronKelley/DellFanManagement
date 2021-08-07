@@ -21,7 +21,7 @@ namespace DellFanManagement.App.FanSpeedReaders
                 new WmiFanSpeedReader()
             };
 
-            IFanSpeedReader selectedReader = null;
+            IFanSpeedReader selectedReader = new NullFanSpeedReader();
             int bestFanCount = 0;
 
             foreach (IFanSpeedReader reader in readers)

@@ -354,8 +354,8 @@ namespace DellFanManagement.App
                     Log.Write("Enabled EC fan control – shutdown");
                 }
 
-                // We need to unload the BZH driver.  If it is not loaded, this will just do nothing.
-                DellSmbiosBzh.Shutdown();
+                // Clean up as the program terminates.
+                _fanController.Shutdown();
             }
             catch (Exception exception)
             {

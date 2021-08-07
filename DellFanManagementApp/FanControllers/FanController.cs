@@ -39,5 +39,10 @@
         /// <param name="fanIndex">Which fan to set.</param>
         /// <returns>True on succes, false on failure.</returns>
         public abstract bool SetFanLevel(FanLevel level, FanIndex fanIndex);
+
+        /// <summary>
+        /// Perform any steps needed to "clean up" as the program is terminating.
+        /// </summary>
+        public abstract void Shutdown();
     }
 }

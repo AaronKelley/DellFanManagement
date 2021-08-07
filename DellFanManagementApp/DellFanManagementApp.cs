@@ -1,6 +1,5 @@
 using DellFanManagement.DellSmbiosSmiLib;
 using DellFanManagement.DellSmbiosSmiLib.DellSmi;
-using DellFanManagement.DellSmbiozBzhLib;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -28,26 +27,15 @@ namespace DellFanManagement.App
                 {
                     if (UacHelper.IsProcessElevated())
                     {
-                        // First thing's first...  Attempt to load the EC control driver.
-                        // Shutdown happens immediately after the background thread main loop ends.
-                        if (DellSmbiosBzh.Initialize())
-                        {
-                            // Looks like we're ready to start up the GUI app.
-                            // Set process priority to high.
-                            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+                        // Looks like we're ready to start up the GUI app.
+                        // Set process priority to high.
+                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
-                            // Boilerplate code to start the app.
-                            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
-                            Application.EnableVisualStyles();
-                            Application.SetCompatibleTextRenderingDefault(false);
-                            Application.Run(new DellFanManagementGuiForm());
-                        }
-                        else
-                        {
-                            MessageBox.Show("Failed to load driver.  Make sure that bzh_dell_smm_io_x64.sys is present in the working directory.  Reboot the system if the EV sign check pass registry setting was just set.",
-                                "Dell Fan Management driver check", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return 1;
-                        }
+                        // Boilerplate code to start the app.
+                        Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        Application.Run(new DellFanManagementGuiForm());
                     }
                     else
                     {
