@@ -892,6 +892,7 @@ namespace DellFanManagement.App
         /// </summary>
         private void TrayIconOnClickEventHandler(object sender, EventArgs e)
         {
+            Visible = true;
             ShowInTaskbar = true;
             WindowState = FormWindowState.Normal;
         }
@@ -905,6 +906,7 @@ namespace DellFanManagement.App
             if (WindowState == FormWindowState.Minimized && trayIcon.Visible)
             {
                 ShowInTaskbar = false;
+                Visible = false;
             }
         }
 
