@@ -9,10 +9,4 @@
       </requestedPrivileges>
     </security>
   </trustInfo>
-  <application xmlns="urn:schemas-microsoft-com:asm.v3">
-    <windowsSettings>
-      <!-- Disable DPI awareness to keep the layout consistent at higher DPI levels. -->
-      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">false</dpiAware>
-    </windowsSettings>
-  </application>
 </assembly>
