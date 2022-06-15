@@ -12,6 +12,11 @@ namespace DellFanManagement.App.TemperatureReaders
     class NvidiaGpuTemperatureReader : TemperatureReader
     {
         /// <summary>
+        /// Keep track of previously read NVIDIA GPU names in the event that one cannot be pulled.
+        /// </summary>
+        private static readonly Dictionary<uint, string> gpuNames = new();
+
+        /// <summary>
         /// Read all of the available temperatures into a dictionary.
         /// </summary>
         /// <returns>Dictionary with temperatures, keyed by sensor name</returns>
@@ -21,10 +26,12 @@ namespace DellFanManagement.App.TemperatureReaders
 
             foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
             {
-                string name = null;
+                string name = gpuNames.ContainsKey(gpu.GPUId) ? gpuNames[gpu.GPUId] : "Unknown GPU";
+
                 try
                 {
-                    name = gpu.FullName.Replace(" Laptop GPU", string.Empty);
+                    name = gpu.FullName.Replace("Laptop GPU", string.Empty).Replace("NVIDIA", string.Empty).Trim();
+                    gpuNames[gpu.GPUId] = name;
 
                     foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
                     {
