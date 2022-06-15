@@ -21,10 +21,11 @@ namespace DellFanManagement.App.TemperatureReaders
 
             foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
             {
-                string name = gpu.FullName.Replace(" Laptop GPU", string.Empty);
-
+                string name = null;
                 try
                 {
+                    name = gpu.FullName.Replace(" Laptop GPU", string.Empty);
+
                     foreach (GPUThermalSensor sensor in gpu.ThermalInformation.ThermalSensors)
                     {
                         temperatures.Add(name, sensor.CurrentTemperature);
@@ -34,8 +35,11 @@ namespace DellFanManagement.App.TemperatureReaders
                 {
                     if (exception.Message == "NVAPI_GPU_NOT_POWERED")
                     {
-                        // GPU is currently powered off.
-                        temperatures.Add(name, 0);
+                        if (name != null)
+                        {
+                            // GPU is currently powered off.
+                            temperatures.Add(name, 0);
+                        }
                     }
                     else if (exception.Message == "NVAPI_NVIDIA_DEVICE_NOT_FOUND")
                     {
