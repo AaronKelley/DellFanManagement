@@ -27,6 +27,7 @@ namespace DellFanManagement.App
             switch (args[1].ToLower())
             {
                 case "optimized":
+                case "optimised":
                     newSetting = ThermalSetting.Optimized;
                     break;
                 case "cool":
