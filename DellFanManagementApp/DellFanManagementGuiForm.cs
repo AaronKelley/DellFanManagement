@@ -426,27 +426,30 @@ namespace DellFanManagement.App
             consistencyModeStatusLabel.Text = _state.ConsistencyModeStatus;
 
             // Thermal setting.
-            switch (_core.RequestedThermalSetting)
+            if (_core.RequestedThermalSetting == null)
             {
-                case ThermalSetting.Optimized:
-                    SetThermalSettingAvaiability(true);
-                    thermalSettingRadioButtonOptimized.Checked = true;
-                    break;
-                case ThermalSetting.Cool:
-                    SetThermalSettingAvaiability(true);
-                    thermalSettingRadioButtonCool.Checked = true;
-                    break;
-                case ThermalSetting.Quiet:
-                    SetThermalSettingAvaiability(true);
-                    thermalSettingRadioButtonQuiet.Checked = true;
-                    break;
-                case ThermalSetting.Performance:
-                    SetThermalSettingAvaiability(true);
-                    thermalSettingRadioButtonPerformance.Checked = true;
-                    break;
-                case ThermalSetting.Error:
-                    SetThermalSettingAvaiability(false);
-                    break;
+                switch (_state.ThermalSetting)
+                {
+                    case ThermalSetting.Optimized:
+                        SetThermalSettingAvaiability(true);
+                        thermalSettingRadioButtonOptimized.Checked = true;
+                        break;
+                    case ThermalSetting.Cool:
+                        SetThermalSettingAvaiability(true);
+                        thermalSettingRadioButtonCool.Checked = true;
+                        break;
+                    case ThermalSetting.Quiet:
+                        SetThermalSettingAvaiability(true);
+                        thermalSettingRadioButtonQuiet.Checked = true;
+                        break;
+                    case ThermalSetting.Performance:
+                        SetThermalSettingAvaiability(true);
+                        thermalSettingRadioButtonPerformance.Checked = true;
+                        break;
+                    case ThermalSetting.Error:
+                        SetThermalSettingAvaiability(false);
+                        break;
+                }
             }
 
             // Restart background thread button.

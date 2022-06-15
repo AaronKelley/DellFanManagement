@@ -79,7 +79,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// Thermal setting that has been requested by the user but not yet applied.
         /// </summary>
-        public ThermalSetting RequestedThermalSetting { get; private set; }
+        public ThermalSetting? RequestedThermalSetting { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -94,7 +94,7 @@ namespace DellFanManagement.App
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
-            RequestedThermalSetting = _state.ThermalSetting;
+            RequestedThermalSetting = null;
             _ecFanControlRequested = true;
             _fan1LevelRequested = null;
             _fan2LevelRequested = null;
@@ -181,7 +181,12 @@ namespace DellFanManagement.App
         public void RequestThermalSetting(ThermalSetting requestedThermalSetting)
         {
             _requestSemaphore.WaitOne();
-            RequestedThermalSetting = requestedThermalSetting;
+
+            if (requestedThermalSetting != _state.ThermalSetting)
+            {
+                RequestedThermalSetting = requestedThermalSetting;
+            }
+
             _requestSemaphore.Release();
         }
 
@@ -322,10 +327,12 @@ namespace DellFanManagement.App
                     }
 
                     // See if we need to update the BIOS thermal setting.
-                    if (_state.ThermalSetting != ThermalSetting.Error && RequestedThermalSetting != _state.ThermalSetting)
+                    if (_state.ThermalSetting != ThermalSetting.Error && RequestedThermalSetting != null && RequestedThermalSetting != _state.ThermalSetting)
                     {
+                        Log.Write(string.Format("Switching thermal setting to {0}", RequestedThermalSetting));
                         DellSmbiosSmi.SetThermalSetting((ThermalSetting)RequestedThermalSetting);
                         _state.UpdateThermalSetting();
+                        RequestedThermalSetting = null;
                     }
 
                     // Check to see if the active audio device has disappeared.
