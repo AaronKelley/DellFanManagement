@@ -1,6 +1,4 @@
-﻿using DellFanManagement.DellSmbiozBzhLib;
-
-namespace DellFanManagement.App.FanControllers
+﻿namespace DellFanManagement.App.FanControllers
 {
     /// <summary>
     /// Determine system capabilities and select an appropriate fan speed controller to use.

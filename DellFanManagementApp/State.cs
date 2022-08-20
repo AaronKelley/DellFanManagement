@@ -10,7 +10,7 @@ namespace DellFanManagement.App
     /// Represents, basically, the current state of the application.  Used for sharing data between the UI and
     /// background threads.
     /// </summary>
-    class State
+    public class State
     {
         /// <summary>
         /// Object for reading CPU and GPU temperatures from the system.

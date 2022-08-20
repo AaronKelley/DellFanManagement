@@ -3,7 +3,7 @@
     /// <summary>
     /// Indicate a specific fan for fan control.
     /// </summary>
-    enum FanIndex
+    public enum FanIndex
     {
         /// <summary>
         /// All fans.

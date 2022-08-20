@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines types of components that have temperatures that we care about.
     /// </summary>
-    enum TemperatureComponent
+    public enum TemperatureComponent
     {
         /// <summary>
         /// CPU temperatures.

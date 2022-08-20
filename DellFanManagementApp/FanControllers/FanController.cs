@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for fan speed controller implementations.
     /// </summary>
-    abstract class FanController
+    public abstract class FanController
     {
         /// <summary>
         /// Whether or not the system's automatic fan control can be specifically engaged and disengaged.

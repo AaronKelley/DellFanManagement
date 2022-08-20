@@ -1,15 +1,13 @@
-﻿using DellFanManagement.App.FanControllers;
-using DellFanManagement.App.TemperatureReaders;
-using DellFanManagement.DellSmbiozBzhLib;
+﻿using DellFanManagement.App.ConsistencyModeHandlers;
+using DellFanManagement.App.FanControllers;
 using DellFanManagement.DellSmbiosSmiLib;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace DellFanManagement.App
 {
-    class Core
+    public class Core
     {
         /// <summary>
         /// How often to refresh the system state, in milliseconds.
@@ -19,7 +17,7 @@ namespace DellFanManagement.App
         /// <summary>
         /// RPM values above this are most likely bogus.
         /// </summary>
-        private static readonly ulong RpmSanityCheck = 6500;
+        public static readonly ulong RpmSanityCheck = 6500;
 
         /// <summary>
         /// Shared object which contains the state of the application.
@@ -35,6 +33,11 @@ namespace DellFanManagement.App
         /// Fan controller for making fan speed adjustments.
         /// </summary>
         private readonly FanController _fanController;
+
+        /// <summary>
+        /// Logic for handling "consistency mode".
+        /// </summary>
+        private readonly ConsistencyModeHandler _consistencyModeHandler;
 
         /// <summary>
         /// Used to play back sounds in the application.
@@ -76,6 +79,8 @@ namespace DellFanManagement.App
         /// </summary>
         public ulong? RpmThreshold { get; private set; }
 
+        public TrayIconColor TrayIconColor { get; set; }
+
         /// <summary>
         /// Thermal setting that has been requested by the user but not yet applied.
         /// </summary>
@@ -91,6 +96,7 @@ namespace DellFanManagement.App
             _state = state;
             _form = form;
             _fanController = FanControllerFactory.GetFanFanController();
+            _consistencyModeHandler = ConsistencyModeHandlerFactory.GetConsistencyModeHandler(this, _state, _fanController);
             _soundPlayer = null;
             _requestSemaphore = new(1, 1);
 
@@ -102,6 +108,7 @@ namespace DellFanManagement.App
             LowerTemperatureThreshold = null;
             UpperTemperatureThreshold = null;
             RpmThreshold = null;
+            TrayIconColor = TrayIconColor.Gray;
         }
 
         /// <summary>
@@ -113,6 +120,7 @@ namespace DellFanManagement.App
             _state.OperationMode = OperationMode.Automatic;
             _state.ConsistencyModeStatus = " ";
             _state.Release();
+            TrayIconColor = TrayIconColor.Gray;
         }
 
         /// <summary>
@@ -129,6 +137,7 @@ namespace DellFanManagement.App
             _fan1LevelRequested = null;
             _fan2LevelRequested = null;
             _state.Release();
+            TrayIconColor = TrayIconColor.Gray;
         }
 
         /// <summary>
@@ -320,10 +329,10 @@ namespace DellFanManagement.App
                             _state.ConsistencyModeStatus = " ";
                         }
                     }
-                    else if (_state.OperationMode == OperationMode.Consistency && IsAutomaticFanControlDisableSupported)
+                    else if (_state.OperationMode == OperationMode.Consistency)
                     {
                         // Consistency mode logic.
-                        ConsistencyModeLogic();
+                        _consistencyModeHandler.RunConsistencyModeLogic();
                     }
 
                     // See if we need to update the BIOS thermal setting.
@@ -383,100 +392,6 @@ namespace DellFanManagement.App
             _state.Release();
 
             UpdateForm();
-        }
-
-        /// <summary>
-        /// Consistency mode logic; lock the fans if temperature and RPM thresholds are met.
-        /// </summary>
-        private void ConsistencyModeLogic()
-        {
-            if (LowerTemperatureThreshold != null && UpperTemperatureThreshold != null && RpmThreshold != null)
-            {
-                bool thresholdsMet = true;
-                ulong? rpmLowerThreshold = RpmThreshold - 400;
-
-                // Is the fan speed too low?
-                if (_state.Fan1Rpm < rpmLowerThreshold || (_state.Fan2Present && _state.Fan2Rpm < rpmLowerThreshold))
-                {
-                    if (_state.Fan1Rpm == 0 && (!_state.Fan2Present || _state.Fan2Rpm == 0))
-                    {
-                        _state.ConsistencyModeStatus = string.Format("Waiting for embedded controller to activate the fan{0}", _state.Fan2Present ? "s" : string.Empty);
-                    }
-                    else
-                    {
-                        _state.ConsistencyModeStatus = "Waiting for embedded controller to raise the fan speed";
-                    }
-
-                    thresholdsMet = false;
-
-                    if (!_state.EcFanControlEnabled)
-                    {
-                        Log.Write(string.Format("EC fan control disabled, but fan speed is too low: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
-                    }
-                }
-
-                // Is the CPU or GPU too hot?
-                if (thresholdsMet)
-                {
-                    foreach (TemperatureComponent component in _state.Temperatures.Keys)
-                    {
-                        foreach (KeyValuePair<string, int> temperature in _state.Temperatures[component])
-                        {
-                            if (temperature.Value > (_state.EcFanControlEnabled ? LowerTemperatureThreshold : UpperTemperatureThreshold))
-                            {
-                                _state.ConsistencyModeStatus = string.Format("Waiting for {0} temperature to fall", component);
-                                thresholdsMet = false;
-                                break;
-                            }
-                        }
-
-                        if (!thresholdsMet)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                // Is the fan speed too high?
-                if (thresholdsMet && (_state.Fan1Rpm > RpmThreshold || (_state.Fan2Present && _state.Fan2Rpm > RpmThreshold)))
-                {
-                    if (_state.Fan1Rpm < RpmSanityCheck && (!_state.Fan2Present || _state.Fan2Rpm < RpmSanityCheck))
-                    {
-                        _state.ConsistencyModeStatus = "Waiting for embedded controller to reduce the fan speed";
-                        thresholdsMet = false;
-
-                        if (!_state.EcFanControlEnabled)
-                        {
-                            Log.Write(string.Format("EC fan control disabled, but fan speed is too high: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
-                        }
-                    }
-                    else
-                    {
-                        Log.Write(string.Format("Recorded fan speed above sanity check level: [{0}] [{1}]", _state.Fan1Rpm, _state.Fan2Present ? _state.Fan2Rpm : "N/A"));
-                    }
-                }
-
-                if (thresholdsMet)
-                {
-                    if (_state.EcFanControlEnabled)
-                    {
-                        _state.EcFanControlEnabled = false;
-                        _fanController.DisableAutomaticFanControl();
-                        Log.Write("Disabled EC fan control – consistency mode – thresholds met");
-                    }
-
-                    if (!_state.ConsistencyModeStatus.StartsWith("Fan speed locked"))
-                    {
-                        _state.ConsistencyModeStatus = string.Format("Fan speed locked since {0}", DateTime.Now);
-                    }
-                }
-                else if (!_state.EcFanControlEnabled && !thresholdsMet)
-                {
-                    _state.EcFanControlEnabled = true;
-                    _fanController.EnableAutomaticFanControl();
-                    Log.Write(string.Format("Enabled EC fan control – consistency mode – {0}", _state.ConsistencyModeStatus));
-                }
-            }
         }
 
         /// <summary>

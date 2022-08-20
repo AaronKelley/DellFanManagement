@@ -3,7 +3,7 @@
     /// <summary>
     /// Representation of supported fan levels.
     /// </summary>
-    enum FanLevel
+    public enum FanLevel
     {
         /// <summary>
         /// Fans are off.

@@ -148,7 +148,11 @@ namespace DellFanManagement.App
             if (!_core.IsAutomaticFanControlDisableSupported)
             {
                 operationModeRadioButtonManual.Enabled = false;
-                operationModeRadioButtonConsistency.Enabled = false;
+                //operationModeRadioButtonConsistency.Enabled = false;
+                consistencyModeLowerTemperatureThresholdLabel.Enabled = false;
+                consistencyModeUpperTemperatureThresholdLabel.Enabled = false;
+                consistencyModeLowerTemperatureThresholdTextBox.Enabled = false;
+                consistencyModeUpperTemperatureThresholdTextBox.Enabled = false;
             }
             if (!_core.IsSpecificFanControlSupported)
             {
@@ -997,23 +1001,13 @@ namespace DellFanManagement.App
 
             if (trayIconCheckBox.Checked)
             {
-                int offset;
-
-                if (_state.OperationMode != OperationMode.Consistency)
+                int offset = _core.TrayIconColor switch
                 {
-                    offset = 0;
-                }
-                else
-                {
-                    if (!_state.EcFanControlEnabled)
-                    {
-                        offset = 16;
-                    }
-                    else
-                    {
-                        offset = 32;
-                    }
-                }
+                    TrayIconColor.Gray => 0,
+                    TrayIconColor.Blue => 16,
+                    TrayIconColor.Red => 32,
+                    _ => 0
+                };
 
                 if (animatedCheckBox.Checked)
                 {

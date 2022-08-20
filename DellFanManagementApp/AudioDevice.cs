@@ -5,7 +5,7 @@ namespace DellFanManagement.App
     /// <summary>
     /// Represents an audio device.
     /// </summary>
-    class AudioDevice
+    public class AudioDevice
     {
         /// <summary>
         /// Audio device ID.
