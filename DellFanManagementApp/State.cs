@@ -1,6 +1,7 @@
 ﻿using DellFanManagement.App.FanSpeedReaders;
 using DellFanManagement.App.TemperatureReaders;
 using DellFanManagement.DellSmbiosSmiLib;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -139,6 +140,7 @@ namespace DellFanManagement.App
             MaximumTemperatures = new();
 
             Fan2Present = true;
+            ActivePowerProfile = null;
 
             WaitOne();
             Update();
@@ -155,6 +157,7 @@ namespace DellFanManagement.App
 
             UpdateFanRpms();
             UpdateTemperatures();
+            UpdatePowerProfile();
             UpdateThermalSetting();
             UpdateAudioDevices();
         }
@@ -246,6 +249,18 @@ namespace DellFanManagement.App
                         MaximumTemperatures[component][key] = temperature;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Read the currently active Windows power profile.
+        /// </summary>
+        private void UpdatePowerProfile()
+        {
+            Guid? activeProfile = PowerProfiles.GetActivePowerProfile();
+            if (activeProfile != null)
+            {
+                ActivePowerProfile = activeProfile;
             }
         }
 
@@ -403,6 +418,11 @@ namespace DellFanManagement.App
         /// Indicates whether or not a second fan is present in the system.
         /// </summary>
         public bool Fan2Present { get; private set; }
+
+        /// <summary>
+        /// Currently active power profile.
+        /// </summary>
+        public Guid? ActivePowerProfile { get; private set; }
 
         /// <summary>
         /// Current temperatures.

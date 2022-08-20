@@ -1,7 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using DellFanManagement.DellSmbiosSmiLib;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DellFanManagement.App
 {
@@ -17,6 +17,16 @@ namespace DellFanManagement.App
         private readonly Dictionary<string, object> _options;
 
         /// <summary>
+        /// Prefix for thermal setting override registry values.
+        /// </summary>
+        private static readonly string ThermalSettingOverridePrefix = "ThermalSetting-";
+
+        /// <summary>
+        /// List of thermal setting overrides for Windows power profiles.
+        /// </summary>
+        private readonly Dictionary<Guid, ThermalSetting> _thermalSettingOverrides;
+
+        /// <summary>
         /// A handle for the registry key that contains the configuration option values.
         /// </summary>
         private readonly RegistryKey _registryKey;
@@ -27,13 +37,30 @@ namespace DellFanManagement.App
         public ConfigurationStore()
         {
             _options = new();
+            _thermalSettingOverrides = new();
 
             // Set up registry key.
             _registryKey = Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("Dell Fan Management");
 
             foreach (string valueName in _registryKey.GetValueNames())
             {
-                _options[valueName] = _registryKey.GetValue(valueName);
+                if (valueName.StartsWith(ThermalSettingOverridePrefix))
+                {
+                    string powerProfileString = valueName.Replace(ThermalSettingOverridePrefix, string.Empty);
+                    if (Guid.TryParse(powerProfileString, out Guid powerProfile))
+                    {
+                        string thermalSettingName = _registryKey.GetValue(valueName).ToString();
+                        if (Enum.TryParse(typeof(ThermalSetting), thermalSettingName, out object thermalSetting))
+                        {
+                            Log.Write(string.Format("Thermal setting override: {0} => {1}", powerProfile, thermalSetting));
+                            _thermalSettingOverrides[powerProfile] = (ThermalSetting) thermalSetting;
+                        }
+                    }
+                }
+                else
+                {
+                    _options[valueName] = _registryKey.GetValue(valueName);
+                }
             }
         }
 
@@ -73,7 +100,7 @@ namespace DellFanManagement.App
         /// <returns>Option value (NULL if none set).</returns>
         public string GetStringOption(ConfigurationOption option)
         {
-            if (!_options.Keys.Contains(option.Key))
+            if (!_options.ContainsKey(option.Key))
             {
                 return null;
             }
@@ -98,7 +125,7 @@ namespace DellFanManagement.App
         /// <returns>Option value (NULL if none set).</returns>
         public int? GetIntOption(ConfigurationOption option)
         {
-            if (!_options.Keys.Contains(option.Key))
+            if (!_options.ContainsKey(option.Key))
             {
                 return null;
             }
@@ -109,6 +136,23 @@ namespace DellFanManagement.App
             else if (_options[option.Key] != null)
             {
                 throw new ConfigurationStoreException(string.Format("Requested int option \"{0}\" is not an int", option.Key));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the thermal setting override for a given power profile (if one exists).
+        /// </summary>
+        /// <param name="powerProfile">Windows power profile GUID.</param>
+        /// <returns>Thermal setting override for the given power profile; NULL if none.</returns>
+        public ThermalSetting? GetThermalSettingOverride(Guid powerProfile)
+        {
+            if (_thermalSettingOverrides.ContainsKey(powerProfile))
+            {
+                return _thermalSettingOverrides[powerProfile];
             }
             else
             {

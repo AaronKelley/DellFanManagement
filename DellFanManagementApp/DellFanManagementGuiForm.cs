@@ -50,6 +50,11 @@ namespace DellFanManagement.App
         private readonly bool _initializationComplete;
 
         /// <summary>
+        /// Last observed Windows power profile.
+        /// </summary>
+        private Guid? _registeredPowerProfile;
+
+        /// <summary>
         /// Constructor.  Get everything set up before the window is displayed.
         /// </summary>
         public DellFanManagementGuiForm()
@@ -525,6 +530,29 @@ namespace DellFanManagement.App
             {
                 MessageBox.Show(_state.Error, "Error in background thread", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _state.Error = null; // ...The one place where the state is actually updated.
+            }
+
+            // Power profiles management.
+            if (_state.ActivePowerProfile != null)
+            {
+                if (_state.ActivePowerProfile != _registeredPowerProfile)
+                {
+                    if (_registeredPowerProfile == null)
+                    {
+                        Log.Write(string.Format("The active power profile is {0}", _state.ActivePowerProfile));
+                    }
+                    else
+                    {
+                        Log.Write(string.Format("Power profile changed from {0} to {1}", _registeredPowerProfile, _state.ActivePowerProfile));
+                        ThermalSetting? thermalSettingOverride = _configurationStore.GetThermalSettingOverride((Guid) _state.ActivePowerProfile);
+                        if (thermalSettingOverride != null)
+                        {
+                            _core.RequestThermalSetting((ThermalSetting) thermalSettingOverride);
+                            Log.Write(string.Format("Thermal setting override: {0}", thermalSettingOverride));
+                        }
+                    }
+                    _registeredPowerProfile = _state.ActivePowerProfile;
+                }
             }
 
             _state.Release();
