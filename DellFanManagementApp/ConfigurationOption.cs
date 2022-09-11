@@ -71,6 +71,11 @@
         public static readonly ConfigurationOption AudioKeepAliveBringBackDevice = new(ConfigurationOptionType.String, "AudioKeepAliveBringBackDevice");
 
         /// <summary>
+        /// Path to NVIDIA Inspector or an application that can manipulate the NVIDIA GPU P-state.
+        /// </summary>
+        public static readonly ConfigurationOption NVPStateApplicationPath = new(ConfigurationOptionType.String, "NVPState");
+
+        /// <summary>
         /// Indicates whether this configuration option is for a "number" or a "string".
         /// </summary>
         public ConfigurationOptionType Type { get; private set; }

@@ -1,5 +1,6 @@
 ﻿using IrrKlang;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DellFanManagement.App
 {
@@ -28,6 +29,23 @@ namespace DellFanManagement.App
             }
 
             return audioDevices;
+        }
+
+        /// <summary>
+        /// Attempt to set the NVIDIA GPU P-state.
+        /// </summary>
+        /// <param name="inspectorPath">Path to NVIDIA Inspector, or an application that can manipulate the NVIDIA GPU
+        /// P-state.</param>
+        /// <param name="pState">P-state to set.  (16 = automatic)</param>
+        /// <returns>True if the attempt to invoke NVIDIA Inspector was successful.</returns>
+        public static bool SetNvidiaGpuPstate(string inspectorPath, int pState)
+        {
+            Process process = new();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.FileName = inspectorPath;
+            process.StartInfo.Arguments = string.Format("-forcepstate:0,{0}", pState);
+            return process.Start();
         }
     }
 }

@@ -22,9 +22,19 @@ namespace DellFanManagement.App
         private static readonly string ThermalSettingOverridePrefix = "ThermalSetting-";
 
         /// <summary>
+        /// Prefix for thermal setting override registry values.
+        /// </summary>
+        private static readonly string NvPstateOverridePrefix = "NVPState-";
+
+        /// <summary>
         /// List of thermal setting overrides for Windows power profiles.
         /// </summary>
         private readonly Dictionary<Guid, ThermalSetting> _thermalSettingOverrides;
+
+        /// <summary>
+        /// List of NVIDIA GPU P-state overrides for Windows power profiles.
+        /// </summary>
+        private readonly Dictionary<Guid, int> _nvPstateOverrides;
 
         /// <summary>
         /// A handle for the registry key that contains the configuration option values.
@@ -38,22 +48,35 @@ namespace DellFanManagement.App
         {
             _options = new();
             _thermalSettingOverrides = new();
+            _nvPstateOverrides = new();
 
             // Set up registry key.
             _registryKey = Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("Dell Fan Management");
 
             foreach (string valueName in _registryKey.GetValueNames())
             {
-                if (valueName.StartsWith(ThermalSettingOverridePrefix))
+                if (valueName.StartsWith(ThermalSettingOverridePrefix) || valueName.StartsWith(NvPstateOverridePrefix))
                 {
-                    string powerProfileString = valueName.Replace(ThermalSettingOverridePrefix, string.Empty);
+                    string replace = valueName.StartsWith(ThermalSettingOverridePrefix) ? ThermalSettingOverridePrefix : NvPstateOverridePrefix;
+                    string powerProfileString = valueName.Replace(replace, string.Empty);
                     if (Guid.TryParse(powerProfileString, out Guid powerProfile))
                     {
-                        string thermalSettingName = _registryKey.GetValue(valueName).ToString();
-                        if (Enum.TryParse(typeof(ThermalSetting), thermalSettingName, out object thermalSetting))
+                        if (valueName.StartsWith(ThermalSettingOverridePrefix))
                         {
-                            Log.Write(string.Format("Thermal setting override: {0} => {1}", powerProfile, thermalSetting));
-                            _thermalSettingOverrides[powerProfile] = (ThermalSetting) thermalSetting;
+                            // Thermal setting override.
+                            string thermalSettingName = _registryKey.GetValue(valueName).ToString();
+                            if (Enum.TryParse(typeof(ThermalSetting), thermalSettingName, out object thermalSetting))
+                            {
+                                Log.Write(string.Format("Thermal setting override: {0} => {1}", powerProfile, thermalSetting));
+                                _thermalSettingOverrides[powerProfile] = (ThermalSetting)thermalSetting;
+                            }
+                        }
+                        else
+                        {
+                            // NVIDIA P-state override.
+                            int pState = int.Parse(_registryKey.GetValue(valueName).ToString());
+                            Log.Write(string.Format("NVIDIA P-state override: {0} => {1}", powerProfile, pState));
+                            _nvPstateOverrides[powerProfile] = pState;
                         }
                     }
                 }
@@ -153,6 +176,23 @@ namespace DellFanManagement.App
             if (_thermalSettingOverrides.ContainsKey(powerProfile))
             {
                 return _thermalSettingOverrides[powerProfile];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the NVIDIA P-state override for a given power profile (if one exists).
+        /// </summary>
+        /// <param name="powerProfile">Windows power profile GUID.</param>
+        /// <returns>NVIDIA P-state override for the given power profile; NULL if none.</returns>
+        public int? GetNvPstateOverride(Guid powerProfile)
+        {
+            if (_nvPstateOverrides.ContainsKey(powerProfile))
+            {
+                return _nvPstateOverrides[powerProfile];
             }
             else
             {

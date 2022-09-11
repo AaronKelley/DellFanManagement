@@ -544,11 +544,25 @@ namespace DellFanManagement.App
                     else
                     {
                         Log.Write(string.Format("Power profile changed from {0} to {1}", _registeredPowerProfile, _state.ActivePowerProfile));
-                        ThermalSetting? thermalSettingOverride = _configurationStore.GetThermalSettingOverride((Guid) _state.ActivePowerProfile);
+
+                        // Check to see if we should change the thermal setting.
+                        ThermalSetting? thermalSettingOverride = _configurationStore.GetThermalSettingOverride((Guid)_state.ActivePowerProfile);
                         if (thermalSettingOverride != null)
                         {
                             _core.RequestThermalSetting((ThermalSetting) thermalSettingOverride);
                             Log.Write(string.Format("Thermal setting override: {0}", thermalSettingOverride));
+                        }
+
+                        // Check to see if we should change the NVIDIA GPU P-state.
+                        int? nvPstate = _configurationStore.GetNvPstateOverride((Guid)_state.ActivePowerProfile);
+                        if (nvPstate != null)
+                        {
+                            string nvInspectorPath = _configurationStore.GetStringOption(ConfigurationOption.NVPStateApplicationPath);
+                            if (nvInspectorPath != null)
+                            {
+                                Utility.SetNvidiaGpuPstate(nvInspectorPath, (int)nvPstate); // NULL check above.
+                                Log.Write(string.Format("NVIDIA P-state override: {0}", nvPstate));
+                            }
                         }
                     }
                     _registeredPowerProfile = _state.ActivePowerProfile;
