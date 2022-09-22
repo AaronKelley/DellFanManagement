@@ -1,6 +1,8 @@
 ﻿using IrrKlang;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace DellFanManagement.App
 {
@@ -47,5 +49,13 @@ namespace DellFanManagement.App
             process.StartInfo.Arguments = string.Format("-forcepstate:0,{0}", pState);
             return process.Start();
         }
+
+        /// <summary>
+        /// Set the current power mode.
+        /// </summary>
+        /// <param name="OverlaySchemeGuid">Power mode to set.</param>
+        /// <returns>Zero on success, non-zero on failure.</returns>
+        [DllImportAttribute("powrprof.dll", EntryPoint = "PowerSetActiveOverlayScheme")]
+        public static extern uint PowerSetActiveOverlayScheme(Guid OverlaySchemeGuid);
     }
 }

@@ -553,6 +553,14 @@ namespace DellFanManagement.App
                             Log.Write(string.Format("Thermal setting override: {0}", thermalSettingOverride));
                         }
 
+                        // Check to see if we should change the power mode.
+                        Guid? powerMode = _configurationStore.GetPowerModeOverride((Guid)_state.ActivePowerProfile);
+                        if (powerMode != null)
+                        {
+                            Utility.PowerSetActiveOverlayScheme((Guid)powerMode); // NULL check above.
+                            Log.Write(string.Format("Power mode overrode: {0}", powerMode));
+                        }
+
                         // Check to see if we should change the NVIDIA GPU P-state.
                         int? nvPstate = _configurationStore.GetNvPstateOverride((Guid)_state.ActivePowerProfile);
                         if (nvPstate != null)

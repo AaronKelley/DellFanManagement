@@ -22,6 +22,11 @@ namespace DellFanManagement.App
         private static readonly string ThermalSettingOverridePrefix = "ThermalSetting-";
 
         /// <summary>
+        /// Prefix for power mode override registry values.
+        /// </summary>
+        private static readonly string PowerModeOverridePrefix = "PowerMode-";
+
+        /// <summary>
         /// Prefix for thermal setting override registry values.
         /// </summary>
         private static readonly string NvPstateOverridePrefix = "NVPState-";
@@ -30,6 +35,11 @@ namespace DellFanManagement.App
         /// List of thermal setting overrides for Windows power profiles.
         /// </summary>
         private readonly Dictionary<Guid, ThermalSetting> _thermalSettingOverrides;
+
+        /// <summary>
+        /// List of power mode overrides for Windows power profiles.
+        /// </summary>
+        private readonly Dictionary<Guid, Guid> _powerModeOverrides;
 
         /// <summary>
         /// List of NVIDIA GPU P-state overrides for Windows power profiles.
@@ -48,6 +58,7 @@ namespace DellFanManagement.App
         {
             _options = new();
             _thermalSettingOverrides = new();
+            _powerModeOverrides = new();
             _nvPstateOverrides = new();
 
             // Set up registry key.
@@ -55,10 +66,10 @@ namespace DellFanManagement.App
 
             foreach (string valueName in _registryKey.GetValueNames())
             {
-                if (valueName.StartsWith(ThermalSettingOverridePrefix) || valueName.StartsWith(NvPstateOverridePrefix))
+                if (valueName.StartsWith(ThermalSettingOverridePrefix) || valueName.StartsWith(NvPstateOverridePrefix) || valueName.StartsWith(PowerModeOverridePrefix))
                 {
-                    string replace = valueName.StartsWith(ThermalSettingOverridePrefix) ? ThermalSettingOverridePrefix : NvPstateOverridePrefix;
-                    string powerProfileString = valueName.Replace(replace, string.Empty);
+                    string powerProfileString = valueName[(valueName.IndexOf("-") + 1)..];
+
                     if (Guid.TryParse(powerProfileString, out Guid powerProfile))
                     {
                         if (valueName.StartsWith(ThermalSettingOverridePrefix))
@@ -69,6 +80,16 @@ namespace DellFanManagement.App
                             {
                                 Log.Write(string.Format("Thermal setting override: {0} => {1}", powerProfile, thermalSetting));
                                 _thermalSettingOverrides[powerProfile] = (ThermalSetting)thermalSetting;
+                            }
+                        }
+                        else if (valueName.StartsWith(PowerModeOverridePrefix))
+                        {
+                            // Power mode override.
+                            string powerModeGuidString = _registryKey.GetValue(valueName).ToString();
+                            if (Guid.TryParse(powerModeGuidString, out Guid powerModeGuid))
+                            {
+                                Log.Write(string.Format("Power mode override: {0} => {1}", powerProfile, powerModeGuid));
+                                _powerModeOverrides[powerProfile] = powerModeGuid;
                             }
                         }
                         else
@@ -176,6 +197,23 @@ namespace DellFanManagement.App
             if (_thermalSettingOverrides.ContainsKey(powerProfile))
             {
                 return _thermalSettingOverrides[powerProfile];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the power mode override for a given power profile (if one exists).
+        /// </summary>
+        /// <param name="powerProfile">Windows power profile GUID.</param>
+        /// <returns>Power mode override GUID for the given power profile; NULL if none.</returns>
+        public Guid? GetPowerModeOverride(Guid powerProfile)
+        {
+            if (_powerModeOverrides.ContainsKey(powerProfile))
+            {
+                return _powerModeOverrides[powerProfile];
             }
             else
             {
