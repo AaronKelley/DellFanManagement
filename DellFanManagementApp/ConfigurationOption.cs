@@ -3,7 +3,7 @@
     /// <summary>
     /// Just some string constants used when dealing with the ConfigurationStore class.
     /// </summary>
-    class ConfigurationOption
+    public class ConfigurationOption
     {
         /// <summary>
         /// Record whether or not the disclaimer message has been shown.
@@ -74,6 +74,11 @@
         /// Path to NVIDIA Inspector or an application that can manipulate the NVIDIA GPU P-state.
         /// </summary>
         public static readonly ConfigurationOption NVPStateApplicationPath = new(ConfigurationOptionType.String, "NVPState");
+
+        /// <summary>
+        /// Option to disable reading the CPU temperatures and thus not invoke LibreHardwareMonitor / WINRING0.
+        /// </summary>
+        public static readonly ConfigurationOption DisableCpuTemperatures = new(ConfigurationOptionType.Integer, "DisableCpuTemperatures");
 
         /// <summary>
         /// Indicates whether this configuration option is for a "number" or a "string".

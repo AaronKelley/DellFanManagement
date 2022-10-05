@@ -1,6 +1,6 @@
 ﻿namespace DellFanManagement.App
 {
-    enum ConfigurationOptionType
+    public enum ConfigurationOptionType
     {
         Integer,
         String

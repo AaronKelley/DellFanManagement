@@ -64,9 +64,9 @@ namespace DellFanManagement.App
             InitializeComponent();
 
             // Initialize objects.
-            _state = new State();
-            _core = new Core(_state, this);
             _configurationStore = new();
+            _state = new State(_configurationStore);
+            _core = new Core(_state, this);
             _formClosed = false;
 
             _trayIcons = new Icon[48];

@@ -8,7 +8,7 @@ namespace DellFanManagement.App
     /// <summary>
     /// Handles storing the options selected in the program in the registry.
     /// </summary>
-    class ConfigurationStore
+    public class ConfigurationStore
     {
         /// <summary>
         /// A reflection of configuration option values that were present in the registry when the application started,

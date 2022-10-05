@@ -99,10 +99,10 @@ namespace DellFanManagement.App
         private int _thermalSettingReadBackoff;
 
         /// <summary>
-        /// <summary>
         /// Constructor; initialize everything.
         /// </summary>
-        public State()
+        /// <param name="configurationStore">Configuration store.</param>
+        public State(ConfigurationStore configurationStore)
         {
             _backgroundThreadRunning = false;
             _audioThreadRunning = false;
@@ -120,8 +120,15 @@ namespace DellFanManagement.App
             _thermalSettingReadBackoff = 0;
 
             // Initialize temperature readers.
+
             _temperatureReaders = new();
-            _temperatureReaders.Add(TemperatureComponent.CPU, new CpuTemperatureReader());
+
+            int? cpuDisabled = configurationStore.GetIntOption(ConfigurationOption.DisableCpuTemperatures);
+            if (cpuDisabled == null || cpuDisabled == 0)
+            {
+                _temperatureReaders.Add(TemperatureComponent.CPU, new CpuTemperatureReader());
+            }
+
             if (NvidiaGpuTemperatureReader.IsNvapiSupported())
             {
                 // Use NVAPI if it is available.
