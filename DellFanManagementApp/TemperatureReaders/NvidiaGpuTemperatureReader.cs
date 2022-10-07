@@ -2,6 +2,7 @@
 using NvAPIWrapper.Native.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace DellFanManagement.App.TemperatureReaders
 {
@@ -24,12 +25,13 @@ namespace DellFanManagement.App.TemperatureReaders
         {
             Dictionary<string, int> temperatures = new();
 
-            foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
-            {
-                string name = gpuNames.ContainsKey(gpu.GPUId) ? gpuNames[gpu.GPUId] : "Unknown GPU";
+            string name = null;
 
-                try
+            try
+            {
+                foreach (PhysicalGPU gpu in PhysicalGPU.GetPhysicalGPUs())
                 {
+                    name = gpuNames.ContainsKey(gpu.GPUId) ? gpuNames[gpu.GPUId] : "Unknown GPU";
                     name = gpu.FullName.Replace("Laptop GPU", string.Empty).Replace("NVIDIA", string.Empty).Trim();
                     gpuNames[gpu.GPUId] = name;
 
@@ -38,25 +40,25 @@ namespace DellFanManagement.App.TemperatureReaders
                         temperatures.Add(name, sensor.CurrentTemperature);
                     }
                 }
-                catch (NVIDIAApiException exception)
+            }
+            catch (NVIDIAApiException exception)
+            {
+                if (exception.Message == "NVAPI_GPU_NOT_POWERED")
                 {
-                    if (exception.Message == "NVAPI_GPU_NOT_POWERED")
+                    if (name != null)
                     {
-                        if (name != null)
-                        {
-                            // GPU is currently powered off.
-                            temperatures.Add(name, 0);
-                        }
+                        // GPU is currently powered off.
+                        temperatures.Add(name, 0);
                     }
-                    else if (exception.Message == "NVAPI_NVIDIA_DEVICE_NOT_FOUND")
-                    {
-                        // NVIDIA device was present previously, but it disappeared?  (Driver update in progress?)
-                        // Silently ignore.
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                }
+                else if (exception.Message == "NVAPI_NVIDIA_DEVICE_NOT_FOUND")
+                {
+                    // NVIDIA device was present previously, but it disappeared?  (Driver update in progress?)
+                    // Silently ignore.
+                }
+                else
+                {
+                    throw;
                 }
             }
 
